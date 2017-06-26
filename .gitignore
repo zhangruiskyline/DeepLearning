@@ -1,0 +1,8 @@
+*.docx
+*.pdf
+/book
+.idea/*
+.ipynb_checkpoints/*
+xgboost/.ipynb_checkpoints/*
+
+/TensorFlow_Examples/labs/03_conv_nets/images_resize/*
