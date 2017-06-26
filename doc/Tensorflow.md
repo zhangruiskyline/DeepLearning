@@ -299,7 +299,7 @@ Internal covariate shift refers to covariate shift occurring within a neural net
 
 For deep network, if only input layer and output layer are whitened, during training, hidden layers are gradually deviated from zero mean,unit variance and decorrelated conditions, which is called internal co-variate shift, as shown below
 
-![internal_co-variate_ shift](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/internal_co-variate_ shift.png)
+![internal_co-variate_ shift](https://github.com/zhangruiskyline/DeepLearning/blob/master/img/internal_co-variate_%20shift.png)
 
 
 ## Process
