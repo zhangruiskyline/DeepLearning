@@ -7,7 +7,9 @@
   - [Process](#process)
   - [Challenge](#challenge)
   - [Item based Collaborative Filtering](#item-based-collaborative-filtering)
-- [Content-based vs Collaborative Filtering (CF)](#content-based-vs-collaborative-filtering-cf)
+  - [Content-based vs Collaborative Filtering (CF)](#content-based-vs-collaborative-filtering-cf)
+  - [SVD/Matrix Factorization](#svdmatrix-factorization)
+    - [How to calculate SVD/MF](#how-to-calculate-svdmf)
 - [Embedding](#embedding)
   - [Theory of Embedding](#theory-of-embedding)
   - [Code for embedding](#code-for-embedding)
@@ -59,10 +61,10 @@ and the weight matrix can be
 
 ## Challenge
 
+* Cold start
+* Popular bias
 * Sparsity:
-
 * Scalability: computation grow as number of users and number of items growing
-
 * Pool relationship among minded but sparse user
 
 > Next? Use latent to capture user and item in reduced dimension
@@ -74,11 +76,22 @@ and the weight matrix can be
 
 ![Item CF](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/item_cf.png)
 
-# Content-based vs Collaborative Filtering (CF)
+## Content-based vs Collaborative Filtering (CF)
 
 * Content-based: user metadata (gender, age, location...) and item metadata (year, genre, director, actors)
 * Collaborative Filtering: passed user/item interactions: stars, plays, likes, clicks
 * Hybrid systems: CF + metadata to mitigate the cold-start problem
+
+## SVD/Matrix Factorization
+matrix factorization can be used to discover latent features underlying the interactions between two different kinds of entities. (Of course, you can consider more than two kinds of entities and you will be dealing with tensor factorization, which would be more complicated.) And one obvious application is to predict ratings in collaborative filtering.
+
+![Matrix Factorization](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/mf.png)
+
+### How to calculate SVD/MF
+iterate/ gradient decent
+
+http://www.quuxlabs.com/blog/2010/09/matrix-factorization-a-simple-tutorial-and-implementation-in-python/
+
 
 # Embedding
 
