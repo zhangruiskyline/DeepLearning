@@ -10,6 +10,7 @@
     - [LSTM mitigate vanlish gradient](#lstm-mitigate-vanlish-gradient)
     - [LSTM activity function](#lstm-activity-function)
   - [LSTM and Sequence Model](#lstm-and-sequence-model)
+    - [Model analysis](#model-analysis)
 - [Seq-to-Seq Model](#seq-to-seq-model)
   - [Encoder/Decoder Model](#encoderdecoder-model)
   - [Seq-to-Seq Application: Translation](#seq-to-seq-application-translation)
@@ -116,6 +117,25 @@ For general model using RNN
 
   ![seq_RNN_3](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/seq_RNN_3.png)
 
+### Model analysis
+
+referring https://www.quora.com/How-are-inputs-fed-into-the-LSTM-RNN-network-in-mini-batch-method
+
+* Variables involved:
+
+Assume we have N data points (sentences), h hidden units (LSTM cells/blocks), b as mini-batch size, then it will take int(N/b)+1 epochs for the learner to go through all data points once. Let us assume that each sentence has length L. Also, suppose each word is represented by an embedding vector of dimensionality e. The input layer will have e linear units. These e linear units are connected to each of the h LSTM/RNN units in the hidden layer (assuming there is only one hidden layer).
+
+* Feeding a sentence to a RNN:
+
+In general, for any Recurrent Neural Network (RNN), there is a concept of time instances (steps) corresponding to a time-series or sequence. The words in a sentence are fed to the network one at a time. So, each of the L words in a sentence is fed to the network one by one (step by step). When one sentence has been fed completely, the activations of the units in the hidden layer are reset. Then, the next sentence is fed, and so on.
+
+* Feeding a batch of b sentences to a RNN:
+
+In step 1, first word of each of the b sentences (in a batch) is input in parallel. In step 2, second word of each of the b sentences is input in parallel. The parallelism is only for efficiency. Each sentence in a batch is handled in parallel, but the network sees one word of a sentence at a time and does the computations accordingly. All the computations involving the words of all sentences in a batch at a given time step are done in parallel.
+
+* Relation between L, e, h:
+
+It is to be noted that, in general, there is no relation between L (length of a sentence), e (the dimension of the embedding space in which words are represented), and h (number of LSTM hidden units in the hidden layer).
 
 # Seq-to-Seq Model
 

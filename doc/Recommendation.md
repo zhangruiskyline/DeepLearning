@@ -10,6 +10,7 @@
   - [Content-based vs Collaborative Filtering (CF)](#content-based-vs-collaborative-filtering-cf)
   - [SVD/Matrix Factorization](#svdmatrix-factorization)
     - [How to calculate SVD/MF](#how-to-calculate-svdmf)
+- [Ranking](#ranking)
 - [Embedding](#embedding)
   - [Theory of Embedding](#theory-of-embedding)
   - [Code for embedding](#code-for-embedding)
@@ -91,6 +92,8 @@ matrix factorization can be used to discover latent features underlying the inte
 iterate/ gradient decent
 
 http://www.quuxlabs.com/blog/2010/09/matrix-factorization-a-simple-tutorial-and-implementation-in-python/
+
+# Ranking
 
 
 # Embedding

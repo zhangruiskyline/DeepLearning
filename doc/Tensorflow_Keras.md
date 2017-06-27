@@ -14,6 +14,7 @@
   - [Saver object](#saver-object)
 - [Keras Usage](#keras-usage)
   - [Merge](#merge)
+  - [Embedding](#embedding)
 - [Batch Normalization](#batch-normalization)
   - [Intention](#intention)
   - [Process](#process)
@@ -282,6 +283,14 @@ Output will be
 [[[ 1.  2.  3.  4.  5.  6.]]]
 [[[ 32.]]]
 [[[[ 0.97463191]]]]
+```
+
+## Embedding
+As far as I know, the Embedding layer is a simple matrix multiplication that transforms words(or other items) into their corresponding embeddings.
+
+The weights of the Embedding layer are of the shape __(vocabulary_size, embedding_dimension)__. For each training sample, its input are integers, which represent certain words. The __integers are in the range of the vocabulary size__. The Embedding layer transforms each integer i into the ith line of the embedding weights matrix.
+```
+(nb_words, vocab_size) x (vocab_size, embedding_dim) = (nb_words, embedding_dim)
 ```
 
 # Batch Normalization
