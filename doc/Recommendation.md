@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Recommender Systems](#recommender-systems)
+- [Collaborative Filtering](#collaborative-filtering)
 - [Content-based vs Collaborative Filtering (CF)](#content-based-vs-collaborative-filtering-cf)
 - [Embedding](#embedding)
   - [Theory of Embedding](#theory-of-embedding)
@@ -32,6 +33,27 @@
 > Embeddings
 
 > Architecture and Regularization
+
+# Collaborative Filtering
+* Typically, the workflow of a collaborative filtering system is:
+
+A user expresses his or her preferences by rating items (e.g. books, movies or CDs) of the system. These ratings can be viewed as an approximate representation of the user's interest in the corresponding domain.
+
+The system matches this user's ratings against other users' and finds the people with most "similar" tastes.
+
+With similar users, the system recommends items that the similar users have rated highly but not yet being rated by this user (presumably the absence of rating is often considered as the unfamiliarity of an item)
+
+* Process
+
+  * Look for users who share the same rating patterns with the active user (the user whom the prediction is for).
+  * Use the ratings from those like-minded users found in step 1 to calculate a prediction for the active user
+
+![Collaborative Filtering](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/cf.png)
+
+and the weight matrix can be
+
+![Collaborative Filtering similarity](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/cf2.png)
+
 
 
 # Content-based vs Collaborative Filtering (CF)
