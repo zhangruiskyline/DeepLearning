@@ -13,10 +13,12 @@
     - [Model analysis](#model-analysis)
 - [Seq-to-Seq Model](#seq-to-seq-model)
   - [Encoder/Decoder Model](#encoderdecoder-model)
+- [Applications](#applications)
   - [Seq-to-Seq Application: Translation](#seq-to-seq-application-translation)
     - [Pre-Process](#pre-process)
     - [Build the model](#build-the-model)
   - [Seq-to-Seq Application: Chat Bot](#seq-to-seq-application-chat-bot)
+  - [LSTM Application: Query Classification](#lstm-application-query-classification)
 - [Attention model](#attention-model)
 - [reference](#reference)
 
@@ -172,7 +174,7 @@ Based on this context, the decoder generates the output sequence, one word at a 
 * Goal
 The context can be provided as the initial state of the decoder RNN or it can be connected to the hidden units at each time step. Now our objective is to jointly maximize the log probability of the output sequence conditioned on the input sequence.
 
-
+# Applications
 ## Seq-to-Seq Application: Translation
 
 http://www.wildml.com/2016/01/attention-and-memory-in-deep-learning-and-nlp/
@@ -322,6 +324,9 @@ best_model_cb = ModelCheckpoint(best_model_fname, monitor='val_loss',
 
 ![seq-to-seq chatbot](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/seq2seq_chatbot.png)
 
+## LSTM Application: Query Classification
+http://campuspress.yale.edu/yw355/deep_learning/
+
 # Attention model
 The above translate mode, every input has to be encoded into a fixed-size state vector, as that is the only thing passed to the decoder(The final sentence embedding). To allow the decoder more direct access to the input, an attention mechanism was introduced.
 
@@ -337,7 +342,6 @@ Take machine Translation example, Each time the decoder RNN produces a word, it 
 This process can be seen as an alignment, because the network usually learns to focus on a single input word each time it produces an output word. This means that most of the attention weights are 0 (black) while a single one is activated (white).he image below shows the attention weights during the translation process, which reveals the alignment and makes it possible to interpret what the network has learnt (and this is usually a problem with RNNs!)
 
 ![attention_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/attention_2.png)
-
 
 # reference
 
