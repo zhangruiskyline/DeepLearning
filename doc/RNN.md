@@ -31,8 +31,15 @@
 http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-1-introduction-to-rnns/
 http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-2-implementing-a-language-model-rnn-with-python-numpy-and-theano/
 
+In a traditional neural network we assume that all inputs (and outputs) are independent of each other. But for many tasks that’s a very bad idea. If you want to predict the next word in a sentence you better know which words came before it. RNNs are called recurrent because they perform the same task for every element of a sequence, with the output being depended on the previous computations. Another way to think about RNNs is that they have a “memory” which captures information about what has been calculated so far. In theory RNNs can make use of information in arbitrarily long sequences, but in practice they are limited to looking back only a few steps (more on this later). Here is what a typical RNN looks like
+
 ## Basic architecture
 ![RNN](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/RNN.png)
+
+* RNN can handle arbitrary input/output lengths.
+* RNN unlike feedforward neural networks - can use their internal memory to process arbitrary sequences of inputs.
+* Recurrent neural networks use time-series information. I.e. what I spoke last will impact what I will speak text.
+* RNNs are ideal for text and speech analysis.
 
 ## Model Analysis
 The input x will be a sequence of words (just like the example printed above) and each x_t is a single word. But there’s one more thing: Because of how matrix multiplication works we can’t simply use a word index (like 36) as an input. Instead, we represent each word as a one-hot vector of size vocabulary_size. For example, the word with index 36 would be the vector of all 0’s and a 1 at position 36. So, each x_t will become a vector, and x will be a matrix, with each row representing a word. We’ll perform this transformation in our Neural Network code instead of doing it in the pre-processing. The output of our network o has a similar format. Each o_t is a vector of vocabulary_size elements, and each element represents the probability of that word being the next word in the sentence.

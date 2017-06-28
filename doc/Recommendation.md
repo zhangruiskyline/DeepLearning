@@ -28,7 +28,11 @@
     - [The Deep NN model](#the-deep-nn-model-1)
 - [General Framework](#general-framework)
 - [Ethical Considerations](#ethical-considerations)
-- [Research work Milestone](#research-work-milestone)
+- [Applications](#applications)
+  - [Spotify Music Recommendation](#spotify-music-recommendation)
+  - [Deep Neural Networks for YouTube Recommendation](#deep-neural-networks-for-youtube-recommendation)
+  - [Quora: Semantic Question Matching with Deep Learning](#quora-semantic-question-matching-with-deep-learning)
+  - [Quora Recommendation Model: Ranking answers](#quora-recommendation-model-ranking-answers)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -825,6 +829,7 @@ for i in range(n_epochs):
     test_auc = average_roc_auc(deep_match_model, pos_data_train, pos_data_test)
     print("Epoch %d/%d: test ROC AUC: %0.4f"
           % (i + 1, n_epochs, test_auc))
+
 ```
 
 
@@ -854,13 +859,17 @@ People tend to unfollow people they don't agree with
 Ranking / filtering systems can further amplify this issue
 Optimizing for short-term clicks can promote clickbait contents
 
-# Research work Milestone
+# Applications
 
-1. [Spotify Music recommendation](http://benanne.github.io/2014/08/05/spotify-cnns.html)
+## Spotify Music Recommendation
 
-2. [Deep Neural Networks for YouTube Recommendations](https://research.google.com/pubs/pub45530.html)
+ [Spotify Music recommendation](http://benanne.github.io/2014/08/05/spotify-cnns.html)
 
-3. Quora: Semantic Question Matching with Deep Learning
+## Deep Neural Networks for YouTube Recommendation
+
+[Deep Neural Networks for YouTube Recommendations](https://research.google.com/pubs/pub45530.html)
+
+## Quora: Semantic Question Matching with Deep Learning
 
 https://engineering.quora.com/Semantic-Question-Matching-with-Deep-Learning
 
@@ -895,6 +904,59 @@ Finally, we tried an attention-based approach from Google Research [4] that comb
 
 ![quora attention](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/quora_attention.png)
 
-4. Quora Recommendation Model
+## Quora Recommendation Model: Ranking answers
 
 https://www.slideshare.net/xamat/recsys-2016-tutorial-lessons-learned-from-building-reallife-recommender-systems
+
+https://engineering.quora.com/A-Machine-Learning-Approach-to-Ranking-Answers-on-Quora
+
+* Ground truth data: upvotes/downvotes
+
+some problem:
+1. time sensitive
+2. rich get richer
+3. joke answer
+4. good answer from not so active user
+
+* Goal:
+
+In ranking problems our goal is to predict a list of documents ranked by relevance. In most cases there is also additional context, e.g. an associated user that's viewing results, therefore introducing personalization to the problem.
+
+* System architecture
+![quora_ranking](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/quora_ranking.png)
+
+* Ground Truth Build
+
+1. A/B Test online observation
+2. offline: user survey. manually create ranking, starting from some already known good one
+
+* Good answer standard
+
+1. Answers the question that was asked.
+2. Provides knowledge that is reusable by anyone interested in the question.
+3. Answers that are supported with rationale.
+4. Demonstrates credibility and is factually correct.
+5. Is clear and easy to read.
+
+* Features
+
+  * text based features:
+  * expertise-based features
+  * upvote/downvote history
+
+General rule is make sure our features generalize well. Text features can be particularly problematic in this regard.
+
+Ensemble always works better
+
+* Real production
+
+  * rank the new answer on the question page as soon as possible to provide a smooth user experience
+
+1. simple model with easy to calculate feature as approximate, once answer is added, recompute the more accurate score asynchronously
+
+2. Question pages can contain hundreds of answers.
+
+  1. cache answer scores so that the question page can load in a reasonable time
+  2. cache all features
+  3. All this data (answer scores and feature values) is stored in HBase, which is an open-source NoSQL datastore able to handle a large volume of data and writes.
+  4.  cache score sometimes is not good when answer or feature changes: Consider a user who has tens of thousands of answers on Quora. If we depend on a feature like the number of answers added by an answer author, then every time this user adds an answer, we have to update the score of all of their answers at once.stopped updating feature values if that wouldn't impact the answer score at all.

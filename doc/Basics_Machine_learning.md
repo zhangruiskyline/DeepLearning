@@ -7,6 +7,7 @@
     - [SoftMax](#softmax)
     - [Cross-Entropy](#cross-entropy)
 - [Bias vs Variance](#bias-vs-variance)
+  - [concept](#concept)
   - [Learn from learning curves](#learn-from-learning-curves)
   - [Debug learning algorithm](#debug-learning-algorithm)
     - [Diagnosing Neural Networks](#diagnosing-neural-networks)
@@ -62,6 +63,16 @@ Once we have done the classification via softmax, we need to know how well it pe
 
 
 # Bias vs Variance
+
+## concept
+* Error due to Bias:
+
+The error due to bias is taken as the difference between the expected (or average) prediction of our model and the correct value which we are trying to predict.
+
+* Error due to Variance:
+
+The error due to variance is taken as the variability of a model prediction for a given data point. Again, imagine you can repeat the entire model building process multiple times. The variance is how much the predictions for a given point vary between different realizations of the model
+
 
 * We need to distinguish whether bias or variance is the problem contributing to bad predictions.
 
