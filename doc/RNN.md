@@ -32,14 +32,19 @@ http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-1-introduc
 http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-2-implementing-a-language-model-rnn-with-python-numpy-and-theano/
 
 ## Basic architecture
-![LSTM_cell](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/RNN.png)
-
-The input x will be a sequence of words (just like the example printed above) and each x_t is a single word. But there’s one more thing: Because of how matrix multiplication works we can’t simply use a word index (like 36) as an input. Instead, we represent each word as a one-hot vector of size vocabulary_size. For example, the word with index 36 would be the vector of all 0’s and a 1 at position 36. So, each x_t will become a vector, and x will be a matrix, with each row representing a word. We’ll perform this transformation in our Neural Network code instead of doing it in the pre-processing. The output of our network o has a similar format. Each o_t is a vector of vocabulary_size elements, and each element represents the probability of that word being the next word in the sentence.
+![RNN](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/RNN.png)
 
 ## Model Analysis
-```math_def
-\begin{aligned}  s_t &= \tanh(Ux_t + Ws_{t-1}) \\  o_t &= \mathrm{softmax}(Vs_t)  \end{aligned}  
-```
+The input x will be a sequence of words (just like the example printed above) and each x_t is a single word. But there’s one more thing: Because of how matrix multiplication works we can’t simply use a word index (like 36) as an input. Instead, we represent each word as a one-hot vector of size vocabulary_size. For example, the word with index 36 would be the vector of all 0’s and a 1 at position 36. So, each x_t will become a vector, and x will be a matrix, with each row representing a word. We’ll perform this transformation in our Neural Network code instead of doing it in the pre-processing. The output of our network o has a similar format. Each o_t is a vector of vocabulary_size elements, and each element represents the probability of that word being the next word in the sentence.
+
+![RNN_math](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/RNN_math.png)
+
+Let’s assume we pick a vocabulary size C = 8000 and a hidden layer size H = 100. You can think of the hidden layer size as the “memory” of our network. Making it bigger allows us to learn more complex patterns, but also results in additional computation. Then we have:
+
+![RNN_math_dimension](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/RNN_math_dimension.png)
+
+This is valuable information. Remember that U,V and W are the parameters of our network we want to learn from data. Thus, we need to learn a total of 2HC + H^2 parameters. In the case of C=8000 and H=100 that’s 1,610,000. The dimensions also tell us the bottleneck of our model. Note that because x_t is a one-hot vector, multiplying it with U is essentially the same as selecting a column of U, so we don’t need to perform the full multiplication. Then, the biggest matrix multiplication in our network is Vs_t. That’s why we want to keep our vocabulary size small if possible.
+
 
 # LSTM
 http://colah.github.io/posts/2015-08-Understanding-LSTMs/
