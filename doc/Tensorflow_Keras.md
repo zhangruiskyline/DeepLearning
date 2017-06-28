@@ -18,6 +18,7 @@
 - [Batch Normalization](#batch-normalization)
   - [Intention](#intention)
   - [Process](#process)
+- [Gradient Decent Optimization Algorithm](#gradient-decent-optimization-algorithm)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -326,3 +327,8 @@ Whitening within gradient descent: Requires inverse square root of covariance ma
 * Learning of scale and shift for every dimension: Scaled and shifted values are passed to the next layer, whether mean and variances are calculated after getting all mini-batch activation of current layer. So, forward pass of all the samples within the mini-batch should pass layer wise. Backpropagation is required for getting gradient of weights as well as scaling (variance) and shift (mean).
 * Inference: During inference moving averaged mean and variance parameters during mini batch training are considered.
 * Convolution Neural Network: Whitening of intermediate layers, before or after the nonlinearity creates a lot of new innovation pathways.
+
+
+# Gradient Decent Optimization Algorithm 
+
+http://sebastianruder.com/optimizing-gradient-descent/index.html#momentum
