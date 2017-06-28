@@ -3,6 +3,8 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Introduction](#introduction)
+  - [Basic architecture](#basic-architecture)
+  - [Model Analysis](#model-analysis)
 - [LSTM](#lstm)
   - [LTSM structure](#ltsm-structure)
   - [GRU](#gru)
@@ -27,6 +29,17 @@
 # Introduction
 
 http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-1-introduction-to-rnns/
+http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-2-implementing-a-language-model-rnn-with-python-numpy-and-theano/
+
+## Basic architecture
+![LSTM_cell](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/RNN.png)
+
+The input x will be a sequence of words (just like the example printed above) and each x_t is a single word. But there’s one more thing: Because of how matrix multiplication works we can’t simply use a word index (like 36) as an input. Instead, we represent each word as a one-hot vector of size vocabulary_size. For example, the word with index 36 would be the vector of all 0’s and a 1 at position 36. So, each x_t will become a vector, and x will be a matrix, with each row representing a word. We’ll perform this transformation in our Neural Network code instead of doing it in the pre-processing. The output of our network o has a similar format. Each o_t is a vector of vocabulary_size elements, and each element represents the probability of that word being the next word in the sentence.
+
+## Model Analysis
+```math_def
+\begin{aligned}  s_t &= \tanh(Ux_t + Ws_{t-1}) \\  o_t &= \mathrm{softmax}(Vs_t)  \end{aligned}  
+```
 
 # LSTM
 http://colah.github.io/posts/2015-08-Understanding-LSTMs/
