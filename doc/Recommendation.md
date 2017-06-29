@@ -1038,4 +1038,4 @@ descriptors of the question, the viewer, and the candidate. some of the most imp
 * Labels:
 the result of the suggestion as a number (e.g. 1 for answer, 0 for no answer).
 
-![quora_A2A](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/quora_rA2A.png)
+![quora_A2A](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/quora_A2A.png)
