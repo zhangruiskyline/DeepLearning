@@ -28,7 +28,20 @@
     - [The Deep NN model](#the-deep-nn-model-1)
 - [General Framework](#general-framework)
 - [Ethical Considerations](#ethical-considerations)
-- [Applications](#applications)
+- [General Feed Rank System](#general-feed-rank-system)
+  - [Data Model](#data-model)
+    - [Basic Data model and features](#basic-data-model-and-features)
+    - [Tools available](#tools-available)
+  - [Feed Model](#feed-model)
+    - [Fan-out-on-load(Pull)](#fan-out-on-loadpull)
+    - [Fan-out-on-write(Push)](#fan-out-on-writepush)
+    - [Combine together](#combine-together)
+    - [Tools available](#tools-available-1)
+  - [Feed Rank](#feed-rank)
+    - [Model](#model)
+    - [Features](#features)
+  - [Data Pipeline](#data-pipeline)
+- [Real Applications](#real-applications)
   - [Spotify Music Recommendation](#spotify-music-recommendation)
   - [Deep Neural Networks for YouTube Recommendation](#deep-neural-networks-for-youtube-recommendation)
   - [Quora: Semantic Question Matching with Deep Learning](#quora-semantic-question-matching-with-deep-learning)
@@ -39,6 +52,8 @@
     - [feature](#feature)
     - [Answer Ranking](#answer-ranking)
     - [Ask to Answer](#ask-to-answer)
+  - [FaceBook NewsFeed: Edge rank](#facebook-newsfeed-edge-rank)
+  - [Pinteret: Smart Feed](#pinteret-smart-feed)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -865,7 +880,85 @@ People tend to unfollow people they don't agree with
 Ranking / filtering systems can further amplify this issue
 Optimizing for short-term clicks can promote clickbait contents
 
-# Applications
+# General Feed Rank System
+
+## Data Model
+
+### Basic Data model and features
+* Three Basic Data:
+  * User
+  * Activity
+  * Connection
+
+* Acitivty features
+  * time
+  * Actor: Who initialized Activity
+  * Verb: Follow, like. etc
+  * Object:
+  * target: related to verb, like "John saved a movie to his wishlist", object is movie, and target is wishlist
+  * title
+  * summary: piece of html
+  * ID: unique ID to represent
+
+* Connection features:
+  * from (Actor)
+  * to (object)
+  * type/name: connection, like, upvote. etc
+  * affinity: strength of connection
+
+### Tools available
+* User: Mysql
+* Connections: Mysql
+* Acitivty: Redis/Canssadra/Mysql
+
+## Feed Model
+
+Fan out: The process of pushing an activity to all your followers is called a fanout. The Basic fanout(like early twitter) is like:
+
+![fanout_basic](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/fanout_basic.png)
+
+### Fan-out-on-load(Pull)
+
+* Pros: simple(one SQL), real time
+* Cons: exponential grow complexity as Connection grow, need memory store everyone's activity, Scalability issue
+
+### Fan-out-on-write(Push)
+When actor generate content, push to all connections. system open area for every person's feed
+
+* Pros: easy and scalable for object, high available
+* Cons: lots of write, N copies of feed, not quite real time
+
+### Combine together
+* for acitive user, push mode, so they won't wait too longest
+* not active user, pull mode
+* Cache hot actor(with large amount of object/follower)
+
+> Etsy:
+* actor and object has high affinition. push.
+* Low affinition: pull or no push
+
+### Tools available
+* Feed store: redis: UID as key
+* Feed Push: celery(distributed queue)
+
+## Feed Rank
+
+* Need measurement metrics
+* Avoid human interaction
+
+### Model
+* Logistic regression: easy, open source,
+* Score or similarity
+
+### Features
+* User features:
+* Content Features:
+* Others
+
+## Data Pipeline 
+
+
+# Real Applications
 
 ## Spotify Music Recommendation
 
@@ -1039,3 +1132,13 @@ descriptors of the question, the viewer, and the candidate. some of the most imp
 the result of the suggestion as a number (e.g. 1 for answer, 0 for no answer).
 
 ![quora_A2A](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/quora_A2A.png)
+
+## FaceBook NewsFeed: Edge rank
+
+Blog in Chinese to explain:[https://zhuanlan.zhihu.com/p/20901694] https://zhuanlan.zhihu.com/p/20901694
+
+![edge_rank](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/edge_rank.png)
+
+## Pinteret: Smart Feed
+
+https://mp.weixin.qq.com/s?__biz=MzA4OTk5OTQzMg==&mid=2449231037&idx=1&sn=c2fc8a7d2832ea109e2abe4b773ff1f5#rd

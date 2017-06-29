@@ -14,7 +14,14 @@
     - [Model Complexity Effects:](#model-complexity-effects)
 - [Overfitting](#overfitting)
   - [How to overcome overfitting](#how-to-overcome-overfitting)
+- [Measurement](#measurement)
+  - [ROC](#roc)
+  - [AUC(Area Under the Curve)](#aucarea-under-the-curve)
 - [Advantages of some particular algorithms](#advantages-of-some-particular-algorithms)
+  - [Advantages of Naive Bayes:](#advantages-of-naive-bayes)
+  - [Advantages of Logistic Regression:](#advantages-of-logistic-regression)
+  - [Advantages of Decision Trees:](#advantages-of-decision-trees)
+  - [Advantages of SVMs:](#advantages-of-svms)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -143,20 +150,43 @@ Go for simpler models over more complicated models. Generally, the fewer paramet
   * Pre_prune: stop growing the tree earlier, before it perfectly classifies the training set.
   * Post_prune: allows the tree to perfectly classify the training set, and then post prune the tree
 
+# Measurement
+
+## ROC
+The ROC curve is created by plotting the true positive rate (TPR) against the false positive rate (FPR)
+
+![ROC](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/ROC.png)
+
+* True positive rate (TPR):
+
+aka. sensitivity, hit rate, and recall, which is defined as __TP/(TP+FN)__
+. Intuitively this metric corresponds to the proportion of positive data points that are correctly considered as positive, with respect to all positive data points. In other words, the higher TPR, the fewer positive data points we will miss.
+
+* False positive rate (FPR), aka. fall-out, which is defined as __FP/(FP+TN)__
+
+. Intuitively this metric corresponds to the proportion of negative data points that are mistakenly considered as positive, with respect to all negative data points. In other words, the higher FPR, the more negative data points we will missclassified.
+
+
+## AUC(Area Under the Curve)
+
+After we get ROC metrics, we cna plot the ROC curve, and the AUC is like
+
+![AUC](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/AUC.png)
+
 # Advantages of some particular algorithms
 
-* Advantages of Naive Bayes:
+## Advantages of Naive Bayes:
 
 Super simple, you're just doing a bunch of counts. If the NB __*conditional independence assumption actually holds*__, a Naive Bayes classifier will converge quicker than discriminative models like logistic regression, so you need less training data. And even if the NB assumption doesn't hold, a NB classifier still often performs surprisingly well in practice. A good bet if you want to do some kind of semi-supervised learning, or want something embarrassingly simple that performs pretty well.
 
-* Advantages of Logistic Regression:
+## Advantages of Logistic Regression:
 
 Lots of ways to regularize your model, and you don't have to worry as much about your features being correlated, like you do in Naive Bayes. You also have a nice probabilistic interpretation, unlike decision trees or SVMs, and you can easily update your model to take in new data (using an online gradient descent method), again unlike decision trees or SVMs. Use it if you want a probabilistic framework (e.g., to easily adjust classification thresholds, to say when you're unsure, or to get confidence intervals) or if you expect to receive more training data in the future that you want to be able to quickly incorporate into your model.
 
-* Advantages of Decision Trees:
+## Advantages of Decision Trees:
 
 Easy to interpret and explain (for some people -- I'm not sure I fall into this camp). Non-parametric, so you don't have to worry about outliers or whether the data is linearly separable (e.g., decision trees easily take care of cases where you have class A at the low end of some feature x, class B in the mid-range of feature x, and A again at the high end). Their main disadvantage is that they easily overfit, but that's where ensemble methods like random forests (or boosted trees) come in. Plus, random forests are often the winner for lots of problems in classification (usually slightly ahead of SVMs, I believe), they're fast and scalable, and you don't have to worry about tuning a bunch of parameters like you do with SVMs, so they seem to be quite popular these days.
 
-* Advantages of SVMs:
+## Advantages of SVMs:
 
 High accuracy, nice theoretical guarantees regarding overfitting, and with an appropriate kernel they can work well even if you're data isn't linearly separable in the base feature space. Especially popular in text classification problems where very high-dimensional spaces are the norm. Memory-intensive and kind of annoying to run and tune, though, so I think random forests are starting to steal the crown.
