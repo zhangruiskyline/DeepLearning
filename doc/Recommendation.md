@@ -32,7 +32,13 @@
   - [Spotify Music Recommendation](#spotify-music-recommendation)
   - [Deep Neural Networks for YouTube Recommendation](#deep-neural-networks-for-youtube-recommendation)
   - [Quora: Semantic Question Matching with Deep Learning](#quora-semantic-question-matching-with-deep-learning)
-  - [Quora Recommendation Model: Ranking answers](#quora-recommendation-model-ranking-answers)
+  - [How Quora build recommendation system](#how-quora-build-recommendation-system)
+    - [Goal and data model](#goal-and-data-model)
+    - [Feed Ranking](#feed-ranking)
+    - [Ranking algorithm](#ranking-algorithm)
+    - [feature](#feature)
+    - [Answer Ranking](#answer-ranking)
+    - [Ask to Answer](#ask-to-answer)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -904,9 +910,63 @@ Finally, we tried an attention-based approach from Google Research [4] that comb
 
 ![quora attention](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/quora_attention.png)
 
-## Quora Recommendation Model: Ranking answers
+
+## How Quora build recommendation system
 
 https://www.slideshare.net/xamat/recsys-2016-tutorial-lessons-learned-from-building-reallife-recommender-systems
+
+### Goal and data model
+The core consideration for Quora's recommendation model is like:
+
+![quora recsys](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/quora_recsys.png)
+
+And the core data flow model is like
+![quora data](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/quora_data.png)
+
+### Feed Ranking
+* Personalized Feed Ranking. Present most interesting stories for a user at a given time
+  * Interesting = topical relevance + social relevance + timeliness
+  * Stories = questions + answers
+
+*  Quora uses learning-to-rank
+  * Compared with time based ranking ,relevance based is much better
+
+* Challenges:
+  * potentially many candidate stories
+  * real-time ranking
+  * optimize for relevance
+
+* The basic data for ranking: Impression logs
+![quora impression log](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/impression_log.png)
+
+### Ranking algorithm
+![quora ranking algorithm](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/ranking_algorithm.png)
+
+* And Quora has defined a relevance score algorithm as
+![quora relevance](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/quora_relevance.png)
+
+* In Summary
+
+This is a weighted sum of actions to predict user's interet to a story. There are two ways to do so:
+
+1. predict final results
+2. predict each actions(upvote, read, share. etc) and weight sum again
+
+> The second one is more resource consuming and Explanation vice better
+
+### feature
+* Major feature categories
+  *user (e.g. age, country, recent activity)
+  *story (e.g. popularity, trendiness, quality)
+  *interactions between the two (e.g. topic or author affinity)
+
+
+* Implicit is always better than explicit
+  * More dense, available for all users
+  * Better representations of user vs user reflections
+  * Better correlated with A/B test
+
+### Answer Ranking
 
 https://engineering.quora.com/A-Machine-Learning-Approach-to-Ranking-Answers-on-Quora
 
@@ -960,3 +1020,23 @@ Ensemble always works better
   2. cache all features
   3. All this data (answer scores and feature values) is stored in HBase, which is an open-source NoSQL datastore able to handle a large volume of data and writes.
   4.  cache score sometimes is not good when answer or feature changes: Consider a user who has tens of thousands of answers on Quora. If we depend on a feature like the number of answers added by an answer author, then every time this user adds an answer, we have to update the score of all of their answers at once.stopped updating feature values if that wouldn't impact the answer score at all.
+
+### Ask to Answer
+https://engineering.quora.com/Ask-To-Answer-as-a-Machine-Learning-Problem
+
+* Frame the Problem
+Given a question and a viewer rank all other users based on how 「well-suited」 they are.
+well-suited」= likelihood of viewer sending a request + likelihood of the candidate adding a good answer
+
+Furthermore, we can derive this as:
+```
+w1⋅had_request+w2⋅had_answer+w3⋅answer_goodness+⋯
+```
+
+
+
+* Features:
+descriptors of the question, the viewer, and the candidate. some of the most important features are history related - features based on what the viewer or candidate has done in the past
+
+* Labels:
+the result of the suggestion as a number (e.g. 1 for answer, 0 for no answer).
