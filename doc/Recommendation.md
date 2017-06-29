@@ -1032,11 +1032,10 @@ Furthermore, we can derive this as:
 ```
 w1⋅had_request+w2⋅had_answer+w3⋅answer_goodness+⋯
 ```
-
-
-
 * Features:
 descriptors of the question, the viewer, and the candidate. some of the most important features are history related - features based on what the viewer or candidate has done in the past
 
 * Labels:
 the result of the suggestion as a number (e.g. 1 for answer, 0 for no answer).
+
+![quora_A2A](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/quora_rA2A.png)
