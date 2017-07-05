@@ -67,11 +67,11 @@ We can compute the spatial size of the output volume as a function of the input 
 
 ImageNet challenge in 2012 accepted images of size [227x227x3]. On the first Convolutional Layer, it used neurons with receptive field size F=11, stride S=4 and no zero padding P=0. Since (227 - 11)/4 + 1 = 55, and since the Conv layer had a depth of K=96, the Conv layer output volume had size [55x55x96].
 
-we see that there are 55*55*96 = 290,400 neurons in the first Conv Layer, and each has 11*11*3 = 363 weights and 1 bias. Together, this adds up to 290400 * 364 = 105,705,600 parameters on the first layer of the ConvNet alone. Clearly, this number is very high.
+we see that there are 55 x 55 x 96 = 290,400 neurons in the first Conv Layer, and each has 11 x 11 x 3 = 363 weights and 1 bias. Together, this adds up to 290400 * 364 = 105,705,600 parameters on the first layer of the ConvNet alone. Clearly, this number is very high.
 
 * Idea of Parameter sharing: if one feature is useful to compute at some spatial position (x,y), then it should also be useful to compute at a different position (x2,y2).
 
-In other words, denoting a single 2-dimensional slice of depth as a depth slice (e.g. a volume of size [55x55x96] has 96 depth slices, each of size [55x55]), we are going to constrain the neurons in each depth slice to use the same weights and bias. With this parameter sharing scheme, the first Conv Layer in our example would now have only 96 unique set of weights (one for each depth slice), for a total of 96*11*11*3 = 34,848 unique weights, or 34,944 parameters (+96 biases). Alternatively, all 55*55 neurons in each depth slice will now be using the same parameters.
+In other words, denoting a single 2-dimensional slice of depth as a depth slice (e.g. a volume of size [55x55x96] has 96 depth slices, each of size [55x55]), we are going to constrain the neurons in each depth slice to use the same weights and bias. With this parameter sharing scheme, the first Conv Layer in our example would now have only 96 unique set of weights (one for each depth slice), for a total of 96 x 11 x 11 x 3 = 34,848 unique weights, or 34,944 parameters (+96 biases). Alternatively, all 55x55 neurons in each depth slice will now be using the same parameters.
 
 ## Summary
 
@@ -106,6 +106,7 @@ First, the neurons would be computing a linear function over the input, while th
 
 Second, it saves parameters:
 ```shell
+//assuming we have C channels
 C×(7×7×C)=49C^2 for one big 7*7 filter
 3×(C×(3×3×C))=27C^2 for 3 stacked 3*3 filters
 
