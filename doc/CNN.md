@@ -23,6 +23,8 @@
     - [Changes made:](#changes-made)
     - [get similar image](#get-similar-image)
 - [Data Augmentation](#data-augmentation)
+- [Image and Text Co-Train](#image-and-text-co-train)
+  - [Devise model](#devise-model)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -427,3 +429,11 @@ train_flow = image_gen.flow_from_directory(train_folder)
 model.fit_generator(train_flow, train_flow.nb_sample)
 
 ```
+
+# Image and Text Co-Train
+
+## Devise model
+
+Co-Train both Image and text to generate the embedding space of each, and then calculate the similarity between image and text embedding
+
+![devise](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/devise.png)
