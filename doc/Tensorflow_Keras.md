@@ -9,6 +9,7 @@
   - [How to run](#how-to-run)
 - [A simple predict model](#a-simple-predict-model)
   - [Variable](#variable)
+    - [Example to show difference between placeholder and variable](#example-to-show-difference-between-placeholder-and-variable)
   - [Optimization](#optimization)
 - [Checkpointing and Reusing TensorFlow Models](#checkpointing-and-reusing-tensorflow-models)
   - [Saver object](#saver-object)
@@ -129,6 +130,32 @@ The next line creates a TensorFlow variable to represent the slope m. A variable
 Notice when we create the Variable objects we supply __initial values__ for the variable, and a __“trainable”__ flag. Providing TensorFlow with initial values for a variable informs TensorFlow of the dimensionality and type – in our case m and b are single dimensional Tensors of size 1, but they could just as easily be multidimensional and/or integer.
 
 ![computation graph](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/tensorflowgraph_1.png)
+
+### Example to show difference between placeholder and variable
+In short, you use __tf.Variable__ for trainable __variables__ such as weights (W) and biases (B) for your model.
+```python
+weights = tf.Variable(
+    tf.truncated_normal([IMAGE_PIXELS, hidden1_units],
+                    stddev=1.0 / math.sqrt(float(IMAGE_PIXELS))), name='weights')
+
+biases = tf.Variable(tf.zeros([hidden1_units]), name='biases')
+tf.placeholder is used to feed actual training examples.
+
+images_placeholder = tf.placeholder(tf.float32, shape=(batch_size, IMAGE_PIXELS))
+labels_placeholder = tf.placeholder(tf.int32, shape=(batch_size))
+```
+
+This is how you feed the training examples during the training:
+```python
+for step in xrange(FLAGS.max_steps):
+    feed_dict = {
+       images_placeholder: images_feed,
+       labels_placeholder: labels_feed,
+     }
+    _, loss_value = sess.run([train_op, loss], feed_dict=feed_dict)
+```
+
+Your tf.variables will be trained (modified) as the result of this training.
 
 ## Optimization
 
@@ -329,6 +356,6 @@ Whitening within gradient descent: Requires inverse square root of covariance ma
 * Convolution Neural Network: Whitening of intermediate layers, before or after the nonlinearity creates a lot of new innovation pathways.
 
 
-# Gradient Decent Optimization Algorithm 
+# Gradient Decent Optimization Algorithm
 
 http://sebastianruder.com/optimizing-gradient-descent/index.html#momentum
