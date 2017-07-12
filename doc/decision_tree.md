@@ -17,14 +17,14 @@
 - [Gradient Boosted Tree](#gradient-boosted-tree)
   - [Introduction link](#introduction-link)
   - [Residual learning to generate tree](#residual-learning-to-generate-tree)
-    - [Loss function and Taylor expansion](#loss-function-and-taylor-expansion)
-    - [New objective function](#new-objective-function)
   - [Tree ensembles Model](#tree-ensembles-model)
   - [Gradient Tree Process](#gradient-tree-process)
     - [learning model](#learning-model)
     - [Learning process](#learning-process)
 - [XGboost](#xgboost)
   - [Improvement on gradient loss function calculation](#improvement-on-gradient-loss-function-calculation)
+    - [Loss function and Taylor expansion](#loss-function-and-taylor-expansion)
+    - [New objective function](#new-objective-function)
   - [New objective function](#new-objective-function-1)
   - [Learning steps: Additive Training](#learning-steps-additive-training)
   - [Parameter selection](#parameter-selection)
@@ -159,7 +159,6 @@ Given a set of examples, S, categorised in categories ci, then:
 # Random Forest(an Ensemble Method) vs Boosted Tree
 
 The major reason is in terms of training objective, __Boosted Trees(GBM)__ tries to add new trees that compliments the already built ones.  This normally gives you better accuracy with less trees.
-
 # Gradient Boosted Tree
 
 ## Introduction [link](http://xgboost.readthedocs.io/en/latest/model.html)
@@ -171,13 +170,6 @@ The idea is to train the additive and residual from last tree, same as gradient 
 ![tree_additive_training](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/tree_additive_training.png)
 
 ![tree_additive_training_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/tree_additive_training_2.png)
-
-### Loss function and Taylor expansion
-
-![tree_additive_training_3](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/tree_additive_training_3.png)
-
-### New objective function
-![tree_additive_training_4](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/tree_additive_training_4.png)
 
 ## Tree ensembles Model
 
@@ -231,6 +223,16 @@ After introducing the model, let us begin with the real training part. How shoul
 Xgboots is a better and faster implementation for gradient boost tree
 
 ## Improvement on gradient loss function calculation
+
+### Loss function and Taylor expansion
+
+![tree_additive_training_3](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/tree_additive_training_3.png)
+
+### New objective function
+![tree_additive_training_4](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/tree_additive_training_4.png)
+
+* it only relies on first and second order gradient values.
+* This formulation applies to all general loss function. square loss is a example case.
 
 * In the general case, we take the __Taylor expansion__ of the loss function up to the __second order__
 
