@@ -17,13 +17,15 @@
 - [Gradient Boosted Tree](#gradient-boosted-tree)
   - [Introduction link](#introduction-link)
   - [Residual learning to generate tree](#residual-learning-to-generate-tree)
+    - [Loss function and Taylor expansion](#loss-function-and-taylor-expansion)
+    - [New objective function](#new-objective-function)
   - [Tree ensembles Model](#tree-ensembles-model)
   - [Gradient Tree Process](#gradient-tree-process)
     - [learning model](#learning-model)
     - [Learning process](#learning-process)
 - [XGboost](#xgboost)
   - [Improvement on gradient loss function calculation](#improvement-on-gradient-loss-function-calculation)
-  - [New objective function](#new-objective-function)
+  - [New objective function](#new-objective-function-1)
   - [Learning steps: Additive Training](#learning-steps-additive-training)
   - [Parameter selection](#parameter-selection)
   - [Features](#features)
@@ -170,6 +172,12 @@ The idea is to train the additive and residual from last tree, same as gradient 
 
 ![tree_additive_training_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/tree_additive_training_2.png)
 
+### Loss function and Taylor expansion
+
+![tree_additive_training_3](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/tree_additive_training_3.png)
+
+### New objective function
+![tree_additive_training_4](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/tree_additive_training_4.png)
 
 ## Tree ensembles Model
 
