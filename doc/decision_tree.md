@@ -13,13 +13,14 @@
   - [Problems](#problems)
   - [Basic algorithm for learning decision trees](#basic-algorithm-for-learning-decision-trees)
   - [The ID3 algorithm](#the-id3-algorithm)
-- [Random Forest(an Ensemble Method) vs Boosted Tree](#random-forestan-ensemble-method-vs-boosted-tree)
 - [Gradient Boosted Tree](#gradient-boosted-tree)
   - [Tree ensembles Model](#tree-ensembles-model)
-  - [Gradient Tree Process](#gradient-tree-process)
+    - [Different ensemble ways: bagging, boosting, stacking](#different-ensemble-ways-bagging-boosting-stacking)
+      - [Random Forest vs Boosted Tree](#random-forest-vs-boosted-tree)
+  - [Gradient Boosting Tree](#gradient-boosting-tree)
     - [learning model](#learning-model)
-    - [Learning process](#learning-process)
-  - [Residual learning to generate tree](#residual-learning-to-generate-tree)
+    - [Residual learning to generate tree](#residual-learning-to-generate-tree)
+    - [mathematic formulation for learning process](#mathematic-formulation-for-learning-process)
 - [XGboost](#xgboost)
   - [Improvement on gradient loss function calculation](#improvement-on-gradient-loss-function-calculation)
     - [Loss function and Taylor expansion](#loss-function-and-taylor-expansion)
@@ -155,9 +156,7 @@ Given a set of examples, S, categorised in categories ci, then:
     * Otherwise, remove A from the set of attributes which can be put into nodes. Then put a new node in the decision tree, where the new attribute being tested in the node is the one which scores highest for information gain relative to Sv (note: not relative to S). This new node starts the cycle again (from 2), with S replaced by Sv in the calculations and the tree gets built iteratively like this.
 
 
-# Random Forest(an Ensemble Method) vs Boosted Tree
 
-The major reason is in terms of training objective, __Boosted Trees(GBM)__ tries to add new trees that compliments the already built ones.  This normally gives you better accuracy with less trees.
 # Gradient Boosted Tree
 
 ## Tree ensembles Model
@@ -186,6 +185,18 @@ Usually, a single tree is not strong enough to be used in practice. What is actu
 
 ![xgboost_parameter](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/xgboost_para.jpg)
 
+### Different ensemble ways: bagging, boosting, stacking
+![ensemble_ways](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/ensemble_ways.png)
+
+
+#### Random Forest vs Boosted Tree
+
+The major reason is in terms of training objective, __Boosted Trees(GBM)__ tries to add new trees that compliments the already built ones.  This normally gives you better accuracy with less trees.
+
+* Random forrest decides to create a large number of them based on bagging. The basic idea is to resample the data over and over and for each sample train a new classifier. Different classifiers overfit the data in a different way, and through voting those differences are averaged out.
+
+* GBM is a boosting method, which builds on weak classifiers. The idea is to add a classifier at a time, so that the next classifier is trained to improve the already trained ensemble. Notice that for RF each iteration the classifier is trained independently from the rest
+
 > Optimizing Goal
 
 * Optimizing training loss encourages __predictive models__.Fitting well in training data at least get you close to training data which is hopefully close to the underlying distribution
@@ -195,7 +206,7 @@ The compleixty of model/regularization will be
 ![xgboost_model_complexity](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/xgboost_model_complexity.jpg)
 
 
-## Gradient Tree Process
+## Gradient Boosting Tree
 
 After introducing the model, let us begin with the real training part. How should we learn the trees? The answer is, as is always for all supervised learning models: define an objective function, and optimize it!
 
@@ -203,12 +214,13 @@ After introducing the model, let us begin with the real training part. How shoul
 
 ![xgboost_loss](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/xgboost_loss.jpg)
 
-### Learning process
+### Residual learning to generate tree
 
 ![gradient_boosting](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/gradient_boosting.jpg)
 
 
-## Residual learning to generate tree
+### mathematic formulation for learning process
+
 The idea is to train the additive and residual from last tree, same as gradient boost idea
 ![tree_additive_training](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/tree_additive_training.png)
 
