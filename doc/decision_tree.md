@@ -16,6 +16,7 @@
 - [Random Forest(an Ensemble Method) vs Boosted Tree](#random-forestan-ensemble-method-vs-boosted-tree)
 - [Gradient Boosted Tree](#gradient-boosted-tree)
   - [Introduction link](#introduction-link)
+  - [Residual learning to generate tree](#residual-learning-to-generate-tree)
   - [Tree ensembles Model](#tree-ensembles-model)
   - [Gradient Tree Process](#gradient-tree-process)
     - [learning model](#learning-model)
@@ -162,6 +163,13 @@ The major reason is in terms of training objective, __Boosted Trees(GBM)__ tries
 ## Introduction [link](http://xgboost.readthedocs.io/en/latest/model.html)
 
 Here is [presentation](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/xgboost_presentation.pdf)
+
+## Residual learning to generate tree
+The idea is to train the additive and residual from last tree, same as gradient boost idea
+![tree_additive_training](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/tree_additive_training.png)
+
+![tree_additive_training_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/tree_additive_training_2.png)
+
 
 ## Tree ensembles Model
 
