@@ -2,6 +2,12 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [Gradient Boosting](#gradient-boosting)
+  - [Additive model for residual](#additive-model-for-residual)
+  - [Gradient decent](#gradient-decent)
+  - [Loss functions](#loss-functions)
+  - [Final algorithm](#final-algorithm)
+  - [Summary](#summary)
 - [Decision Tree](#decision-tree)
   - [Choosing the attributes](#choosing-the-attributes)
   - [Problems](#problems)
@@ -25,6 +31,74 @@
   - [Xgboost vs Gradient Boost decision Tree (GBDT)](#xgboost-vs-gradient-boost-decision-tree-gbdt)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# Gradient Boosting
+referring http://www.ccs.neu.edu/home/vip/teach/MLcourse/4_boosting/slides/gradient_boosting.pdf
+
+## Additive model for residual
+
+* This one uses regression as example
+
+  * You are given (x1, y1), (x2, y2), ..., (xn, yn), and the task is to fit a model F(x) to minimize square loss.
+
+  *  Given model F. the model is good but not perfect. There are some mistakes: F(x1) = 0.8, while y1 = 0.9, and You are not allowed to remove anything from F or change any parameter in F.
+
+  * Solution is to add additional model (regression tree) h to F, so the new prediction will be F (x ) + h(x ).
+
+  * Just fit a regression tree h to data
+  (x1,y1 −F(x1)),(x2,y2 −F(x2)),...,(xn,yn −F(xn))
+
+* yi − F (xi ) are called residuals. These are the parts that existing model F cannot do well. The role of h is to compensate the shortcoming of existing model F.
+If the new model F + h is still not satisfactory, we can add another regression tree...
+
+## Gradient decent
+![gradient_loss](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/gradient_loss.png)
+So basically we have:
+
+* residual ⇔ negative gradient
+* fit h to residual ⇔ fit h to negative gradient
+* update F based on residual ⇔ update F based on negative gradient
+
+So we are actually updating our model using gradient descent!
+
+> Algorithm could be
+
+* start with an initial model
+* iterate until converge:
+  * calculate negative gradients −g(xi)
+  * fit a regression tree h to negative gradients −g(xi)
+  * F := F + ρh, where ρ = 1
+
+The benefit of formulating this algorithm using gradients is that it allows us to consider other loss functions and derive the corresponding algorithms in the same way.
+
+## Loss functions
+
+1. squared loss
+
+* Easy to deal with mathematically
+* Not robust to outliers. Outliers are heavily punished because the error is squared.
+
+Pay too much attention to outliers. Try hard to incorporate outliers into the model. Degrade the overall performance
+
+2. Absolute loss
+
+(more robust to outliers) L(y , F ) = |y − F |
+
+3. Huber loss (more robust to outliers)
+```
+(y − F )^2 if |y − F | ≤ δ
+δ(|y−F|−δ/2) if |y−F|>δ
+```
+## Final algorithm
+![regression_loss](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/regression_loss.png)
+
+## Summary
+Summary of the Section
+* Fit an additive model F =  t ρt ht in a forward stage-wise manner.
+* In each stage, introduce a new regression tree h to compensate the shortcomings of existing model.
+* The“shortcomings” are identified by negative gradients.
+* For any loss function, we can derive a gradient boostingalgorithm.
+* Absolute loss and Huber loss are more robust to outliers than square loss.
 
 # Decision Tree
 
