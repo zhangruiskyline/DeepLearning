@@ -2,28 +2,27 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [DeepLearning_Resource](#deeplearning_resource)
-- [Study Notes](#study-notes)
+- [Basic algorithm/Framework Study Notes](#basic-algorithmframework-study-notes)
   - [Applications](#applications)
+    - [Kaggle](#kaggle)
+    - [Text Classification](#text-classification)
+    - [Recommendations](#recommendations)
+    - [Industrial Usage](#industrial-usage)
 - [Book](#book)
 - [Tutorial](#tutorial)
 - [Courses](#courses)
 - [Workshop](#workshop)
 - [Blog](#blog)
-  - [Text Classification](#text-classification)
   - [Blog Posts](#blog-posts)
 - [Code and Framework](#code-and-framework)
-- [Industrial Usage](#industrial-usage)
 - [Open Source](#open-source)
 - [All Code Implementations for NIPS 2016 papers](#all-code-implementations-for-nips-2016-papers)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# DeepLearning_Resource
+# Basic algorithm/Framework Study Notes
 
 [Basics Machine learning](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/Basics_Machine_learning.md)
-
-# Study Notes
 
 [CNN](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/CNN.md)
 
@@ -35,11 +34,28 @@
 
 [SVM](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/SVM.md)
 
+[Machine Learning system design](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/system.md)
+
 ## Applications
 
-* [Recommendation using DL](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/Recommendation.md)
+### Kaggle
 
 * [Kaggle experience](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/Kaggle.md)
+
+### Text Classification
+
+* Convolutional Neural Networks for Sentence Classification. [Paper](https://www.cs.cmu.edu/%7Ediyiy/docs/naacl16.pdf) and [blog post](https://richliao.github.io/supervised/classification/2016/11/26/textclassifier-convolutional/)
+
+* Bidirectional LSTM and one level attentional RNN. [blog](https://richliao.github.io/supervised/classification/2016/12/26/textclassifier-RNN/)
+
+### Recommendations
+* [Recommendation using DL](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/Recommendation.md)
+
+### Industrial Usage
+
+* [How does Quora use machine learning in 2017?](https://www.quora.com/How-does-Quora-use-machine-learning-in-2017/answer/Nikhil-Dandekar?utm_source=wanqu.co&utm_campaign=Wanqu+Daily&utm_medium=website)
+
+* [Using Deep Learning at Scale in Twitter’s Timelines](https://blog.twitter.com/2017/using-deep-learning-at-scale-in-twitter-s-timelines?utm_campaign=Revue%20newsletter&utm_medium=Newsletter&utm_source=revue)
 
 # Book
 * [Deep Learning: An MIT Press Book](http://www.deeplearningbook.org)
@@ -115,12 +131,6 @@
 
 * [AI, Deep Learning and NLP (By Denny Britz in Google Brain)](http://www.wildml.com)
 
-## Text Classification
-
-* Convolutional Neural Networks for Sentence Classification. [Paper](https://www.cs.cmu.edu/%7Ediyiy/docs/naacl16.pdf) and [blog post](https://richliao.github.io/supervised/classification/2016/11/26/textclassifier-convolutional/)
-
-* Bidirectional LSTM and one level attentional RNN. [blog](https://richliao.github.io/supervised/classification/2016/12/26/textclassifier-RNN/)
-
 
 ## Blog Posts
 
@@ -137,12 +147,6 @@
 
 * [LEARNING REINFORCEMENT LEARNING (WITH CODE, EXERCISES AND SOLUTIONS)](http://www.wildml.com/2016/10/learning-reinforcement-learning/)
     * [Github link](https://github.com/dennybritz/reinforcement-learning)
-
-# Industrial Usage
-
-* [How does Quora use machine learning in 2017?](https://www.quora.com/How-does-Quora-use-machine-learning-in-2017/answer/Nikhil-Dandekar?utm_source=wanqu.co&utm_campaign=Wanqu+Daily&utm_medium=website)
-
-* [Using Deep Learning at Scale in Twitter’s Timelines](https://blog.twitter.com/2017/using-deep-learning-at-scale-in-twitter-s-timelines?utm_campaign=Revue%20newsletter&utm_medium=Newsletter&utm_source=revue)
 
 # Open Source
 
