@@ -82,9 +82,10 @@ The worker machine diagram looks like:
 ![Stochastic_average](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/stochastic_average.png)
 
 If we again define our loss function as L, then parameter vector W at iteration i + 1 for simple SGD training with learning rate α is obtained by:
-![Stochastic_average_math_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/stochastic_average_math_2.png)
 
-![Stochastic_average_math_3](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/stochastic_average_math_3.png)
+![Stochastic_average_math_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Stochastic_average_math_2.png)
+
+![Stochastic_average_math_3](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Stochastic_average_math_3.png)
 
 Consequently, there is an equivalence between parameter averaging and update-based data parallelism, when parameters are updated synchronously (this last part is key). This equivalence also holds for multiple averaging steps and other updaters (not just simple SGD).
 
