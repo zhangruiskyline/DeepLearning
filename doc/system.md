@@ -14,6 +14,12 @@
       - [Recovery](#recovery)
       - [Consensus Protocol](#consensus-protocol)
       - [Routing](#routing)
+- [Tree based Allreduce vs Ring based Allreduce](#tree-based-allreduce-vs-ring-based-allreduce)
+  - [limitations of Tree Allreduce](#limitations-of-tree-allreduce)
+  - [Ring Allreduce](#ring-allreduce)
+    - [Scatter-Reduce](#scatter-reduce)
+    - [AllGather](#allgather)
+    - [Overhead Analysis](#overhead-analysis)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -88,3 +94,56 @@ for recovery.
 Routing: Once the model version to recover is agreed among the nodes, the routing protocol executes. It finds the shortest path a failed node needs to use in order to retrieve the model. It uses two rounds of message passing.
 * The first round computes the distance from a failed node to the nearest node that has the model.
 * The second round sends requests through the shortest path until it reaches the node that owns the model, and retrieves it.
+
+# Tree based Allreduce vs Ring based Allreduce
+
+## limitations of Tree Allreduce
+![allreduce_issue](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/allreduce_issue.png)
+
+If we have 300M parameters and each is 4 Bytes. it will have 1.2G data, and assuming bandwidth is 1GB/s. if we use 2 GPUs, delayed 1.2s, 10 GPUs, delayed 10.8s for each epoch
+
+## Ring Allreduce
+GPUs have been placed in logical ring. GPU get data from left GPU and sends to right GPU
+![ring_reduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/ring_reduce.png)
+
+### Scatter-Reduce
+assuming we have N GPUs in system and every GPU has same length array. GPU will chunk the data into N small pieces.
+
+GPU will execute N-1 times iterations. In every iteration, sender and receiver are different. n GPU will send n block and receive n-1  
+
+```
+GPU #, Send, receive
+0 Chunk 0 Chunk 4
+1 Chunk 1 Chunk 0
+2 Chunk 2 Chunk 1
+3 Chunk 3 Chunk 2
+4 Chunk 4 Chunk 3
+```
+
+The figure shows the data flow for one iteration
+![ringreduce_data](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/ringreduce_data.png)
+
+This figure shows middle results after one iteration
+![ringreduce_middle](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/ringreduce_middle.png)
+
+At the end, every GPU block will have all results from same blocks along other GPUs
+![ringreduce_end](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/ringreduce_end.png)
+
+### AllGather
+After scatter reduce, every GPU has some values from all GPUs, they need to exchange these values so all GPUs have all values
+
+allgather is same as scatter reduce, except that it is not sum, just simple copy, the process will look like
+![allgather](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/allgather.png)
+
+And after N-1 iteration, final results will be
+![allgather_end](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/allgather_end.png)
+
+### Overhead Analysis
+* Communication cost
+
+N GPUs, in Scatter-Reduce stage, each one will have N-1 data receiving, and send k data(K is array length in single GPU), in allgather stage, another N-1 receving and N sending
+
+For Each GPU,
+```
+2(N−1)⋅K
+```
