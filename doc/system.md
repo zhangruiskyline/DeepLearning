@@ -2,6 +2,10 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [Distributed Machine Learning](#distributed-machine-learning)
+  - [model parallelism vs data parallelism](#model-parallelism-vs-data-parallelism)
+  - [Data Parallelism](#data-parallelism)
+    - [Parameter Averaging](#parameter-averaging)
 - [MPI](#mpi)
   - [MPI Reduce and Allreduce](#mpi-reduce-and-allreduce)
 - [RABIT: A Reliable Allreduce and Broadcast Interface](#rabit-a-reliable-allreduce-and-broadcast-interface)
@@ -20,8 +24,96 @@
     - [Scatter-Reduce](#scatter-reduce)
     - [AllGather](#allgather)
     - [Overhead Analysis](#overhead-analysis)
+- [Allreduce vs Paramter server](#allreduce-vs-paramter-server)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# Distributed Machine Learning
+
+## model parallelism vs data parallelism
+
+In model parallelism, different machines in the distributed system are responsible for the computations in different parts of a single network - for example, each layer in the neural network may be assigned to a different machine.
+
+In data parallelism, different machines have a complete copy of the model; each machine simply gets a different portion of the data, and results from each are somehow combined.
+
+Of course, these approaches are not mutually exclusive. Consider a cluster of multi-GPU systems. We could use model parallelism (model split across GPUs) for each machine, and data parallelism between machines.
+
+## Data Parallelism
+
+Data parallel approaches to distributed training keep a copy of the entire model on each worker machine, processing different subsets of the training data set on each. Data parallel training approaches all require some method of combining results and synchronizing the model parameters between each worker. A number of different approaches have been discussed in the literature, and the primary differences between approaches are
+
+* Parameter averaging vs. update (gradient)-based approaches
+* Synchronous vs. asynchronous methods
+* Centralized vs. distributed synchronization
+
+### Parameter Averaging
+Parameter averaging is the conceptually simplest approach to data parallelism. With parameter averaging, training proceeds as follows:
+
+1. Initialize the network parameters randomly based on the model configuration
+2. Distribute a copy of the current parameters to each worker
+3. Train each worker on a subset of the data
+4. Set the global parameters to the average the parameters from each worker
+5. While there is more data to process, go to step 2
+
+![parameter_average](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/parameter_average.png)
+
+Steps 2 through 4 are demonstrated in the image below. In this diagram, W represents the parameters (weights, biases) in the neural network. Subscripts are used to index the version of the parameters over time, and where necessary for each worker machine.
+
+
+```XML
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msub>
+    <mi>W</mi>
+    <mrow class="MJX-TeXAtom-ORD">
+      <mi>i</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>W</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>&#x2212;<!-- − --></mo>
+  <mfrac>
+    <mi>&#x03B1;<!-- α --></mi>
+    <mrow>
+      <mi>n</mi>
+      <mi>m</mi>
+    </mrow>
+  </mfrac>
+  <munderover>
+    <mo>&#x2211;<!-- ∑ --></mo>
+    <mrow class="MJX-TeXAtom-ORD">
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow class="MJX-TeXAtom-ORD">
+      <mi>n</mi>
+      <mi>m</mi>
+    </mrow>
+  </munderover>
+  <mfrac>
+    <mrow>
+      <mi mathvariant="normal">&#x2202;<!-- ∂ --></mi>
+      <msup>
+        <mi>L</mi>
+        <mi>j</mi>
+      </msup>
+    </mrow>
+    <mrow>
+      <mi mathvariant="normal">&#x2202;<!-- ∂ --></mi>
+      <msub>
+        <mi>W</mi>
+        <mi>i</mi>
+      </msub>
+    </mrow>
+  </mfrac>
+</math>
+
+```
 
 # MPI
 
@@ -147,3 +239,5 @@ For Each GPU,
 ```
 2(N−1)⋅K
 ```
+
+# Allreduce vs Paramter server
