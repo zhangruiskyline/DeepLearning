@@ -6,6 +6,9 @@
   - [model parallelism vs data parallelism](#model-parallelism-vs-data-parallelism)
   - [Data Parallelism](#data-parallelism)
     - [Parameter Averaging](#parameter-averaging)
+    - [Update based method](#update-based-method)
+    - [Asychronous Stochastic Gradient Descent](#asychronous-stochastic-gradient-descent)
+  - [Distributed Asychronous Stochastic Gradient Descent](#distributed-asychronous-stochastic-gradient-descent)
 - [MPI](#mpi)
   - [MPI Reduce and Allreduce](#mpi-reduce-and-allreduce)
 - [RABIT: A Reliable Allreduce and Broadcast Interface](#rabit-a-reliable-allreduce-and-broadcast-interface)
@@ -59,61 +62,56 @@ Parameter averaging is the conceptually simplest approach to data parallelism. W
 
 Steps 2 through 4 are demonstrated in the image below. In this diagram, W represents the parameters (weights, biases) in the neural network. Subscripts are used to index the version of the parameters over time, and where necessary for each worker machine.
 
+we instead perform learning on m examples in each of the n workers (where worker 1 gets examples 1, ..., m, worker 2 gets examples m + 1, ..., 2m and so on), we have:
 
-```XML
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <msub>
-    <mi>W</mi>
-    <mrow class="MJX-TeXAtom-ORD">
-      <mi>i</mi>
-      <mo>+</mo>
-      <mn>1</mn>
-    </mrow>
-  </msub>
-  <mo>=</mo>
-  <msub>
-    <mi>W</mi>
-    <mi>i</mi>
-  </msub>
-  <mo>&#x2212;<!-- − --></mo>
-  <mfrac>
-    <mi>&#x03B1;<!-- α --></mi>
-    <mrow>
-      <mi>n</mi>
-      <mi>m</mi>
-    </mrow>
-  </mfrac>
-  <munderover>
-    <mo>&#x2211;<!-- ∑ --></mo>
-    <mrow class="MJX-TeXAtom-ORD">
-      <mi>j</mi>
-      <mo>=</mo>
-      <mn>1</mn>
-    </mrow>
-    <mrow class="MJX-TeXAtom-ORD">
-      <mi>n</mi>
-      <mi>m</mi>
-    </mrow>
-  </munderover>
-  <mfrac>
-    <mrow>
-      <mi mathvariant="normal">&#x2202;<!-- ∂ --></mi>
-      <msup>
-        <mi>L</mi>
-        <mi>j</mi>
-      </msup>
-    </mrow>
-    <mrow>
-      <mi mathvariant="normal">&#x2202;<!-- ∂ --></mi>
-      <msub>
-        <mi>W</mi>
-        <mi>i</mi>
-      </msub>
-    </mrow>
-  </mfrac>
-</math>
+![parameter_average_math](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/parameter_average_math.png)
 
-```
+
+Now, parameter averaging is conceptually simple, but there are a few complications that we’ve glossed over.
+
+First, how should we implement averaging? The naive approach is to simply average the parameters after each iteration. While this can work, we are likely to find that the overhead of doing so to be impractically high; network communication and synchronization costs may overwhelm the benefit obtained from the extra machines. Consequently, parameter averaging is generally implemented with an averaging period (in terms of number of minibatches per worker) greater than 1. However, if we average too infrequently, the local parameters in each worker may diverge too much, resulting in a poor model after averaging. The intuition here is that the average of N different local minima are not guaranteed to be a local minima:
+
+### Update based method
+
+A conceptually similar approach to parameter averaging is what we might call ‘update based’ data parallelism. The primary difference between the two is that instead of transferring parameters from the workers to the parameter server, we will transfer the updates (i.e., gradients post learning rate and momentum, etc.) instead. This gives an update of the form:
+
+![Stochastic_average_math](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/stochastic_average_math.png)
+
+The worker machine diagram looks like:
+
+![Stochastic_average](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/stochastic_average.png)
+
+If we again define our loss function as L, then parameter vector W at iteration i + 1 for simple SGD training with learning rate α is obtained by:
+![Stochastic_average_math_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/stochastic_average_math_2.png)
+
+![Stochastic_average_math_3](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/stochastic_average_math_3.png)
+
+Consequently, there is an equivalence between parameter averaging and update-based data parallelism, when parameters are updated synchronously (this last part is key). This equivalence also holds for multiple averaging steps and other updaters (not just simple SGD).
+
+### Asychronous Stochastic Gradient Descent
+
+Update-based data parallelism becomes more interesting (and arguably more useful) when we relax the synchronous update requirement. That is, by allowing the updates ∆Wi,j to be applied to the parameter vector as soon as they are computed (instead of waiting for N ≥ 1 iterations by all workers), we obtain asynchronous stochastic gradient descent algorithm. Async SGD has two main benefits:
+
+* First, we can potentially gain higher throughput in our distributed system: workers can spend more time performing useful computations, instead of waiting around for the parameter averaging step to be completed.
+
+* Second, workers can potentially incorporate information (parameter updates) from other workers sooner than when using synchronous (every N steps) updating.
+
+By introducing asynchronous updates to the parameter vector, we introduce a new problem, known as the stale gradient problem. The stale gradient problem is quite simple: the calculation of gradients (updates) takes time. By the time a worker has finished these calculations and applies the results to the global parameter vector, the parameters may have been updated a number of times. This problem is illustrated in the figure below.
+
+![stale_gradient](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/stale_gradient.png)
+
+Most variants of asynchronous stochastic gradient descent maintain the same basic approach, but apply a variety of strategies to minimize the impact of the stale gradients, whilst attempting to maintaining high cluster utilization. It should be noted that parameter averaging is not subject to the stale gradient problem due to the synchronous nature of the algorithm.
+
+* Scaling the value λ separately for each update ∆Wi,j based on the staleness of the gradients
+
+* Implementing ‘soft’ synchronization protocols ([9])
+
+* Use synchronization to bound staleness. For example, the system of [4] delays faster workers when necessary, to ensure that the maximum staleness is below some threshold
+
+## Distributed Asychronous Stochastic Gradient Descent
+
+* No centralized parameter server is present in the system (instead, peer to peer communication is used to transmit model updates between workers).
+* Updates are heavily compressed, resulting in the size of network communications being reduced by some 3 orders of magnitude.
 
 # MPI
 
