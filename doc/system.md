@@ -9,6 +9,12 @@
     - [Update based method](#update-based-method)
     - [Asychronous Stochastic Gradient Descent](#asychronous-stochastic-gradient-descent)
   - [Distributed Asychronous Stochastic Gradient Descent](#distributed-asychronous-stochastic-gradient-descent)
+- [Parameter Server](#parameter-server)
+  - [System view](#system-view)
+    - [Challenge](#challenge)
+    - [Large data](#large-data)
+    - [Synchronization](#synchronization)
+    - [Fault tolerance](#fault-tolerance)
 - [MPI](#mpi)
   - [MPI Reduce and Allreduce](#mpi-reduce-and-allreduce)
 - [RABIT: A Reliable Allreduce and Broadcast Interface](#rabit-a-reliable-allreduce-and-broadcast-interface)
@@ -113,6 +119,48 @@ Most variants of asynchronous stochastic gradient descent maintain the same basi
 
 * No centralized parameter server is present in the system (instead, peer to peer communication is used to transmit model updates between workers).
 * Updates are heavily compressed, resulting in the size of network communications being reduced by some 3 orders of magnitude.
+
+# Parameter Server
+
+## System view
+* Initialize model with small random values Paid Once
+  * fairly trivial to parallelize
+* Try to train the right answer for your input set Iterate through the input set many many times
+* Adjust the model: Send a small update to the model parameters
+
+### Challenge
+
+* Three main challenges of implementing a parameter server:
+  * Accessing parameters requires lots of network bandwidth
+  * Training is sequential and synchronization is hard to scale
+  * Fault tolerance at scale (~25% failure rate for 10k machine-hour jobs)
+
+* General purpose machine-learning frameworks
+  * Many have synchronization points -> difficult to scale
+  * Key observation: cache state between iterations
+
+### Large data
+
+What are parameters of a ML model? Usually an element of a vector, matrix, etc. Need to do lots of linear algebra operations.
+
+* Introduce new constraint: ordered keys
+* Typically some index into a linear algebra structure
+* High model complexity leads to overfitting: Updates don’t touch many parameters
+  * Range push-and-pull: Can update a range of rows instead of single key
+  * When sending ranges, use compression
+
+### Synchronization
+
+* ML models try to find a good local min/min
+* Need updates to be generally in the right direction
+* Not important to have strong consistency guarantees all the time
+* Parameter server introduces Bounded Delay
+
+### Fault tolerance
+* Server stores all state, workers are stateless
+  * However, workers cache state across iterations
+* Keys are replicated for fault tolerance
+* Jobs are rerun if a worker fails
 
 # MPI
 
@@ -240,3 +288,4 @@ For Each GPU,
 ```
 
 # Allreduce vs Paramter server
+http://hunch.net/?p=151364
