@@ -39,6 +39,8 @@
 
 # Distributed Machine Learning
 
+http://dlsys.cs.washington.edu/schedule
+
 ## model parallelism vs data parallelism
 
 In model parallelism, different machines in the distributed system are responsible for the computations in different parts of a single network - for example, each layer in the neural network may be assigned to a different machine.
