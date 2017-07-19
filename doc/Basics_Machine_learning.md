@@ -14,6 +14,11 @@
     - [Model Complexity Effects:](#model-complexity-effects)
 - [Overfitting](#overfitting)
   - [How to overcome overfitting](#how-to-overcome-overfitting)
+- [Dimension Reduction](#dimension-reduction)
+  - [PCA](#pca)
+- [Hyperparameter](#hyperparameter)
+  - [Grid search](#grid-search)
+  - [Bayesian Optimization for Hyperparameter Tuning](#bayesian-optimization-for-hyperparameter-tuning)
 - [Measurement](#measurement)
   - [ROC](#roc)
   - [AUC(Area Under the Curve)](#aucarea-under-the-curve)
@@ -149,6 +154,28 @@ Go for simpler models over more complicated models. Generally, the fewer paramet
 * Decision Tree tends to have overfitting: The ID3 algorithm will grow each branch in the tree just deep enough to classify the training instances perfectly
   * Pre_prune: stop growing the tree earlier, before it perfectly classifies the training set.
   * Post_prune: allows the tree to perfectly classify the training set, and then post prune the tree
+
+# Dimension Reduction
+
+## PCA
+* Standardize the data/normalization
+* Obtain the Eigenvectors and Eigenvalues from the covariance matrix or correlation matrix, or perform Singular Vector Decomposition.
+* Sort eigenvalues in descending order and choose the k eigenvectors that correspond to the k largest eigenvalues where k is the number of dimensions of the new feature subspace (k≤d).
+* Construct the projection matrix W from the selected k eigenvectors.
+* Transform the original dataset X via W to obtain a k-dimensional feature subspace Y.
+
+# Hyperparameter
+
+## Grid search
+In grid search, we try a set of configurations of hyperparameters and train the algorithm accordingly, choosing the hyperparameter configuration that gives the best performance. In practice, practitioners specify the bounds and steps between values of the hyperparameters, so that it forms a grid of configurations.
+
+Grid search is a costly approach. Assuming we have n hyperparameters and each hyperparameter has two values, then the total number of configurations is 2^{n}. Therefore it is only feasible to do grid search on a small number of configurations.
+
+## Bayesian Optimization for Hyperparameter Tuning
+
+https://arimo.com/data-science/2016/bayesian-optimization-hyperparameter-tuning/
+
+
 
 # Measurement
 
