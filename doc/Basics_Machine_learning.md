@@ -163,6 +163,8 @@ Go for simpler models over more complicated models. Generally, the fewer paramet
 ## PCA
 * Standardize the data/normalization
 * Obtain the Eigenvectors and Eigenvalues from the covariance matrix or correlation matrix, or perform Singular Vector Decomposition.
+  * covariance:
+  ![covariance](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/covariance.png)
 * Sort eigenvalues in descending order and choose the k eigenvectors that correspond to the k largest eigenvalues where k is the number of dimensions of the new feature subspace (k≤d).
 * Construct the projection matrix W from the selected k eigenvectors.
 * Transform the original dataset X via W to obtain a k-dimensional feature subspace Y.
@@ -194,9 +196,6 @@ In practice, different algorithms answer this question differently (based on the
 repeat the following:
 
 ![Bayesian_Optimization](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Bayesian_Optimization.png)
-
-
-
 
 # Measurement
 
