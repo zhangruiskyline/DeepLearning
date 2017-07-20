@@ -19,6 +19,8 @@
 - [Hyperparameter](#hyperparameter)
   - [Grid search](#grid-search)
   - [Bayesian Optimization for Hyperparameter Tuning](#bayesian-optimization-for-hyperparameter-tuning)
+    - [general idea](#general-idea)
+    - [Process](#process)
 - [Measurement](#measurement)
   - [ROC](#roc)
   - [AUC(Area Under the Curve)](#aucarea-under-the-curve)
@@ -166,6 +168,8 @@ Go for simpler models over more complicated models. Generally, the fewer paramet
 
 # Hyperparameter
 
+https://jmhessel.github.io/Bayesian-Optimization/
+
 ## Grid search
 In grid search, we try a set of configurations of hyperparameters and train the algorithm accordingly, choosing the hyperparameter configuration that gives the best performance. In practice, practitioners specify the bounds and steps between values of the hyperparameters, so that it forms a grid of configurations.
 
@@ -173,7 +177,23 @@ Grid search is a costly approach. Assuming we have n hyperparameters and each hy
 
 ## Bayesian Optimization for Hyperparameter Tuning
 
+### general idea
 https://arimo.com/data-science/2016/bayesian-optimization-hyperparameter-tuning/
+
+At a high level, Bayesian Optimization offers a principled method of hyperparameter searching that takes advantage of information one learns during the optimization process. The idea is as follows: you pick some prior belief (it is Bayesian, after all) about how your parameters behave, and search the parameter space of interest by enforcing and updating that prior belief based on your ongoing measurements.
+
+Slightly more specifically, Bayesian Optimization algorithms place a Gaussian Process (GP) prior on your function of interest (in this case, the function that maps from parameter settings to validation set performance). By assuming this prior and updating it after each evaluation of parameter settings, one can infer the shape and structure of the underlying function one is attempting to optimize.
+
+
+The fundamental question of Bayesian Optimization is: given this set of evaluations, where should we look next? The answer is not obvious. We are fairly confident about the value of the function in regions close to where we evaluate, so perhaps it is best to evaluate in these regions? On the other hand, the unknown function may have a smaller value we’d like to find further away from the region we’ve already explored, though we are less confident in that expectation, as illustrated by the wide confidence intervals.
+
+In practice, different algorithms answer this question differently (based on their so-called acquisition function) but all address the balance between exploration (going to new, unknown regions of parameter space) and exploitation (optimizing within regions where you have higher confidence) to determine good settings of hyperparameters.
+
+### Process
+repeat the following: 
+
+![Bayesian_Optimization](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Bayesian_Optimization.png)
+
 
 
 
