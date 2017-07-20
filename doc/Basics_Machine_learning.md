@@ -24,6 +24,7 @@
 - [Measurement](#measurement)
   - [ROC](#roc)
   - [AUC(Area Under the Curve)](#aucarea-under-the-curve)
+- [Feature Selection](#feature-selection)
 - [Advantages of some particular algorithms](#advantages-of-some-particular-algorithms)
   - [Advantages of Naive Bayes:](#advantages-of-naive-bayes)
   - [Advantages of Logistic Regression:](#advantages-of-logistic-regression)
@@ -190,7 +191,7 @@ The fundamental question of Bayesian Optimization is: given this set of evaluati
 In practice, different algorithms answer this question differently (based on their so-called acquisition function) but all address the balance between exploration (going to new, unknown regions of parameter space) and exploitation (optimizing within regions where you have higher confidence) to determine good settings of hyperparameters.
 
 ### Process
-repeat the following: 
+repeat the following:
 
 ![Bayesian_Optimization](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Bayesian_Optimization.png)
 
@@ -219,6 +220,8 @@ aka. sensitivity, hit rate, and recall, which is defined as __TP/(TP+FN)__
 After we get ROC metrics, we cna plot the ROC curve, and the AUC is like
 
 ![AUC](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/AUC.png)
+
+# Feature Selection
 
 # Advantages of some particular algorithms
 
