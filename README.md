@@ -3,11 +3,18 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Basic algorithm/Framework Study Notes](#basic-algorithmframework-study-notes)
-  - [Applications](#applications)
-    - [Kaggle](#kaggle)
-    - [Text Classification](#text-classification)
-    - [Recommendations](#recommendations)
-    - [Industrial Usage](#industrial-usage)
+  - [Basics Machine learning](#basics-machine-learning)
+  - [CNN](#cnn)
+  - [RNN](#rnn)
+  - [TensorFlow](#tensorflow)
+  - [Tree](#tree)
+  - [SVM](#svm)
+  - [Machine learning system](#machine-learning-system)
+- [Applications](#applications)
+  - [Kaggle](#kaggle)
+  - [Text Classification](#text-classification)
+  - [Recommendations](#recommendations)
+  - [Industrial Usage](#industrial-usage)
 - [Book](#book)
 - [Tutorial](#tutorial)
 - [Courses](#courses)
@@ -22,36 +29,44 @@
 
 # Basic algorithm/Framework Study Notes
 
+## Basics Machine learning
 [Basics Machine learning](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/Basics_Machine_learning.md)
 
+## CNN
 [CNN](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/CNN.md)
 
+## RNN
 [RNN](https://github.com/zhangruiskyline/DeepLearning/blob/master/doc/RNN.md)
+
+## TensorFlow
 
 [TensorFlow and Keras](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/Tensorflow_Keras.md)
 
+## Tree
 [Tree(decision_tree,xgboost)](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/decision_tree.md)
 
+## SVM
 [SVM](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/SVM.md)
 
+## Machine learning system
 [Machine Learning system design](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/system.md)
 
-## Applications
+# Applications
 
-### Kaggle
+## Kaggle
 
 * [Kaggle experience](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/Kaggle.md)
 
-### Text Classification
+## Text Classification
 
 * Convolutional Neural Networks for Sentence Classification. [Paper](https://www.cs.cmu.edu/%7Ediyiy/docs/naacl16.pdf) and [blog post](https://richliao.github.io/supervised/classification/2016/11/26/textclassifier-convolutional/)
 
 * Bidirectional LSTM and one level attentional RNN. [blog](https://richliao.github.io/supervised/classification/2016/12/26/textclassifier-RNN/)
 
-### Recommendations
+## Recommendations
 * [Recommendation using DL](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/Recommendation.md)
 
-### Industrial Usage
+## Industrial Usage
 
 * [How does Quora use machine learning in 2017?](https://www.quora.com/How-does-Quora-use-machine-learning-in-2017/answer/Nikhil-Dandekar?utm_source=wanqu.co&utm_campaign=Wanqu+Daily&utm_medium=website)
 
