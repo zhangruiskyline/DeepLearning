@@ -30,6 +30,10 @@
   - [Advantages of Logistic Regression:](#advantages-of-logistic-regression)
   - [Advantages of Decision Trees:](#advantages-of-decision-trees)
   - [Advantages of SVMs:](#advantages-of-svms)
+- [Interview Questions](#interview-questions)
+  - [Design a iphone APP recommendation system(Siri Recommendation)](#design-a-iphone-app-recommendation-systemsiri-recommendation)
+  - [Design Search Autocomplete System](#design-search-autocomplete-system)
+  - [Improve accuracy](#improve-accuracy)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -239,3 +243,47 @@ Easy to interpret and explain (for some people -- I'm not sure I fall into this 
 ## Advantages of SVMs:
 
 High accuracy, nice theoretical guarantees regarding overfitting, and with an appropriate kernel they can work well even if you're data isn't linearly separable in the base feature space. Especially popular in text classification problems where very high-dimensional spaces are the norm. Memory-intensive and kind of annoying to run and tune, though, so I think random forests are starting to steal the crown.
+
+# Interview Questions
+
+## Design a iphone APP recommendation system(Siri Recommendation)
+
+1. overall system:
+
+* Training data: each user click data/select or not . and their feature list,
+* Model:  NN model. GBT
+* Output:  regression/classification,
+
+offline model. for training,  online mode, for serving
+
+how to measure accuracy
+
+2. Feature selection
+
+* static features: ID, gender, age, country,
+* dynamic: time, location,
+
+3. Optimization:
+
+* data
+
+100M iphone, each record is 10 Bytes, 1000 records per day/user, 1T per day/user.
+how to compress: only upload once per day, do local data analysis/aggregation first
+
+* networking:
+
+if model is heavy, then probably need a local model, with rough estimation, like local model with less accuracy.
+
+* Real time
+
+need to be fast, could start after take out phone instead of unlock
+
+## Design Search Autocomplete System
+
+
+## Improve accuracy
+
+current model is 85%, what could be next step to increase to 90%.
+
+* data: is training representing all distribution enough? is data enough?
+* model: overfitting
