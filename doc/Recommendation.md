@@ -955,7 +955,7 @@ When actor generate content, push to all connections. system open area for every
 * Content Features:
 * Others
 
-## Data Pipeline 
+## Data Pipeline
 
 
 # Real Applications
@@ -982,6 +982,8 @@ f(q1, q2) → 0 or 1
 * Current model
 
 Our current production model for solving this problem is a random forest model with tens of handcrafted features, including the cosine similarity of the average of the word2vec embeddings of tokens, the number of common words, the number of common topics labeled on the questions, and the part-of-speech tags of the words.
+
+Tips: questions may be different length, so we need to force them to same size.
 
 * Improvement
 
