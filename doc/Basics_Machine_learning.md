@@ -33,7 +33,14 @@
 - [Interview Questions](#interview-questions)
   - [Design a iphone APP recommendation system(Siri Recommendation)](#design-a-iphone-app-recommendation-systemsiri-recommendation)
   - [Design Search Autocomplete System](#design-search-autocomplete-system)
+- [Debug the Machine Learning system](#debug-the-machine-learning-system)
   - [Improve accuracy](#improve-accuracy)
+  - [37 Reasons why your Neural Network is not working](#37-reasons-why-your-neural-network-is-not-working)
+    - [Start Point](#start-point)
+    - [Dataset issues](#dataset-issues)
+    - [Data Normalization/Augmentation issues](#data-normalizationaugmentation-issues)
+    - [Implementation issues](#implementation-issues)
+    - [Training issues](#training-issues)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -280,6 +287,7 @@ need to be fast, could start after take out phone instead of unlock
 
 ## Design Search Autocomplete System
 
+# Debug the Machine Learning system
 
 ## Improve accuracy
 
@@ -287,3 +295,131 @@ current model is 85%, what could be next step to increase to 90%.
 
 * data: is training representing all distribution enough? is data enough?
 * model: overfitting
+
+
+## 37 Reasons why your Neural Network is not working
+
+https://blog.slavv.com/37-reasons-why-your-neural-network-is-not-working-4020854bd607
+
+### Start Point
+
+* Start with a simple model that is known to work for this type of data (for example, VGG for images). Use a standard loss if possible.
+* Turn off all bells and whistles, e.g. regularization and data augmentation.
+* If fine tuning a model, double check the preprocessing, for it should be the same as the original model’s training.
+* Verify that the input data is correct.
+* Start with a really small dataset (2–20 samples). Overfit on it and gradually add more data.
+* Start gradually adding back all the pieces that were omitted: augmentation/regularization, custom loss functions, try more complex models.
+
+### Dataset issues
+
+* Examine Input
+
+  * Check your input data
+
+  I’ve more than once mixed the width and the height of an image. Sometimes, I would feed all zeroes by mistake. Or I would use the same batch over and over. So print/display a couple of batches of input and target output and make sure they are OK.
+
+  * Try random input
+
+  Try passing random numbers instead of actual data and see if the error behaves the same way. If it does, it’s a sure sign that your net is turning data into garbage at some point. Try debugging layer by layer /op by op/ and see where things go wrong.
+
+  * Check the data loader
+
+  * Is the relationship between input and output too random?
+
+  Maybe the non-random part of the relationship between the input and output is too small compared to the random part (one could argue that stock prices are like this). I.e. the input are not sufficiently related to the output. There isn’t an universal way to detect this as it depends on the nature of the data.
+
+  * Is there too much noise in the dataset?
+
+  Check a bunch of input samples manually and see if labels seem off.
+
+* Input data process
+
+  * Shuffle the dataset
+
+  If your dataset hasn’t been shuffled and has a particular order to it (ordered by label) this could negatively impact the learning.
+
+  * Reduce class imbalance
+
+  * Do you have enough training examples?
+
+  If you are training a net from scratch (i.e. not finetuning), you probably need lots of data. For image classification, people say you need a 1000 images per class or more.
+
+* Examine the batch
+
+  * Make sure your batches don’t contain a single label
+
+  This can happen in a sorted dataset (i.e. the first 10k samples contain the same class). Easily fixable by shuffling the dataset.
+
+  * Reduce batch size
+
+  This paper points out that having a very large batch can reduce the generalization ability of the model.
+
+### Data Normalization/Augmentation issues
+
+* Standardize the features(Normalization)
+
+Did you standardize your input to have zero mean and unit variance?
+
+* Check the preprocessing of your pretrained model
+
+If you are using a pretrained model, make sure you are using the same normalization and preprocessing as the model was when training. For example, should an image pixel be in the range [0, 1], [-1, 1] or [0, 255]?
+
+* Check the preprocessing for train/validation/test set
+
+CS231n points out a common pitfall:
+“… any preprocessing statistics (e.g. the data mean) must only be computed on the training data, and then applied to the validation/test data. E.g. computing the mean and subtracting it from every image across the entire dataset and then splitting the data into train/val/test splits would be a mistake. “
+Also, check for different preprocessing in each sample or batch.
+
+
+### Implementation issues
+
+* Try solving a simpler version of the problem
+
+This will help with finding where the issue is. For example, if the target output is an object class and coordinates, try limiting the prediction to object class only
+
+
+* Look for correct loss “at chance”
+
+Again from the excellent CS231n: Initialize with small parameters, without regularization. For example, if we have 10 classes, at chance means we will get the correct class 10% of the time, and the Softmax loss is the negative log probability of the correct class so: -ln(0.1) = 2.302.
+After this, try increasing the regularization strength which should increase the loss.
+
+* Check the Loss function
+  * Check your loss function for any potential bug
+  * Verify loss input
+  * Adjust loss weights.
+
+  If your loss is composed of several smaller loss functions, make sure their magnitude relative to each is correct.
+
+* Increase network size
+Maybe the expressive power of your network is not enough to capture the target function. Try adding more layers or more hidden units in fully connected layers.
+* Check for hidden dimension errors
+If your input looks like (k, H, W) = (64, 64, 64) it’s easy to miss errors related to wrong dimensions. Use weird numbers for input dimensions (for example, different prime numbers for each dimension) and check how they propagate through the network.
+* Explore Gradient checking
+
+### Training issues
+
+* Solve for a really small dataset
+
+Overfit a small subset of the data and make sure it works. For example, train with just 1 or 2 examples and see if your network can learn to differentiate these. Move on to more samples per class.
+
+* Check weights initialization
+
+If unsure, use Xavier or He initialization. Also, your initialization might be leading you to a bad local minimum, so try a different initialization and see if it helps.
+
+* Change your hyperparameters
+Maybe you using a particularly bad set of hyperparameters. If feasible, try a grid search or bayesian-optimization-hyperparameter-tuning
+
+* Reduce regularization
+
+Too much regularization can cause the network to underfit badly. Reduce regularization such as dropout, batch norm, weight/bias L2 regularization, etc. In the excellent [Practical Deep Learning for coders](http://course.fast.ai) course, Jeremy Howard advises getting rid of underfitting first. This means you overfit the training data sufficiently, and only then addressing overfitting.
+
+* Visualize the training
+
+  * Monitor the activations, weights, and updates of each layer. Make sure their magnitudes match. For example, the magnitude of the updates to the parameters (weights and biases) should be 1-e3.
+  * Consider a visualization library like Tensorboard and Crayon. In a pinch, you can also print weights/biases/activations.
+  * Be on the lookout for layer activations with a mean much larger than 0. Try Batch Norm or ELUs.
+  * Deeplearning4j points out what to expect in histograms of weights and biases:
+
+* Try a different optimizer
+
+Your choice of optimizer shouldn’t prevent your network from training unless you have selected particularly bad hyperparameters. However, the proper optimizer for a task can be helpful in getting the most training in the shortest amount of time. The paper which describes the algorithm you are using should specify the optimizer. If not, I tend to use Adam or plain SGD with momentum, see great [post](http://ruder.io/optimizing-gradient-descent/)

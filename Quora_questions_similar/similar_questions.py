@@ -134,12 +134,15 @@ Q2_test = X_test[:, 1]
 # Define the model
 question1 = Input(shape=(MAX_SEQUENCE_LENGTH,))
 question2 = Input(shape=(MAX_SEQUENCE_LENGTH,))
+print(question1.shape)
+print(question2.shape)
 
 q1 = Embedding(nb_words + 1,
                EMBEDDING_DIM,
                weights=[word_embedding_matrix],
                input_length=MAX_SEQUENCE_LENGTH,
                trainable=False)(question1)
+print(q1.shape)
 q1 = TimeDistributed(Dense(EMBEDDING_DIM, activation='relu'))(q1)
 q1 = Lambda(lambda x: K.max(x, axis=1), output_shape=(EMBEDDING_DIM,))(q1)
 
@@ -148,6 +151,7 @@ q2 = Embedding(nb_words + 1,
                weights=[word_embedding_matrix],
                input_length=MAX_SEQUENCE_LENGTH,
                trainable=False)(question2)
+print(q2.shape)
 q2 = TimeDistributed(Dense(EMBEDDING_DIM, activation='relu'))(q2)
 q2 = Lambda(lambda x: K.max(x, axis=1), output_shape=(EMBEDDING_DIM,))(q2)
 
