@@ -62,6 +62,9 @@ Unfortunately, as that gap grows, RNNs become unable to learn to connect the inf
 
 LSTMs are explicitly designed to avoid the long-term dependency problem. Remembering information for long periods of time is practically their default behavior, not something they struggle to learn!
 
+Here is another great article to show how LSTM works:
+http://blog.echen.me/2017/05/30/exploring-lstms/
+
 ## LTSM structure
 ![LSTM_cell](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/LSTM_1.png)
 
