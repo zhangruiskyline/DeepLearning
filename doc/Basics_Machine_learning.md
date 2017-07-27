@@ -85,8 +85,13 @@ Once we have done the classification via softmax, we need to know how well it pe
 ![LR cross entropy](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/lr_cross_entropy.png)
 
 
+Another way to get the loss function of logistic regression
 
+![LR_loss](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/lr_loss.png)
 
+![LR_loss_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/lr_loss_2.png)
+
+![LR_loss_3](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/lr_loss_3.png)
 
 # Bias vs Variance
 
