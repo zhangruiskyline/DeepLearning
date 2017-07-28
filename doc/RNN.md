@@ -11,6 +11,7 @@
   - [Vanishing / Exploding Gradients](#vanishing--exploding-gradients)
     - [LSTM mitigate vanlish gradient](#lstm-mitigate-vanlish-gradient)
     - [LSTM activity function](#lstm-activity-function)
+    - [Batch process in LSTM](#batch-process-in-lstm)
   - [LSTM and Sequence Model](#lstm-and-sequence-model)
     - [Model analysis](#model-analysis)
 - [Seq-to-Seq Model](#seq-to-seq-model)
@@ -123,6 +124,18 @@ The reason behind is
 Below is a comparison among three different acitivation functions
 ![acitivity](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/activiation.png)
 
+### Batch process in LSTM
+
+https://www.quora.com/In-LSTM-how-do-you-figure-out-what-size-the-weights-are-supposed-to-be
+
+usually LSTM processes not a single word, but a batch of words or sequence, in such case, the model can be seen as:
+
+* __H__ = Size of the hidden state of an LSTM unit. This is also called the capacity of a LSTM and is chosen by a user depending upon the amount of data available and capacity of LSTM required. Usually it is taken to be 128, 256, 512, 1024 for small models.
+
+* __B__ = Size of the input batch. Inputs are very rarely fed one-by-one. They are usually fed into any LSTM based model in form of a subset of total number of examples i.e. batch. Keep in mind that you can choose B = 1.
+
+
+![LSTM_batch](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/lstm_batch.png)
 
 ## LSTM and Sequence Model
 
