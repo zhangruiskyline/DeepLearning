@@ -81,6 +81,8 @@ With similar users, the system recommends items that the similar users have rate
 
 ![Collaborative Filtering](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/cf.png)
 
+* basically measure current user's rate on j based on others' normalized rating on j and others' similarity with current user
+
 and the weight matrix can be
 
 ![Collaborative Filtering similarity](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/cf2.png)
