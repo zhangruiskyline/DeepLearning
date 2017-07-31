@@ -159,6 +159,7 @@ q2 = TimeDistributed(Dense(EMBEDDING_DIM, activation='relu'))(q2)
 q2 = Lambda(lambda x: K.max(x, axis=1), output_shape=(EMBEDDING_DIM,))(q2)
 
 merged = concatenate([q1,q2])
+print(merged.shape)
 
 merged = Dense(128, activation='relu')(merged)
 merged = Dropout(DROPOUT)(merged)
@@ -176,6 +177,7 @@ merged = BatchNormalization()(merged)
 is_duplicate = Dense(1, activation='sigmoid')(merged)
 
 model = Model(inputs=[question1, question2], outputs=is_duplicate)
+
 model.compile(loss='binary_crossentropy', optimizer=OPTIMIZER, metrics=['accuracy'])
 
 # Train the model, checkpointing weights with best validation accuracy

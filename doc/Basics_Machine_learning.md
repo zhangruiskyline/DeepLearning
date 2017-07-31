@@ -30,7 +30,16 @@
   - [Advantages of Logistic Regression:](#advantages-of-logistic-regression)
   - [Advantages of Decision Trees:](#advantages-of-decision-trees)
   - [Advantages of SVMs:](#advantages-of-svms)
-- [Interview Questions](#interview-questions)
+- [Design a Machine learning system](#design-a-machine-learning-system)
+  - [Requirements/Consideration :](#requirementsconsideration-)
+  - [Form The question](#form-the-question)
+  - [Model](#model)
+    - [features](#features)
+    - [Quality Measurement/Twitter Tweets Rank Example](#quality-measurementtwitter-tweets-rank-example)
+  - [Platform](#platform)
+    - [scalable](#scalable)
+    - [Deployment and iterate](#deployment-and-iterate)
+    - [speed vs quality](#speed-vs-quality)
   - [Design a iphone APP recommendation system(Siri Recommendation)](#design-a-iphone-app-recommendation-systemsiri-recommendation)
   - [Design Search Autocomplete System](#design-search-autocomplete-system)
 - [Debug the Machine Learning system](#debug-the-machine-learning-system)
@@ -256,7 +265,80 @@ Easy to interpret and explain (for some people -- I'm not sure I fall into this 
 
 High accuracy, nice theoretical guarantees regarding overfitting, and with an appropriate kernel they can work well even if you're data isn't linearly separable in the base feature space. Especially popular in text classification problems where very high-dimensional spaces are the norm. Memory-intensive and kind of annoying to run and tune, though, so I think random forests are starting to steal the crown.
 
-# Interview Questions
+# Design a Machine learning system
+
+Based on Twitter Machine Learning tweets rank system design experience:
+
+https://blog.twitter.com/engineering/en_us/topics/insights/2017/using-deep-learning-at-scale-in-twitters-timelines.html?utm_campaign=Revue%2520newsletter&utm_medium=Newsletter&utm_source=revue
+
+## Requirements/Consideration :
+
+prediction models have to meet many requirements before they can be run in production at Twitter’s scale. This includes:
+* Quality and speed of predictions
+* Resource utilization
+* Maintainability
+
+Besides the prediction models themselves, a similar set of requirements is applied to the machine learning frameworks – that is, a set of tools that allows one to define, train, evaluate, and launch a prediction model. Specifically, we pay attention to:
+* Training speed and scalability to very large datasets
+* Extensibility to new techniques
+* Tooling for easy training, debugging, evaluation and deployment
+
+
+## Form The question
+
+## Model
+
+### features
+
+### Quality Measurement/Twitter Tweets Rank Example
+
+* Accurate Metrics
+
+First, we evaluate the model using a well-defined accuracy metric we compute during model training. This measure tells us how well the model performs its task – specifically, giving engaging Tweets a high score. While final model accuracy is a good early indicator, it cannot be used alone to reliably predict how people using Twitter will react to seeing Tweets picked out by that model
+
+Impact on people using Twitter is typically measured by running one or more A/B tests and comparing the results between experiment buckets.
+
+Finally, even if the desired real-time speed could be achieved for a given model quality, launching that model would be subject to the same trade-off analysis as any new feature. We would want to know the impact of the model and weigh that against any increase in the cost of running the model. The added cost can come from higher hardware utilization, or more complicated operation and support.
+
+## Platform
+
+### scalable
+
+* Distributed training
+
+### Deployment and iterate
+
+* Before roll out
+
+Models have to meet many requirements before they can be run in production
+
+  * Quality and speed of predictions
+  * Resource utilization
+  * Maintainability
+
+* A/B test for user experience
+* Measure impact:
+
+e.g: Impact on people using Twitter is typically measured by running one or more A/B tests and comparing the results between experiment buckets.
+
+* Offline vs online
+
+log data, offline training for accuracy model. online serving
+
+### speed vs quality
+
+* Lots of tasks need latency requirements. quick serving time may be more important than accuracy
+
+* Also Training time could be important, as we may have urgent requirement for some tasks like fraud detection, need to wrap up model quickly and push online, rather than design best detection model
+
+* Twitter Example
+
+Even if the desired real-time speed could be achieved for a given model quality, launching that model would be subject to the same trade-off analysis as any new feature. We would want to know the impact of the model and weigh that against any increase in the cost of running the model. The added cost can come from higher hardware utilization, or more complicated operation and support.
+
+
+
+
+
 
 ## Design a iphone APP recommendation system(Siri Recommendation)
 
