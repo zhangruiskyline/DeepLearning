@@ -32,14 +32,15 @@
   - [Advantages of SVMs:](#advantages-of-svms)
 - [Design a Machine learning system](#design-a-machine-learning-system)
   - [Requirements/Consideration :](#requirementsconsideration-)
-  - [Form The question](#form-the-question)
   - [Model](#model)
     - [features](#features)
-    - [Quality Measurement/Twitter Tweets Rank Example](#quality-measurementtwitter-tweets-rank-example)
+  - [Quality Measurement](#quality-measurement)
+    - [Tweets Rank Example](#tweets-rank-example)
   - [Platform](#platform)
-    - [scalable](#scalable)
-    - [Deployment and iterate](#deployment-and-iterate)
-    - [speed vs quality](#speed-vs-quality)
+    - [System Consideration](#system-consideration)
+    - [Bottleneck](#bottleneck)
+  - [Deployment and iterate](#deployment-and-iterate)
+  - [Speed vs quality](#speed-vs-quality)
   - [Design a iphone APP recommendation system(Siri Recommendation)](#design-a-iphone-app-recommendation-systemsiri-recommendation)
   - [Design Search Autocomplete System](#design-search-autocomplete-system)
 - [Debug the Machine Learning system](#debug-the-machine-learning-system)
@@ -284,13 +285,15 @@ Besides the prediction models themselves, a similar set of requirements is appli
 * Tooling for easy training, debugging, evaluation and deployment
 
 
-## Form The question
 
 ## Model
 
 ### features
 
-### Quality Measurement/Twitter Tweets Rank Example
+
+## Quality Measurement
+
+### Tweets Rank Example
 
 * Accurate Metrics
 
@@ -302,11 +305,15 @@ Finally, even if the desired real-time speed could be achieved for a given model
 
 ## Platform
 
-### scalable
+### System Consideration
 
 * Distributed training
 
-### Deployment and iterate
+### Bottleneck
+
+Analyzed Bottleneck: CPU bound service or IO bound service
+
+## Deployment and iterate
 
 * Before roll out
 
@@ -325,7 +332,7 @@ e.g: Impact on people using Twitter is typically measured by running one or more
 
 log data, offline training for accuracy model. online serving
 
-### speed vs quality
+## Speed vs quality
 
 * Lots of tasks need latency requirements. quick serving time may be more important than accuracy
 
