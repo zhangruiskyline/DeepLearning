@@ -435,8 +435,6 @@ This can be related to machine learning. One way to do it is to identify several
 
 Please refer [Design a Machine learning system](#design-a-machine-learning-system)
 
-And link is 
-
 * How to measure the algorithm? Maybe by the average time users spend on Twitter or users interaction like favorite/retweet.
 * What signals to use to evaluate how likely the user will like the feed? Users relation with the author, the number of replies/retweets of this feed, the number of followers of the author etc. might be important.
 * If machine learning is used, how to design the whole system?
@@ -461,7 +459,13 @@ This is a complicated problem and there are various follow-up questions:
 * How to evaluate the system?
 * How to design the same feature for Facebook (bi-directional relationship)
 
+6. Search
 
+The high-level approach can be pretty similar to Google search except that you don’t need to crawl the web. Basically, you need to build indexing, ranking and retrieval.
+
+The most straightforward approach is to give each feature/signal a weight and then compute a ranking score for each tweet. Then we can just rank them by the score. Features can include reply/retweet/favorite numbers, relevance, freshness, users popularity etc..
+
+But how do we evaluate the ranking and search? I think it’s better to define few core metrics like total number of searches per day, tweet click even followed by a search etc. and observe these metrics every day. They are also stats we should care whatever changes are made.
 
 
 ## Design Feed Rank System(Facebook)
