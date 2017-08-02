@@ -44,6 +44,10 @@
 - [Machine Learning System Design Examples:](#machine-learning-system-design-examples)
   - [Design a iphone APP recommendation system(Siri Recommendation)](#design-a-iphone-app-recommendation-systemsiri-recommendation)
   - [Design Search Autocomplete System](#design-search-autocomplete-system)
+  - [Design Twitter](#design-twitter)
+    - [Overall solution picture](#overall-solution-picture)
+    - [FanOut: Push and Pull](#fanout-push-and-pull)
+    - [Follow-up on details](#follow-up-on-details)
   - [Design Feed Rank System(Facebook)](#design-feed-rank-systemfacebook)
     - [Overall consideration](#overall-consideration)
     - [Data Model](#data-model)
@@ -52,7 +56,7 @@
     - [Production/Publication](#productionpublication)
       - [Push and Pull](#push-and-pull)
       - [Select FanOut](#select-fanout)
-      - [Cache](#cache)
+      - [Scalability](#scalability)
 - [Debug the Machine Learning system](#debug-the-machine-learning-system)
   - [Improve accuracy](#improve-accuracy)
   - [37 Reasons why your Neural Network is not working](#37-reasons-why-your-neural-network-is-not-working)
@@ -391,6 +395,73 @@ need to be fast, could start after take out phone instead of unlock
 
 ## Design Search Autocomplete System
 
+## Design Twitter
+
+http://blog.gainlo.co/index.php/2016/02/17/system-design-interview-question-how-to-design-twitter-part-1/
+
+http://blog.gainlo.co/index.php/2016/02/24/system-design-interview-question-how-to-design-twitter-part-2/
+
+The common strategy I would use here is to divide the whole system into several core components. There are quite a lot divide strategies, for example, you can divide by frontend/backend, offline/online logic etc.
+
+### Overall solution picture
+
+In this question, I would design solutions for the following two things:
+
+1. Data modeling.
+
+Data modeling – If we want to use a relational database like MySQL, we can define user object and feed object. Two relations are also necessary. One is user can follow each other, the other is each feed has a user owner.
+
+2. How to serve feeds.
+
+Serve feeds – The most straightforward way is to fetch feeds from all the people you follow and render them by time.
+
+### FanOut: Push and Pull
+
+* Push:  Push its tweet to all followers, O(n) write, O(1) read, Cons: if a user has many followers
+* Pull: only post tweet to my own timeline, each user to pull tweets from all its followings
+O(1) write. O(n) read. Cons: if a user follows many people
+
+### Follow-up on details
+
+1. When users followed a lot of people, fetching and rendering all their feeds can be costly. How to improve this?
+
+There are many approaches. Since Twitter has the infinite scroll feature especially on mobile, each time we only need to fetch the most recent N feeds instead of all of them. Then there will many details about how the pagination should be implemented.
+
+2. How to detect fake users?
+
+This can be related to machine learning. One way to do it is to identify several related features like registration date, the number of followers, the number of feeds etc. and build a machine learning system to detect if a user is fake.
+
+3. Feed Rank
+
+Please refer
+
+* How to measure the algorithm? Maybe by the average time users spend on Twitter or users interaction like favorite/retweet.
+* What signals to use to evaluate how likely the user will like the feed? Users relation with the author, the number of replies/retweets of this feed, the number of followers of the author etc. might be important.
+* If machine learning is used, how to design the whole system?
+
+4. Trend Topics
+
+first, How to get trending topic candidates? second, How to rank those candidates?
+
+5. Who to follow
+
+This is a core feature that plays an important role in user onboarding and engagement.
+
+There are mainly two kinds of people that Twitter will show you – people you may know (friends) and famous account (celebrities/brands…).
+
+The question would be how to rank them given that each time we can only show a few suggestions. I would lean toward using a machine learning system to do that.
+
+There are tons of features we can use, e.g. whether the other person has followed this user, the number of common follows/followers, any overlap in basic information (like location) and so on so forth.
+
+This is a complicated problem and there are various follow-up questions:
+
+* How to scale the system when there are millions/billions of users?
+* How to evaluate the system?
+* How to design the same feature for Facebook (bi-directional relationship)
+
+
+
+
 ## Design Feed Rank System(Facebook)
 
 http://blog.gainlo.co/index.php/2016/03/29/design-news-feed-system-part-1-system-design-interview-questions/
@@ -480,7 +551,7 @@ The older the story, the less likely users find it interesting.
 
 > Some reference
 
-Blog in Chinese to explain:[https://zhuanlan.zhihu.com/p/20901694] https://zhuanlan.zhihu.com/p/20901694
+[Blog in Chinese to explain](https://zhuanlan.zhihu.com/p/20901694)
 
 
 
@@ -506,7 +577,11 @@ The idea is that push operation can be extremely costly for high profile users s
 
 By the same token, once a user publish a feed, we can also limit the fanout to only his active friends. For non-active users, most of the time the push operation is a waste since they will never come back consuming feeds
 
-#### Cache
+#### Scalability
+
+You want to minimize the number of disk seeks that need to happen when loading your home page. The number of seeks could be 0 or 1 but definitely not O(num friends).
+
+https://www.quora.com/What-are-the-scaling-issues-to-keep-in-mind-while-developing-a-social-network-feed
 
 # Debug the Machine Learning system
 
