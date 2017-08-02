@@ -433,7 +433,9 @@ This can be related to machine learning. One way to do it is to identify several
 
 3. Feed Rank
 
-Please refer
+Please refer [Design a Machine learning system](#design-a-machine-learning-system)
+
+And link is 
 
 * How to measure the algorithm? Maybe by the average time users spend on Twitter or users interaction like favorite/retweet.
 * What signals to use to evaluate how likely the user will like the feed? Users relation with the author, the number of replies/retweets of this feed, the number of followers of the author etc. might be important.
