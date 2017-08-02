@@ -44,6 +44,15 @@
 - [Machine Learning System Design Examples:](#machine-learning-system-design-examples)
   - [Design a iphone APP recommendation system(Siri Recommendation)](#design-a-iphone-app-recommendation-systemsiri-recommendation)
   - [Design Search Autocomplete System](#design-search-autocomplete-system)
+  - [Design Feed Rank System(Facebook)](#design-feed-rank-systemfacebook)
+    - [Overall consideration](#overall-consideration)
+    - [Data Model](#data-model)
+    - [Feeds Ranking](#feeds-ranking)
+      - [Edge rank system](#edge-rank-system)
+    - [Production/Publication](#productionpublication)
+      - [Push and Pull](#push-and-pull)
+      - [Select FanOut](#select-fanout)
+      - [Cache](#cache)
 - [Debug the Machine Learning system](#debug-the-machine-learning-system)
   - [Improve accuracy](#improve-accuracy)
   - [37 Reasons why your Neural Network is not working](#37-reasons-why-your-neural-network-is-not-working)
@@ -381,6 +390,123 @@ if model is heavy, then probably need a local model, with rough estimation, like
 need to be fast, could start after take out phone instead of unlock
 
 ## Design Search Autocomplete System
+
+## Design Feed Rank System(Facebook)
+
+http://blog.gainlo.co/index.php/2016/03/29/design-news-feed-system-part-1-system-design-interview-questions/
+
+http://blog.gainlo.co/index.php/2016/04/05/design-news-feed-system-part-2/
+
+### Overall consideration
+
+it’s better to have some high-level ideas by dividing the big problem into subproblem.
+
+* Data model. We need some schema to store user and feed object. More importantly, there are lots of trade-offs when we try to optimize the system on read/write. I’ll explain in details next.
+* Feed ranking. Facebook is doing more than ranking chronologically.
+* Feed publishing. Publishing can be trivial when there’re only few hundreds of users. But it can be costly when there are millions or even billions of users. So there’s a scale problem here.
+
+### Data Model
+
+* Objects: User and Feeds
+  * User object, we can store userID, name, registration date and so on so forth.
+  * Feed object, there are feedId, feedType, content, metadata etc., which should support images and videos as well.
+
+* Data structure to store data
+  * user-feed relation. We can create a user-feed table that stores userID and corresponding feedID. For a single user, it can contain multiple entries if he has published many feeds.
+
+  * Friends relation: adjacency list is one of the most common approaches.We can use a friend table that contains two userIDs in each entry to model the edge (friend relation). By doing this, most operations are quite convenient like fetch all friends of a user, check if two people are friends.
+
+![adjacent_list](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/adjacent_list.png)
+
+* Data fetch
+
+  * 3 steps classical approach:
+
+  The system will first get all userIDs of friends from friend table. Then it fetches all feedIDs for each friend from user-feed table. Finally, feed content is fetched based on feedID from feed table.
+
+  * denormalization optimization
+
+  store feed content together with feedID in user-feed table so that we don’t need to join the feed table any more.
+
+  cons:
+
+  1. Data redundancy. We are storing redundant data, which occupies storage space (classic time-space trade-off).
+  2. Data consistency. Whenever we update a feed, we need to update both feed table and user-feed table. Otherwise, there is data inconsistency. This increases the complexity of the system.
+
+
+
+### Feeds Ranking
+
+* Intention:
+
+why do we want to change the ranking? How do we evaluate whether the new ranking algorithm is better? It’s definitely impressive if candidates come up with these questions by themselves.
+
+Let’s say there are several core metrics we care about, e.g. users stickiness, retention, ads revenue etc.. A better ranking system can significantly improve these metrics potentially, which also answers how to evaluate if we are making progress.
+
+* Approach
+
+A common strategy is to calculate a feed score based on various features and rank feeds by its score, which is one of the most common approaches for all ranking problems.
+
+* Features
+
+More specifically, we can select several features that are mostly relevant to the importance of the feed, e.g. share/like/comments numbers, time of the update, whether the feed has images/videos etc.. And then, a score can be computed by these features, maybe a linear combination. This is usually enough for a naive ranking system.
+
+#### Edge rank system
+
+As you can see that what matters here are two things – features and calculation algorithm. To give you a better idea of it, I’d like to briefly introduce how ranking actually works at Facebook-Edge Rank.
+
+For each news update you have, whenever another user interacts with that feed, they’re creating what Facebook calls an Edge, which includes actions like like and comments.
+
+
+Edge Rank basically is using three signals: affinity score, edge weight and time decay.
+
+* Affinity score (u).
+
+For each news feed, affinity score evaluates how close you are with this user. For instance, you are more likely to care about feed from your close friends instead of someone you just met once. You might ask how affinity score is calculated, I’ll talk about it soon.
+
+  * First of all, explicit interactions like comment, like, tag, share, click etc. are strong signals we should use. Apparently, each type of interaction should have different weight. For instance, comments should be worth much more than likes.
+
+  * Secondly, we should also track the time factor. Perhaps you used to interact with a friend quite a lot, but less frequent recently. In this case, we should lower the affinity score. So for each interaction, we should also put the time decay factor.
+
+* Edge weight (e).
+
+Edge weight basically reflects importance of each edge. For instance, comments are worth more than likes.
+
+* Time decay (d).
+
+The older the story, the less likely users find it interesting.
+
+![edge_rank](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/edge_rank.png)
+
+> Some reference
+
+Blog in Chinese to explain:[https://zhuanlan.zhihu.com/p/20901694] https://zhuanlan.zhihu.com/p/20901694
+
+
+
+### Production/Publication
+
+#### Push and Pull
+
+* Push
+
+For a push system, once a user has published a feed, we immediately pushing this feed (actually the pointer to the feed) to all his friends. The advantage is that when fetching feed, you don’t need to go through your friends list and get feeds for each of them. It __significantly reduces read operation__. However, the downside is also obvious. It __increases write operation__ especially for people with a large number of friends.
+
+* Pull
+
+For a pull system, feeds are only fetched when users are loading their home pages. So feed data doesn’t need to be sent right after it’s created. You can see that this approach __optimizes for write operation__, but can be quite slow to fetch data even after using denormalization
+
+#### Select FanOut
+
+The process of pushing an activity to all your friends or followers is called a fanout. So the push approach is also called fanout on write, while the pull approach is fanout on load.
+
+if you are mainly using push model, what you can do is to disable fanout for high profile users and other people can only load their updates during read.
+
+The idea is that push operation can be extremely costly for high profile users since they have a lot of friends to notify. By disabling fanout for them, we can save a huge number of resources. Actually Twitter has seen great improvement after adopting this approach.
+
+By the same token, once a user publish a feed, we can also limit the fanout to only his active friends. For non-active users, most of the time the push operation is a waste since they will never come back consuming feeds
+
+#### Cache
 
 # Debug the Machine Learning system
 
