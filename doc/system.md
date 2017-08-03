@@ -34,6 +34,11 @@
     - [AllGather](#allgather)
     - [Overhead Analysis](#overhead-analysis)
 - [Allreduce vs Paramter server](#allreduce-vs-paramter-server)
+- [Nvidia Multi-GPU Lib: NCCL](#nvidia-multi-gpu-lib-nccl)
+  - [communication primitive](#communication-primitive)
+  - [Ring-based Collective communication](#ring-based-collective-communication)
+  - [NCCL Implementation](#nccl-implementation)
+    - [Performance](#performance)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -291,3 +296,72 @@ For Each GPU,
 
 # Allreduce vs Paramter server
 http://hunch.net/?p=151364
+
+# Nvidia Multi-GPU Lib: NCCL
+
+NCCL (pronounced "Nickel") is a stand-alone library of standard collective communication routines, such as all-gather, reduce, broadcast, etc., that have been optimized to achieve high bandwidth over PCIe, Nvlink、InfiniBand
+
+## communication primitive
+
+* Reduce:
+
+Multiple senders send information and combine in one node
+
+![reduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/reduce.png)
+
+* All reduce
+
+Multiple senders send information and combine and distribute to all nodes
+
+![all_reduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/all_reduce.png)
+
+Traditional Collective communication assumes a tree style topology, but it dose not assume a flat tree, instead it use ring-based Collective communication.
+
+## Ring-based Collective communication
+
+Ring based assumes all nodes are in a circle.
+
+* Assume there are K nodes, N data, and bandwidth is B
+
+total communication time is:
+
+```
+(K-1)*N/B
+```
+
+* Split the data into S, then we split N/S data
+
+total communication time is:
+
+```
+S*(N/S/B) + (k-2)* (N/S/B) = N(S+K-2)/(SB) --> N/B
+
+if S>>K, which is normally true
+```
+
+![collective_communication](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/collective_communication.png)
+
+* Implement in GPU environment
+
+![GPU_allreduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_allreduce.png)
+
+## NCCL Implementation
+
+NCCL Implements CUDA C++ kernels. including 3 primitives: Copy，Reduce，ReduceAndCopy. NCCL can support PCIe、NVlink、GPU Direct P2P. NCCL 2.0 can support many machines using Sockets (Ethernet), InfiniBand with GPU Direct RDMA
+
+![NCCL_mode](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/NCCL_mode.png)
+
+
+### Performance
+
+* Single node multiple GPU Cards
+
+![allreduce_perf_1](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/allreduce_perf_1.png)
+
+DGX_1 can achieve 60G bps, the former 3 is single machine multiple GPU cards. first is 2 GPU connects via 2 CPUs with QPI, second is 2 GPUs connect with switch, and finally with CPU. third one is all four GPU cards via PCIe.
+
+* Multiple nodes and Multiple GPUs
+
+![allreduce_perf_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/allreduce_perf_2.png)
+
+PCIe within machine and InfiniBand among nodes
