@@ -46,10 +46,10 @@
   - [Challenges](#challenges)
   - [Overview](#overview)
   - [Candidate generations](#candidate-generations)
-    - [Model](#model-1)
+    - [Model overview](#model-overview)
     - [Model Architecture](#model-architecture)
     - [Features](#features-1)
-    - [Label and Context Selection](#label-and-context-selection)
+    - [NN architecture](#nn-architecture)
     - [Model Summary](#model-summary)
   - [Ranking](#ranking-1)
     - [Feature Engineering](#feature-engineering)
@@ -911,44 +911,71 @@ Presenting a few “best” recommendations in a list requires a fine-level repr
 
 During candidate generation, the enormous YouTube corpus is winnowed down to hundreds of videos that may be relevant to the user. It could be a was a __matrix factorization__ approach trained under rank loss
 
-### Model
+### Model overview
 
 * pose recommendation as extreme multiclass classification where the prediction problem
 
-In this setting, an embedding is simply a mapping of sparse entities (individual videos, users etc.) into a dense vector in RN . The task of the deep neural network is to learn user embeddings u as a function of the user’s history and context that are useful for discriminating among videos with a softmax classifier.
 
 ![recommendation_classfication](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/recommendation_classfication.png)
 
-Although explicit feedback mechanisms exist on YouTube (thumbs up/down, in-product surveys, etc.) we use the im- plicit feedback [16] of watches to train the model, where a user completing a video is a positive example.
+where u represents a high-dimensional “embedding”of the user, context pair and the vj represent embeddings of each candidate video.
 
-To efficiently train such a model with __millions of classes__, we rely on a technique to sample negative classes from the back- ground distribution (“candidate sampling”)
+In this setting, an embedding is simply a mapping of sparse entities (individual videos, users etc.) into a dense vector. The task of the deep neural network is to learn user embeddings u as a function of the user’s history and context that are useful for discriminating among videos with a softmax classifier.
+
+Although explicit feedback mechanisms exist on YouTube (thumbs up/down, in-product surveys, etc.) we use the implicit feedback of watches to train the model, where a user completing a video is a positive example.
+
+To efficiently train such a model with __millions of classes__, we rely on a technique to sample negative classes from the background distribution (“candidate sampling”)
 
 * Serving stage
 
-At serving time we need to compute the most likely N classes (videos) in order to choose the top N to present to the user. Scoring millions of items under a strict serv- ing latency of tens of milliseconds requires an approximate scoring scheme sublinear in the number of classes.
+At serving time we need to compute the most likely N classes (videos) in order to choose the top N to present to the user. Scoring millions of items under a strict serving latency of tens of milliseconds requires an approximate scoring scheme sublinear in the number of classes.
 
-the scoring problem reduces to a nearest neighbor search in the dot product space
+* the scoring problem reduces to a nearest neighbor search in the dot product space
 
 ### Model Architecture
 
-we learn high dimensional embeddings for each video in a fixed vocabulary and feed these embeddings into a feedfor- ward neural network. A user’s watch history is represented by a variable-length sequence of sparse video IDs which is mapped to a dense vector representation via the embed- dings. The network requires fixed-sized dense inputs and simply averaging the embeddings performed best among several strategies.
+* user embedding
+
+we learn high dimensional embeddings for each video in a fixed vocabulary and feed these embeddings into a feedforward neural network. A user’s watch history is represented by a variable-length sequence of sparse video IDs which is mapped to a dense vector representation via the embeddings. The network requires fixed-sized dense inputs and simply averaging the embeddings performed best among several strategies.
 
 ### Features
 
-Each query is tokenized into unigrams and bigrams and each to- ken is embedded. Once averaged, the user’s tokenized, em- bedded queries represent a summarized dense search history.
+A key advantage of using deep neural networks as a generalization of matrix factorization is that arbitrary continuous and categorical features can be easily added to the model.
 
-* New users
+* General features
 
-Demographic features are important for providing priors so that the recommendations behave reasonably for new users.
+Search history is treated similarly to watch history, Each query is tokenized into unigrams and bigrams and each to- ken is embedded. Once averaged, the user’s tokenized, embedded queries represent a summarized dense search history.
 
-* New video
+* users Features
+
+Demographic features are important for providing priors so that the recommendations behave reasonably for new users. The user’s geographic region and device are embedded and concatenated. Simple binary and continuous features such as the user’s gender, logged-in state and age are input di- rectly into the network as real values normalized to [0, 1].
+
+* video features/New Video
 
 We consistently observe that users prefer fresh content, though not at the expense of relevance.
 
-Machine learning systems often exhibit an implicit bias towards the past because they are trained to predict future behavior from historical examples. To correct for this, we feed the age of the training example as a feature during training. At serving time, this feature is set to zero (or slightly negative) to re- flect that the model is making predictions at the very end of the training window.
+Machine learning systems often exhibit an implicit bias towards the past because they are trained to predict future behavior from historical examples. To correct for this, we feed the __age of the training example__ as a feature during training.
 
-### Label and Context Selection
+At serving time, this feature is set to zero (or slightly negative) to reflect that the model is making predictions at the very end of the training window.
+
+### NN architecture
 Training examples are generated from all YouTube watches (even those embedded on other sites) rather than just watches on the recommendations we produce. Otherwise, it would be very difficult for new content to surface and the recommender would be overly biased towards exploitation.
+
+Another key insight that improved live metrics was to generate a fixed number of training examples per user, effectively weighting our users equally in the loss function. (Another way to normalization)
+
+* Explore NN structure and feature space
+
+a vocabulary of 1M videos and 1M search tokens were embedded with 256 floats each in a maximum bag size of 50 recent watches and 50 recent searches.
+
+The softmax layer outputs a multinomial distribution over the same 1M video classes with a dimension of 256 (which can be thought of as a separate output video embedding). These models were trained until convergence over all YouTube users, corresponding to several epochs over the data.
+
+  * Depth 0: A linear layer simply transforms the concate- nation layer to match the softmax dimension of 256
+  * Depth 1: 256 ReLU
+  * Depth 2: 512 ReLU → 256 ReLU
+  * Depth 3: 1024 ReLU → 512 ReLU → 256 ReLU
+  * Depth 4: 2048 ReLU → 1024 ReLU → 512 ReLU → 256 ReLU
+
+
 
 ### Model Summary
 
