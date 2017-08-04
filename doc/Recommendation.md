@@ -41,30 +41,31 @@
     - [Model](#model)
     - [Features](#features)
   - [Data Pipeline](#data-pipeline)
-- [Real Applications](#real-applications)
-  - [Spotify Music Recommendation](#spotify-music-recommendation)
-  - [YouTube Recommendation](#youtube-recommendation)
-    - [Overview](#overview)
-    - [Candidate generations](#candidate-generations)
-      - [Model](#model-1)
-      - [Model Architecture](#model-architecture)
-      - [Features](#features-1)
-      - [Label and Context Selection](#label-and-context-selection)
-      - [Model Summary](#model-summary)
-    - [Ranking](#ranking-1)
-      - [Feature Engineering](#feature-engineering)
-      - [Embedding Categorical Features](#embedding-categorical-features)
-      - [Normalizing Continuous Features](#normalizing-continuous-features)
-  - [Quora: Semantic Question Matching with Deep Learning](#quora-semantic-question-matching-with-deep-learning)
+- [Spotify Music Recommendation](#spotify-music-recommendation)
+- [YouTube Recommendation](#youtube-recommendation)
+  - [Challenges](#challenges)
+  - [Overview](#overview)
+  - [Candidate generations](#candidate-generations)
+    - [Model](#model-1)
+    - [Model Architecture](#model-architecture)
+    - [Features](#features-1)
+    - [Label and Context Selection](#label-and-context-selection)
+    - [Model Summary](#model-summary)
+  - [Ranking](#ranking-1)
+    - [Feature Engineering](#feature-engineering)
+    - [Embedding Categorical Features](#embedding-categorical-features)
+    - [Normalizing Continuous Features](#normalizing-continuous-features)
+- [Quora Machine Learning Applications](#quora-machine-learning-applications)
+  - [Semantic Question Matching with Deep Learning](#semantic-question-matching-with-deep-learning)
   - [How Quora build recommendation system](#how-quora-build-recommendation-system)
     - [Goal and data model](#goal-and-data-model)
     - [Feed Ranking](#feed-ranking)
     - [Ranking algorithm](#ranking-algorithm)
     - [feature](#feature)
-    - [Answer Ranking](#answer-ranking)
-    - [Ask to Answer](#ask-to-answer)
-  - [FaceBook NewsFeed: Edge rank](#facebook-newsfeed-edge-rank)
-  - [Pinteret: Smart Feed](#pinteret-smart-feed)
+  - [Answer Ranking](#answer-ranking)
+  - [Ask to Answer](#ask-to-answer)
+- [FaceBook NewsFeed: Edge rank](#facebook-newsfeed-edge-rank)
+- [Pinteret: Smart Feed](#pinteret-smart-feed)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -867,17 +868,30 @@ When actor generate content, push to all connections. system open area for every
 ## Data Pipeline
 
 
-# Real Applications
 
-## Spotify Music Recommendation
+
+# Spotify Music Recommendation
 
  [Spotify Music recommendation](http://benanne.github.io/2014/08/05/spotify-cnns.html)
 
-## YouTube Recommendation
+# YouTube Recommendation
 
 [Deep Neural Networks for YouTube Recommendations](https://research.google.com/pubs/pub45530.html)
 
-### Overview
+## Challenges
+* Scale:
+
+Many existing recommendation algorithms proven to work well on small problems fail to operate on our scale. Highly specialized distributed learning algorithms and efficient serving systems are essential for handling YouTube’s massive user base and corpus.
+
+* Freshness
+
+YouTube has a very dynamic corpus with many hours of video are uploaded per second. The recommendation system should be responsive enough to model newly uploaded content as well as the latest actions taken by the user.
+
+* Noise
+
+Historical user behavior on YouTube is inher- ently difficult to predict due to sparsity and a vari- ety of unobservable external factors. We rarely ob- tain the ground truth of user satisfaction and instead model noisy implicit feedback signals. Furthermore, metadata associated with content is poorly structured without a well defined ontology. Our algorithms need to be robust to these particular characteristics of our training data.
+
+## Overview
 ![youtube_recommend](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/youtube_recommend.png)
 
 The system is comprised of two neural networks: one for candidate generation and one for ranking.
@@ -886,11 +900,11 @@ The candidate generation network takes events from the user’s YouTube activity
 
 Presenting a few “best” recommendations in a list requires a fine-level representation to distinguish relative importance among candidates with high recall. The ranking network accomplishes this task by assigning a score to each video according to a desired objective function using a rich set of features describing the video and user. The highest scoring videos are presented to the user, ranked by their score.
 
-### Candidate generations
+## Candidate generations
 
 During candidate generation, the enormous YouTube cor- pus is winnowed down to hundreds of videos that may be relevant to the user. It could be a was a __matrix factorization__ approach trained under rank loss
 
-#### Model
+### Model
 
 * pose recommendation as extreme multiclass classification where the prediction problem
 
@@ -908,11 +922,11 @@ At serving time we need to compute the most likely N classes (videos) in order t
 
 the scoring problem reduces to a nearest neighbor search in the dot product space
 
-#### Model Architecture
+### Model Architecture
 
 we learn high dimensional embeddings for each video in a fixed vocabulary and feed these embeddings into a feedfor- ward neural network. A user’s watch history is represented by a variable-length sequence of sparse video IDs which is mapped to a dense vector representation via the embed- dings. The network requires fixed-sized dense inputs and simply averaging the embeddings performed best among several strategies.
 
-#### Features
+### Features
 
 Each query is tokenized into unigrams and bigrams and each to- ken is embedded. Once averaged, the user’s tokenized, em- bedded queries represent a summarized dense search history.
 
@@ -926,17 +940,17 @@ We consistently observe that users prefer fresh content, though not at the expen
 
 Machine learning systems often exhibit an implicit bias towards the past because they are trained to predict future behavior from historical examples. To correct for this, we feed the age of the training example as a feature during training. At serving time, this feature is set to zero (or slightly negative) to re- flect that the model is making predictions at the very end of the training window.
 
-#### Label and Context Selection
+### Label and Context Selection
 Training examples are generated from all YouTube watches (even those embedded on other sites) rather than just watches on the recommendations we produce. Otherwise, it would be very difficult for new content to surface and the recommender would be overly biased towards exploitation.
 
-#### Model Summary
+### Model Summary
 
 
 ![NN_recommendation](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/NN_recommendation.png)
 
 Deep candidate generation model architecture showing embedded sparse features concatenated with dense features. Embeddings are averaged before concatenation to transform variable sized bags of sparse IDs into fixed-width vectors suitable for input to the hidden layers. All hidden layers are fully connected. In training, a cross-entropy loss is minimized with gradient descent on the output of the sampled softmax. At serving, an approximate nearest neighbor lookup is performed to generate hundreds of candidate video recommendations.
 
-### Ranking
+## Ranking
 
 During ranking, we have access to many more features describing the video and the user’s relationship to the video because only a few hundred videos are being scored rather than the millions scored in candidate generation.
 
@@ -944,7 +958,7 @@ We use a deep neural network with similar architecture as candidate generation t
 
 ![ranking_recommendation](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/ranking_recommendation.png)
 
-#### Feature Engineering
+### Feature Engineering
 use hundreds of features in our ranking mod- els, roughly split evenly between categorical and continuous.
 
 We observe that the most important signals are those that describe a user’s previous interaction with the item itself and other similar items, matching others’ experience in ranking ads.
@@ -953,14 +967,16 @@ We observe that the most important signals are those that describe a user’s pr
 
 As an example, consider the user’s past history with the channel that uploaded the video being scored - how many videos has the user watched from this channel? When was the last time the user watched a video on this topic? These continuous features describing past user actions on related items are particularly powerful because they generalize well across disparate items.
 
-#### Embedding Categorical Features
+### Embedding Categorical Features
 
 Similar to candidate generation, we use embeddings to map sparse categorical features to dense representations suitable for neural networks.
 
-#### Normalizing Continuous Features
+### Normalizing Continuous Features
 A continuous feature x with distribution f is transformed to x by scaling the values such that the feature is equally distributed in [0,1) using the cumulative distribution
 
-## Quora: Semantic Question Matching with Deep Learning
+# Quora Machine Learning Applications
+
+## Semantic Question Matching with Deep Learning
 
 https://engineering.quora.com/Semantic-Question-Matching-with-Deep-Learning
 
@@ -1043,9 +1059,9 @@ This is a weighted sum of actions to predict user's interet to a story. There ar
 
 ### feature
 * Major feature categories
-  *user (e.g. age, country, recent activity)
-  *story (e.g. popularity, trendiness, quality)
-  *interactions between the two (e.g. topic or author affinity)
+  * user (e.g. age, country, recent activity)
+  * story (e.g. popularity, trendiness, quality)
+  * interactions between the two (e.g. topic or author affinity)
 
 
 * Implicit is always better than explicit
@@ -1053,7 +1069,7 @@ This is a weighted sum of actions to predict user's interet to a story. There ar
   * Better representations of user vs user reflections
   * Better correlated with A/B test
 
-### Answer Ranking
+## Answer Ranking
 
 https://engineering.quora.com/A-Machine-Learning-Approach-to-Ranking-Answers-on-Quora
 
@@ -1108,7 +1124,7 @@ Ensemble always works better
   3. All this data (answer scores and feature values) is stored in HBase, which is an open-source NoSQL datastore able to handle a large volume of data and writes.
   4.  cache score sometimes is not good when answer or feature changes: Consider a user who has tens of thousands of answers on Quora. If we depend on a feature like the number of answers added by an answer author, then every time this user adds an answer, we have to update the score of all of their answers at once.stopped updating feature values if that wouldn't impact the answer score at all.
 
-### Ask to Answer
+## Ask to Answer
 https://engineering.quora.com/Ask-To-Answer-as-a-Machine-Learning-Problem
 
 * Frame the Problem
@@ -1127,12 +1143,12 @@ the result of the suggestion as a number (e.g. 1 for answer, 0 for no answer).
 
 ![quora_A2A](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/quora_A2A.png)
 
-## FaceBook NewsFeed: Edge rank
+# FaceBook NewsFeed: Edge rank
 
 Blog in Chinese to explain:[https://zhuanlan.zhihu.com/p/20901694] https://zhuanlan.zhihu.com/p/20901694
 
 ![edge_rank](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/edge_rank.png)
 
-## Pinteret: Smart Feed
+# Pinteret: Smart Feed
 
 https://mp.weixin.qq.com/s?__biz=MzA4OTk5OTQzMg==&mid=2449231037&idx=1&sn=c2fc8a7d2832ea109e2abe4b773ff1f5#rd
