@@ -43,7 +43,13 @@
   - [Data Pipeline](#data-pipeline)
 - [Real Applications](#real-applications)
   - [Spotify Music Recommendation](#spotify-music-recommendation)
-  - [Deep Neural Networks for YouTube Recommendation](#deep-neural-networks-for-youtube-recommendation)
+  - [YouTube Recommendation](#youtube-recommendation)
+    - [Overview](#overview)
+    - [Candidate generations](#candidate-generations)
+    - [Model Problem](#model-problem)
+    - [Model Architecture](#model-architecture)
+    - [Features](#features-1)
+    - [Label and Context Selection](#label-and-context-selection)
   - [Quora: Semantic Question Matching with Deep Learning](#quora-semantic-question-matching-with-deep-learning)
   - [How Quora build recommendation system](#how-quora-build-recommendation-system)
     - [Goal and data model](#goal-and-data-model)
@@ -751,110 +757,6 @@ Evaluate the resulting model by computing the per-user average ROC AUC score on 
 AUC ROC score is close to 0.50 for a randomly initialized model.
 can reach at least 0.91 ROC AUC with this deep model.
 
-```python
-from keras.models import Model, Sequential
-from keras.layers import Embedding, Flatten, Input, Dense, Dropout, merge
-from keras.regularizers import l2
-
-
-def make_interaction_mlp(input_dim, n_hidden=1, hidden_size=64,
-                         dropout=0, l2_reg=None):
-    """Build the shared multi layer perceptron"""
-    mlp = Sequential()
-    if n_hidden == 0:
-        # Plug the output unit directly: this is a simple
-        # linear regression model. Not dropout required.
-        mlp.add(Dense(1, input_dim=input_dim,activation='relu', W_regularizer=l2_reg))
-    else:
-        mlp.add(Dense(hidden_size, input_dim=input_dim,activation='relu', W_regularizer=l2_reg))
-        mlp.add(Dropout(dropout))
-        for i in range(n_hidden - 1):
-            mlp.add(Dense(hidden_size, activation='relu',W_regularizer=l2_reg))
-            mlp.add(Dropout(dropout))
-        mlp.add(Dense(1, activation='relu', W_regularizer=l2_reg))
-    return mlp
-
-
-def build_models(n_users, n_items, user_dim=32, item_dim=64,
-                 n_hidden=1, hidden_size=64, dropout=0, l2_reg=0):
-    """Build models to train a deep triplet network"""
-    user_input = Input((1,), name='user_input')
-    positive_item_input = Input((1,), name='positive_item_input')
-    negative_item_input = Input((1,), name='negative_item_input')
-
-    l2_reg = None if l2_reg == 0 else l2(l2_reg)
-    user_layer = Embedding(n_users, user_dim, input_length=1,name='user_embedding', W_regularizer=l2_reg)
-
-    # The following embedding parameters will be shared to encode both
-    # the positive and negative items.
-    item_layer = Embedding(n_items, item_dim, input_length=1,name="item_embedding", W_regularizer=l2_reg)
-
-    user_embedding = Flatten()(user_layer(user_input))
-    positive_item_embedding = Flatten()(item_layer(positive_item_input))
-    negative_item_embedding = Flatten()(item_layer(negative_item_input))
-
-
-    # Similarity computation between embeddings using a MLP similarity
-    positive_embeddings_pair = merge([user_embedding, positive_item_embedding],mode='concat',
-            name="positive_embeddings_pair")
-    positive_embeddings_pair = Dropout(dropout)(positive_embeddings_pair)
-    negative_embeddings_pair = merge([user_embedding, negative_item_embedding],mode='concat',
-                                     name="negative_embeddings_pair")
-    negative_embeddings_pair = Dropout(dropout)(negative_embeddings_pair)
-
-    # Instanciate the shared similarity architecture
-    interaction_layers = make_interaction_mlp(user_dim + item_dim, n_hidden=n_hidden, hidden_size=hidden_size,
-        dropout=dropout, l2_reg=l2_reg)
-
-    positive_similarity = interaction_layers(positive_embeddings_pair)
-    negative_similarity = interaction_layers(negative_embeddings_pair)
-
-    # The triplet network model, only used for training
-    triplet_loss = merge([positive_similarity,
-    negative_similarity],mode=margin_comparator_loss,output_shape=(1,),name='comparator_loss')
-
-    deep_triplet_model = Model(input=[user_input, positive_item_input,negative_item_input],
-                               output=triplet_loss)
-
-    # The match-score model, only used at inference
-    deep_match_model = Model(input=[user_input, positive_item_input],
-                             output=positive_similarity)
-
-    return deep_match_model, deep_triplet_model
-
-
-hyper_parameters = dict(
-    user_dim=32,
-    item_dim=64,
-    n_hidden=2,
-    hidden_size=128,
-    dropout=0.1,
-    l2_reg=0
-)
-deep_match_model, deep_triplet_model = build_models(n_users, n_items,**hyper_parameters)
-
-
-deep_triplet_model.compile(loss=identity_loss, optimizer='adam')
-fake_y = np.ones_like(pos_data_train['user_id'])
-
-n_epochs = 15
-
-for i in range(n_epochs):
-    # Sample new negatives to build different triplets at each epoch
-    triplet_inputs = sample_triplets(pos_data_train, max_item_id,random_seed=i)
-
-    # Fit the model incrementally by doing a single pass over the
-    # sampled triplets.
-    deep_triplet_model.fit(triplet_inputs, fake_y, shuffle=True,
-                           batch_size=64, nb_epoch=1, verbose=2)
-
-    # Monitor the convergence of the model
-    test_auc = average_roc_auc(deep_match_model, pos_data_train, pos_data_test)
-    print("Epoch %d/%d: test ROC AUC: %0.4f"
-          % (i + 1, n_epochs, test_auc))
-
-```
-
 
 # General Framework
 
@@ -966,9 +868,56 @@ When actor generate content, push to all connections. system open area for every
 
  [Spotify Music recommendation](http://benanne.github.io/2014/08/05/spotify-cnns.html)
 
-## Deep Neural Networks for YouTube Recommendation
+## YouTube Recommendation
 
 [Deep Neural Networks for YouTube Recommendations](https://research.google.com/pubs/pub45530.html)
+
+### Overview
+![youtube_recommend](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/youtube_recommend.png)
+
+The system is comprised of two neural networks: one for candidate generation and one for ranking.
+
+The candidate generation network takes events from the user’s YouTube activity history as input and retrieves a small subset (hundreds) of videos from a large corpus. These candidates are intended to be generally relevant to the user with high precision. The candidate generation network only provides broad personalization via collaborative filtering. The similarity between users is expressed in terms of coarse features such as IDs of video watches, search query tokens and demographics.
+
+Presenting a few “best” recommendations in a list requires a fine-level representation to distinguish relative importance among candidates with high recall. The ranking network accomplishes this task by assigning a score to each video according to a desired objective function using a rich set of features describing the video and user. The highest scoring videos are presented to the user, ranked by their score.
+
+### Candidate generations
+
+During candidate generation, the enormous YouTube cor- pus is winnowed down to hundreds of videos that may be relevant to the user. It could be a was a __matrix factorization__ approach trained under rank loss
+
+### Model Problem
+
+* pose recommendation as extreme multiclass classification where the prediction problem
+
+In this setting, an embedding is simply a mapping of sparse entities (individual videos, users etc.) into a dense vector in RN . The task of the deep neural network is to learn user embeddings u as a function of the user’s history and context that are useful for discriminating among videos with a softmax classifier.
+
+![recommendation_classfication](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/recommendation_classfication.png)
+
+Although explicit feedback mechanisms exist on YouTube (thumbs up/down, in-product surveys, etc.) we use the im- plicit feedback [16] of watches to train the model, where a user completing a video is a positive example.
+
+To efficiently train such a model with millions of classes, we rely on a technique to sample negative classes from the back- ground distribution (“candidate sampling”)
+
+### Model Architecture
+
+we learn high dimensional embeddings for each video in a fixed vocabulary and feed these embeddings into a feedfor- ward neural network. A user’s watch history is represented by a variable-length sequence of sparse video IDs which is mapped to a dense vector representation via the embed- dings. The network requires fixed-sized dense inputs and simply averaging the embeddings performed best among several strategies.
+
+### Features
+
+Each query is tokenized into unigrams and bigrams and each to- ken is embedded. Once averaged, the user’s tokenized, em- bedded queries represent a summarized dense search history.
+
+* New users
+
+Demographic features are important for providing priors so that the recommendations behave reasonably for new users.
+
+* New video
+
+We consistently observe that users prefer fresh content, though not at the expense of relevance.
+
+Machine learning systems often exhibit an implicit bias towards the past because they are trained to predict future behavior from historical examples. To correct for this, we feed the age of the training example as a feature during training. At serving time, this feature is set to zero (or slightly negative) to re- flect that the model is making predictions at the very end of the training window.
+
+### Label and Context Selection
+![NN_recommendation](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/NN_recommendation.png)
+
 
 ## Quora: Semantic Question Matching with Deep Learning
 
