@@ -900,9 +900,16 @@ The candidate generation network takes events from the user’s YouTube activity
 
 Presenting a few “best” recommendations in a list requires a fine-level representation to distinguish relative importance among candidates with high recall. The ranking network accomplishes this task by assigning a score to each video according to a desired objective function using a rich set of features describing the video and user. The highest scoring videos are presented to the user, ranked by their score.
 
+* How to measure
+  * During development, we make extensive use of offline metrics (precision, recall, ranking loss, etc.) to guide iterative improvements to our system.
+  * However for the final determination of the effectiveness of an algorithm or model, we rely on A/B testing via live experiments. we can measure subtle changes in click-through rate, watch time, and many other metrics that measure user engagement.
+  * Live A/B test results may not always correlated with offline experiments
+
+
+
 ## Candidate generations
 
-During candidate generation, the enormous YouTube cor- pus is winnowed down to hundreds of videos that may be relevant to the user. It could be a was a __matrix factorization__ approach trained under rank loss
+During candidate generation, the enormous YouTube corpus is winnowed down to hundreds of videos that may be relevant to the user. It could be a was a __matrix factorization__ approach trained under rank loss
 
 ### Model
 
