@@ -46,10 +46,15 @@
   - [YouTube Recommendation](#youtube-recommendation)
     - [Overview](#overview)
     - [Candidate generations](#candidate-generations)
-    - [Model Problem](#model-problem)
-    - [Model Architecture](#model-architecture)
-    - [Features](#features-1)
-    - [Label and Context Selection](#label-and-context-selection)
+      - [Model](#model-1)
+      - [Model Architecture](#model-architecture)
+      - [Features](#features-1)
+      - [Label and Context Selection](#label-and-context-selection)
+      - [Model Summary](#model-summary)
+    - [Ranking](#ranking-1)
+      - [Feature Engineering](#feature-engineering)
+      - [Embedding Categorical Features](#embedding-categorical-features)
+      - [Normalizing Continuous Features](#normalizing-continuous-features)
   - [Quora: Semantic Question Matching with Deep Learning](#quora-semantic-question-matching-with-deep-learning)
   - [How Quora build recommendation system](#how-quora-build-recommendation-system)
     - [Goal and data model](#goal-and-data-model)
@@ -885,7 +890,7 @@ Presenting a few “best” recommendations in a list requires a fine-level repr
 
 During candidate generation, the enormous YouTube cor- pus is winnowed down to hundreds of videos that may be relevant to the user. It could be a was a __matrix factorization__ approach trained under rank loss
 
-### Model Problem
+#### Model
 
 * pose recommendation as extreme multiclass classification where the prediction problem
 
@@ -895,13 +900,19 @@ In this setting, an embedding is simply a mapping of sparse entities (individual
 
 Although explicit feedback mechanisms exist on YouTube (thumbs up/down, in-product surveys, etc.) we use the im- plicit feedback [16] of watches to train the model, where a user completing a video is a positive example.
 
-To efficiently train such a model with millions of classes, we rely on a technique to sample negative classes from the back- ground distribution (“candidate sampling”)
+To efficiently train such a model with __millions of classes__, we rely on a technique to sample negative classes from the back- ground distribution (“candidate sampling”)
 
-### Model Architecture
+* Serving stage
+
+At serving time we need to compute the most likely N classes (videos) in order to choose the top N to present to the user. Scoring millions of items under a strict serv- ing latency of tens of milliseconds requires an approximate scoring scheme sublinear in the number of classes.
+
+the scoring problem reduces to a nearest neighbor search in the dot product space
+
+#### Model Architecture
 
 we learn high dimensional embeddings for each video in a fixed vocabulary and feed these embeddings into a feedfor- ward neural network. A user’s watch history is represented by a variable-length sequence of sparse video IDs which is mapped to a dense vector representation via the embed- dings. The network requires fixed-sized dense inputs and simply averaging the embeddings performed best among several strategies.
 
-### Features
+#### Features
 
 Each query is tokenized into unigrams and bigrams and each to- ken is embedded. Once averaged, the user’s tokenized, em- bedded queries represent a summarized dense search history.
 
@@ -915,9 +926,39 @@ We consistently observe that users prefer fresh content, though not at the expen
 
 Machine learning systems often exhibit an implicit bias towards the past because they are trained to predict future behavior from historical examples. To correct for this, we feed the age of the training example as a feature during training. At serving time, this feature is set to zero (or slightly negative) to re- flect that the model is making predictions at the very end of the training window.
 
-### Label and Context Selection
+#### Label and Context Selection
+Training examples are generated from all YouTube watches (even those embedded on other sites) rather than just watches on the recommendations we produce. Otherwise, it would be very difficult for new content to surface and the recommender would be overly biased towards exploitation.
+
+#### Model Summary
+
+
 ![NN_recommendation](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/NN_recommendation.png)
 
+Deep candidate generation model architecture showing embedded sparse features concatenated with dense features. Embeddings are averaged before concatenation to transform variable sized bags of sparse IDs into fixed-width vectors suitable for input to the hidden layers. All hidden layers are fully connected. In training, a cross-entropy loss is minimized with gradient descent on the output of the sampled softmax. At serving, an approximate nearest neighbor lookup is performed to generate hundreds of candidate video recommendations.
+
+### Ranking
+
+During ranking, we have access to many more features describing the video and the user’s relationship to the video because only a few hundred videos are being scored rather than the millions scored in candidate generation.
+
+We use a deep neural network with similar architecture as candidate generation to assign an independent score to each video impression using logistic regression
+
+![ranking_recommendation](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/ranking_recommendation.png)
+
+#### Feature Engineering
+use hundreds of features in our ranking mod- els, roughly split evenly between categorical and continuous.
+
+We observe that the most important signals are those that describe a user’s previous interaction with the item itself and other similar items, matching others’ experience in ranking ads.
+
+* Example:
+
+As an example, consider the user’s past history with the channel that uploaded the video being scored - how many videos has the user watched from this channel? When was the last time the user watched a video on this topic? These continuous features describing past user actions on related items are particularly powerful because they generalize well across disparate items.
+
+#### Embedding Categorical Features
+
+Similar to candidate generation, we use embeddings to map sparse categorical features to dense representations suitable for neural networks.
+
+#### Normalizing Continuous Features
+A continuous feature x with distribution f is transformed to x by scaling the values such that the feature is equally distributed in [0,1) using the cumulative distribution
 
 ## Quora: Semantic Question Matching with Deep Learning
 
