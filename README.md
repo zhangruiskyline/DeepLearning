@@ -9,7 +9,7 @@
   - [TensorFlow](#tensorflow)
   - [Tree](#tree)
   - [SVM](#svm)
-  - [Machine learning system level view](#machine-learning-system-level-view)
+  - [Machine learning implementation in large scale system](#machine-learning-implementation-in-large-scale-system)
   - [Industrial machine Learning Application design](#industrial-machine-learning-application-design)
 - [Applications](#applications)
   - [Kaggle](#kaggle)
@@ -49,11 +49,11 @@
 ## SVM
 [SVM](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/SVM.md)
 
-## Machine learning system level view
-[Machine Learning system design](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/system.md)
+## Machine learning implementation in large scale system
+[Machine learning implementation in large scale system](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/system.md)
 
 ## Industrial machine Learning Application design
-[Machine Learning system design](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/industrial_design.md)
+[Industrial machine Learning Application design](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/industrial_design.md)
 
 # Applications
 
