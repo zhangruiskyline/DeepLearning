@@ -30,6 +30,9 @@
     - [Select FanOut](#select-fanout)
     - [Scalability](#scalability)
 - [Spotify Music Recommendation](#spotify-music-recommendation)
+  - [collaborative filter](#collaborative-filter)
+  - [Content based](#content-based)
+  - [](#)
 - [YouTube Recommendation](#youtube-recommendation)
   - [Challenges](#challenges)
   - [Overview](#overview)
@@ -392,6 +395,20 @@ https://www.quora.com/What-are-the-scaling-issues-to-keep-in-mind-while-developi
 # Spotify Music Recommendation
 
  [Spotify Music recommendation](http://benanne.github.io/2014/08/05/spotify-cnns.html)
+
+## collaborative filter
+
+Traditionally, Spotify has relied mostly on collaborative filtering approaches to power their recommendations. The idea of collaborative filtering is to determine the users’ preferences from historical usage data.
+
+Pure collaborative filtering approaches do not use any kind of information about the items that are being recommended, except for the consumption patterns associated with them: they are content-agnostic.
+
+Unfortunately, this also turns out to be their biggest flaw. Because of their reliance on usage data, popular items will be much easier to recommend than unpopular items, as there is more usage data available for them. This is usually the opposite of what we want.
+
+## Content based
+
+There is quite a large semantic gap between music audio on the one hand, and the various aspects of music that affect listener preferences on the other hand. Some of these are fairly easy to extract from audio signals, such as the genre of the music and the instruments used. Others are a little more challenging
+
+## 
 
 # YouTube Recommendation
 
