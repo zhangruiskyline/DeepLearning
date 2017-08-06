@@ -146,8 +146,39 @@ Besides the prediction models themselves, a similar set of requirements is appli
 
 ## Model
 
-### features
+With ranking, we add an extra twist. Right after gathering all Tweets, each is scored by a relevance model. The model’s score predicts how interesting and engaging a Tweet would be specifically to you. A set of highest-scoring Tweets is then shown at the top of your timeline, with the remainder shown directly below.
 
+## features
+* The Tweet itself: its recency, presence of media cards (image or video), total interactions (e.g. number of Retweets or likes)
+* The Tweet’s author: your past interactions with this author, the strength of your connection to them, the origin of your relationship
+* You: Tweets you found engaging in the past, how often and how heavily you use Twitter
+
+## Deep Learning
+
+Deep learning modules can be composed in various ways (stacked, concatenated, etc.) to form a computational graph. The parameters of this graph can then be learned, typically by using back-propagation and SGD (Stochastic Gradient Descent) on mini-batches.
+
+### Challenge: Sparse data
+
+Tweet ranking lives in a different domain than what most researchers and deep learning algorithm usually focus on. This is mostly because the data is inherently sparse. For multiple reasons including availability and latency requirements, the presence of a feature cannot be guaranteed for each data record going through the model.
+
+Usually, these problems are solved using other types of algorithm such as decision trees, logistic regression, feature crossing and discretization.
+
+### Solve with deep learning
+
+* Discretization:
+
+sparse feature values can be wildly different from one data record to another. We found a way to discretize the input’s sparse features, before feeding them to the main deep net.
+
+* A custom sparse linear layer:
+
+this layer has two main extras compared to other sparse layers out there, namely an online normalization scheme that prevents gradients from exploding, and a per-feature bias to distinguish between the absence of a feature and the presence of a zero-valued feature.
+
+* A sampling scheme associated with a calibration layer:
+
+deep nets usually explore the space of solutions much better when the training dataset contains a similar number of positive and negative examples. However, hand-tuning a training dataset in this manner leads to uncalibrated output predictions. Thus, we added a custom isotonic calibration layer to recalibrate and output actual probabilities.
+* A training plan:
+
+with all these additions, the whole training procedure of a model now has multiple steps: discretizer calibration, deep net training, isotonic calibration of the predictions, and testing. Thanks to the flexibility of our platform, it is easy to declare these steps and run them in sequence.
 
 ## Quality Measurement
 
