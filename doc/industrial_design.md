@@ -67,6 +67,7 @@
     - [Feature selection](#feature-selection)
       - [Feature extraction](#feature-extraction)
       - [Feature combination](#feature-combination)
+    - [Optimization and Loss function](#optimization-and-loss-function)
     - [Deep Learning system](#deep-learning-system)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -777,7 +778,7 @@ If the ranking is only based on history data, it will be limited. The current sy
 
 The none linear model and GBDT can not beat LR in CTR, and LR model representation capability is not strong
 
-* Example of recommendation system
+* Example of recommendation system issue
 
 ![miss_recommend](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/miss_recommend.png)
 
@@ -791,15 +792,36 @@ positive sample when clicked, negative when not clicked, purchased item will hav
 
 * User
 
+Like gender, price preference, location, item preference
+
 * item
+
+local stores(prices, orders, reviews), orders(price, deliver time, volume)
 
 * Context
 
+user current location, search query. etc
+
 #### Feature extraction
+
+
+![feature_extraction](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/feature_extraction.png)
+
+The overhead for feature selection, extraction and adding will be more and more, so CTR prediction will be harder and harder for more features added. so intend to use deep learning to automatically select features.
 
 #### Feature combination
 
-Combine features
+Combine features and transform features
+
+* normalization
+
+Min-Max, CDF
+
+* Aggregation
+
+Use super linear (__X^2__) and sub linear(__sqr(x)__)
+
+### Optimization and Loss function 
 
 
 ### Deep Learning system
