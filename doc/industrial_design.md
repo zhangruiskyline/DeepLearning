@@ -25,7 +25,7 @@
   - [Data Model](#data-model)
   - [Feeds Ranking](#feeds-ranking)
     - [Edge rank system](#edge-rank-system)
-  - [Production/Publication](#productionpublication)
+  - [Production](#production)
     - [Push and Pull](#push-and-pull)
     - [Select FanOut](#select-fanout)
     - [Scalability](#scalability)
@@ -56,6 +56,18 @@
   - [Answer Ranking](#answer-ranking)
   - [Ask to Answer](#ask-to-answer)
 - [Pinteret: Smart Feed](#pinteret-smart-feed)
+- [MeiTuan: Deep Learning on recommendation](#meituan-deep-learning-on-recommendation)
+  - [Requirements and Scenario](#requirements-and-scenario)
+  - [System Architecture](#system-architecture)
+    - [Recall layer(Candidates Selections via collaborative filter)](#recall-layercandidates-selections-via-collaborative-filter)
+    - [Ranking layer](#ranking-layer)
+  - [Deep Learning on ranking](#deep-learning-on-ranking)
+    - [Current system limitation](#current-system-limitation)
+    - [How to generate label data](#how-to-generate-label-data)
+    - [Feature selection](#feature-selection)
+      - [Feature extraction](#feature-extraction)
+      - [Feature combination](#feature-combination)
+    - [Deep Learning system](#deep-learning-system)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -364,7 +376,7 @@ The older the story, the less likely users find it interesting.
 
 
 
-## Production/Publication
+## Production
 
 ### Push and Pull
 
@@ -408,7 +420,7 @@ Unfortunately, this also turns out to be their biggest flaw. Because of their re
 
 There is quite a large semantic gap between music audio on the one hand, and the various aspects of music that affect listener preferences on the other hand. Some of these are fairly easy to extract from audio signals, such as the genre of the music and the instruments used. Others are a little more challenging
 
-## 
+##
 
 # YouTube Recommendation
 
@@ -717,3 +729,79 @@ the result of the suggestion as a number (e.g. 1 for answer, 0 for no answer).
 # Pinteret: Smart Feed
 
 https://mp.weixin.qq.com/s?__biz=MzA4OTk5OTQzMg==&mid=2449231037&idx=1&sn=c2fc8a7d2832ea109e2abe4b773ff1f5#rd
+
+
+# MeiTuan: Deep Learning on recommendation
+
+https://tech.meituan.com/dl.html
+
+## Requirements and Scenario
+
+## System Architecture
+
+### Recall layer(Candidates Selections via collaborative filter)
+
+Different recall methodologies will generate different candidate pools, and then apply the ranking to all of them
+
+
+* user based collaborative-filter
+
+Find N similar users to current user, and score item based on those N users' score results. use Jaccard Similarity for similar users. R_x and R_y are user's score on items
+
+![Jaccard Similarity](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Jaccard.png)
+
+
+* Model based collaborative-filter
+
+use embedding to calculate user and item vector, and calculate inner product for user i to item j.
+
+* Query based
+
+Abstract the user intention by query, wifi status, Geo information. etc
+
+* Location based
+
+
+### Ranking layer
+
+![meituan_rank](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/meituan_rank.png)
+
+
+## Deep Learning on ranking
+
+### Current system limitation
+
+
+If the ranking is only based on history data, it will be limited. The current system looks like
+![meituan_ml](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/meituan_ml.png)
+
+The none linear model and GBDT can not beat LR in CTR, and LR model representation capability is not strong
+
+* Example of recommendation system
+
+![miss_recommend](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/miss_recommend.png)
+
+The below pic shows that recommendation system recommends some items user clicked before, but may not be good enough in current context(like too far away), so we need to have more complex features rather than simple distance or manual crafted features. New [wide deep learning model](https://static.googleusercontent.com/media/research.google.com/zh-CN//pubs/archive/45530.pdf) is used. Deep learning can learn the low level features and transform to high level features. so the team explores this auto-feature selection
+
+### How to generate label data
+
+positive sample when clicked, negative when not clicked, purchased item will have added weight. The portion for positive/negative samples will be around 10% in order to prevent overfitting
+
+### Feature selection
+
+* User
+
+* item
+
+* Context
+
+#### Feature extraction
+
+#### Feature combination
+
+Combine features
+
+
+### Deep Learning system
+
+![meituan_dl](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/meituan_dl.png)
