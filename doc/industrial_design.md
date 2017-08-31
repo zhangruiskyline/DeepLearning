@@ -2,6 +2,13 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [Summary](#summary)
+  - [Architecture](#architecture)
+  - [Data](#data)
+  - [Features](#features)
+  - [models](#models)
+  - [Evaluation](#evaluation)
+  - [Discussion](#discussion)
 - [Design Twitter](#design-twitter)
   - [Overall solution picture](#overall-solution-picture)
   - [FanOut: Push and Pull](#fanout-push-and-pull)
@@ -39,7 +46,7 @@
   - [Candidate generations](#candidate-generations)
     - [Model overview](#model-overview)
     - [Model Architecture](#model-architecture)
-    - [Features](#features)
+    - [Features](#features-1)
     - [NN architecture](#nn-architecture)
     - [Model Summary](#model-summary)
   - [Ranking](#ranking)
@@ -71,6 +78,41 @@
     - [Deep Learning system](#deep-learning-system)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# Summary
+
+How to approach the machine learning design problem
+
+## Architecture
+
+Big picture of whole system
+
+1. data
+2. model
+3. feature
+4. evaluation
+
+## Data
+
+how to get data, how to process, augmentation, etc.  if there is no label, how to get implicit data label
+
+## Features
+
+What are features, feature dimension, input and output of feature. How to process data into feature(clean, normalization,etc.)
+
+Raw data feature or high level abstraction
+
+## models
+
+which model to choose, Tree based or deep learning, if it is deep learning, what could be the depth of network, what is NN architecture
+
+## Evaluation
+
+How to evaluate the model, what are main focus: accurate? speed?
+
+## Discussion
+
+1. How to make the mode fast?
 
 # Design Twitter
 
@@ -729,6 +771,8 @@ the result of the suggestion as a number (e.g. 1 for answer, 0 for no answer).
 
 # Pinteret: Smart Feed
 
+https://medium.com/@Pinterest_Engineering/building-a-smarter-home-feed-ad1918fdfbe3
+
 https://mp.weixin.qq.com/s?__biz=MzA4OTk5OTQzMg==&mid=2449231037&idx=1&sn=c2fc8a7d2832ea109e2abe4b773ff1f5#rd
 
 
@@ -821,7 +865,7 @@ Min-Max, CDF
 
 Use super linear (__X^2__) and sub linear(__sqr(x)__)
 
-### Optimization and Loss function 
+### Optimization and Loss function
 
 
 ### Deep Learning system
