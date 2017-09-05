@@ -63,6 +63,11 @@
   - [Answer Ranking](#answer-ranking)
   - [Ask to Answer](#ask-to-answer)
 - [Pinteret: Smart Feed](#pinteret-smart-feed)
+- [Amazon Deep Learning For recommendation](#amazon-deep-learning-for-recommendation)
+  - [Overview](#overview-1)
+  - [Architecture](#architecture-1)
+  - [Deep learning with DSSTNE](#deep-learning-with-dsstne)
+  - [Model parallel training Example](#model-parallel-training-example)
 - [MeiTuan: Deep Learning on recommendation](#meituan-deep-learning-on-recommendation)
   - [Requirements and Scenario](#requirements-and-scenario)
   - [System Architecture](#system-architecture)
@@ -774,6 +779,58 @@ the result of the suggestion as a number (e.g. 1 for answer, 0 for no answer).
 https://medium.com/@Pinterest_Engineering/building-a-smarter-home-feed-ad1918fdfbe3
 
 https://mp.weixin.qq.com/s?__biz=MzA4OTk5OTQzMg==&mid=2449231037&idx=1&sn=c2fc8a7d2832ea109e2abe4b773ff1f5#rd
+
+# Amazon Deep Learning For recommendation
+
+https://aws.amazon.com/blogs/big-data/generating-recommendations-at-amazon-scale-with-apache-spark-and-amazon-dsstne/
+
+## Overview
+
+In Personalization at Amazon, we use neural networks to generate personalized product recommendations for our customers. Amazon’s product catalog is huge compared to the number of products that a customer has purchased, making our datasets extremely sparse. And with hundreds of millions of customers and products, our neural network models often have to be distributed across multiple GPUs to meet space and time constraints.
+
+On the other hand, data for training and prediction tasks is processed and generated from Apache Spark on a CPU cluster. This presents a fundamental problem: data processing happens on CPU while training and prediction happen on GPU.
+
+## Architecture
+
+![aws_dl_arch](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/aws_dl_arch.png)
+
+* CPU Job:
+
+In this architecture, data analytics and processing (i.e., CPU jobs) are executed through vanilla Spark on Amazon EMR, where the job is broken up into tasks and runs on a Spark executor.
+
+* GPU Job:
+
+GPU job above refers to the training or prediction of neural networks.
+
+The partitioning of the dataset for these jobs is done in Spark, but the execution of these jobs is delegated to ECS and is run inside Docker containers on the GPU slaves. Data transfer between the two clusters is done through Amazon S3.
+
+On the GPU node, each task does the following:
+
+1. Downloads its data partition from S3.
+2. Executes the specified command.
+3. Uploads the output of the command back to S3.
+
+## Deep learning with DSSTNE
+
+![aws_dl_arch_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/aws_dl_arch_2.png)
+
+Support large, sparse layers
+
+* Model Training:
+
+In model parallel training, the model is distributed across N GPUs – the dataset (e.g., RDD) is replicated to all GPU nodes. Contrast this with data parallel training where each GPU only trains on a subset of the data, then shares the weights with each other using synchronization techniques such as a parameter server.
+
+* prediction
+
+After the model is trained, we generate predictions (e.g., recommendations) for each customer. This is an embarrassingly parallel task as each customer’s recommendations can be generated independently. Thus, we perform data parallel predictions, where each GPU handles the prediction of a batch of customers.
+
+
+## Model parallel training Example
+
+See Link for detail
+
+
+
 
 
 # MeiTuan: Deep Learning on recommendation
