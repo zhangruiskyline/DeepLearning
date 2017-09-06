@@ -63,6 +63,10 @@
 
 ## Text Classification
 
+* Summmary of Text Classification
+
+[text_classification Repo](https://github.com/zhangruiskyline/text_classification)
+
 * Convolutional Neural Networks for Sentence Classification. [Paper](https://www.cs.cmu.edu/%7Ediyiy/docs/naacl16.pdf) and [blog post](https://richliao.github.io/supervised/classification/2016/11/26/textclassifier-convolutional/)
 
 * Bidirectional LSTM and one level attentional RNN. [blog](https://richliao.github.io/supervised/classification/2016/12/26/textclassifier-RNN/)
