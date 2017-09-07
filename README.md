@@ -58,6 +58,8 @@
 
 ## Deep Learning/AI Chip Design
 
+[Deep Learning/AI Chip Design](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/AI_chip.md)
+
 # Applications
 
 ## Kaggle
