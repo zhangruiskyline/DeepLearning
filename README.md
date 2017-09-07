@@ -11,6 +11,7 @@
   - [SVM](#svm)
   - [Machine learning implementation in large scale system](#machine-learning-implementation-in-large-scale-system)
   - [Industrial machine Learning Application design](#industrial-machine-learning-application-design)
+  - [Deep Learning/AI Chip Design](#deep-learningai-chip-design)
 - [Applications](#applications)
   - [Kaggle](#kaggle)
   - [Text Classification](#text-classification)
@@ -55,6 +56,8 @@
 ## Industrial machine Learning Application design
 [Industrial machine Learning Application design](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/industrial_design.md)
 
+## Deep Learning/AI Chip Design
+
 # Applications
 
 ## Kaggle
@@ -63,9 +66,7 @@
 
 ## Text Classification
 
-* Summmary of Text Classification
-
-[text_classification Repo](https://github.com/zhangruiskyline/text_classification)
+* [Summary of Text Classification](https://github.com/zhangruiskyline/text_classification)
 
 * Convolutional Neural Networks for Sentence Classification. [Paper](https://www.cs.cmu.edu/%7Ediyiy/docs/naacl16.pdf) and [blog post](https://richliao.github.io/supervised/classification/2016/11/26/textclassifier-convolutional/)
 
