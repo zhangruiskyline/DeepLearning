@@ -34,11 +34,11 @@ The typical architecture will be as follow
 
 ![computation](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/computation.png)
 
-### Andoird_NN on cellphone
+### Android on cellphone
 
 Follow Google Android NN interface: Android interface supports TensorFlow and Tensorflow-Lite, it can support CPU, GPU, DSP and ASIC
 
-![Andoird_NN](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Andoird_NN.png)
+![Android_NN](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Android_NN.png)
 
 
 ### Performance Analysis:
