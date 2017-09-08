@@ -83,17 +83,17 @@
     - [Deep Learning system](#deep-learning-system)
 - [Uber: Machine Learning system Michelangelo](#uber-machine-learning-system-michelangelo)
   - [System architecture](#system-architecture)
-- [WorkFlow](#workflow)
+  - [WorkFlow](#workflow)
   - [Manage data](#manage-data)
     - [Offline](#offline)
     - [online](#online)
     - [Shared feature store](#shared-feature-store)
     - [Domain specific language for feature selection and transformation](#domain-specific-language-for-feature-selection-and-transformation)
-- [Train Model](#train-model)
-- [Evaluate Model](#evaluate-model)
-- [Deploy Model](#deploy-model)
-- [Prediction and Serving](#prediction-and-serving)
-- [Scale and Latency](#scale-and-latency)
+  - [Train Model](#train-model)
+  - [Evaluate Model](#evaluate-model)
+  - [Deploy Model](#deploy-model)
+  - [Prediction and Serving](#prediction-and-serving)
+  - [Scale and Latency](#scale-and-latency)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -953,7 +953,7 @@ Michelangelo is designed to address these gaps by standardizing the workflows an
 
 Michelangelo consists of a mix of open source systems and components built in-house. The primary open sourced components used are HDFS, Spark, Samza, Cassandra, MLLib, XGBoost, and TensorFlow.
 
-# WorkFlow
+## WorkFlow
 
 ![uber_ml](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/uber_ml.png)
 
@@ -1015,17 +1015,17 @@ In some cases, it may be more useful for the model to transform a timestamp into
 
 In other cases, feature values may need to be normalized (e.g., subtract the mean and divide by standard deviation).
 
-# Train Model
+## Train Model
 
 support offline, large-scale distributed training of decision trees, linear and logistic models, unsupervised models (k-means), time series models, and deep neural networks.
 
 A model configuration specifies the model type, hyper-parameters, data source reference, and feature DSL expressions, as well as compute resource requirements (the number of machines, how much memory, whether or not to use GPUs, etc.). It is used to configure the training job, which is run on a YARN or Mesos cluster.
 
-# Evaluate Model
+## Evaluate Model
 
 visualization
 
-# Deploy Model
+## Deploy Model
 
 * Offline deployment: The model is deployed to an offline container and run in a Spark job to generate batch predictions either on demand or on a repeating schedule.
 
@@ -1034,10 +1034,10 @@ visualization
 * Library deployment: We intend to launch a model that is deployed to a serving container that is embedded as a library in another service and invoked via a Java API. (It is not shown in Figure 8, below, but works similarly to online deployment).
 
 
-# Prediction and Serving
+## Prediction and Serving
 
 
-# Scale and Latency
+## Scale and Latency
 
 * Scale: add more hosts to the prediction service cluster and let the load balancer spread the load. In the case of offline predictions, we can add more Spark executors and let Spark manage the parallelism.
 
