@@ -81,6 +81,9 @@
       - [Feature combination](#feature-combination)
     - [Optimization and Loss function](#optimization-and-loss-function)
     - [Deep Learning system](#deep-learning-system)
+- [Uber: Machine Learning system Michelangelo](#uber-machine-learning-system-michelangelo)
+  - [System architecture](#system-architecture)
+  - [WorkFlow](#workflow)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -928,3 +931,16 @@ Use super linear (__X^2__) and sub linear(__sqr(x)__)
 ### Deep Learning system
 
 ![meituan_dl](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/meituan_dl.png)
+
+# Uber: Machine Learning system Michelangelo
+
+Michelangelo is designed to address these gaps by standardizing the workflows and tools across teams though an end-to-end system that enables users across the company to easily build and operate machine learning systems at scale. Our goal was not only to solve these immediate problems, but also create a system that would grow with the business
+
+## System architecture
+
+
+Michelangelo consists of a mix of open source systems and components built in-house. The primary open sourced components used are HDFS, Spark, Samza, Cassandra, MLLib, XGBoost, and TensorFlow.
+
+## WorkFlow
+
+![uber_ml](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/uber_ml.png)
