@@ -6,10 +6,11 @@
   - [Applications](#applications)
     - [Cost analysis](#cost-analysis)
   - [Deep Learning Break Down to Chip](#deep-learning-break-down-to-chip)
-    - [Andoird_NN on cellphone](#andoird_nn-on-cellphone)
+    - [Android on cellphone](#android-on-cellphone)
     - [Performance Analysis:](#performance-analysis)
     - [Scenario analysis](#scenario-analysis)
   - [HW Acceleration](#hw-acceleration)
+  - [Deep Learning Accelerator](#deep-learning-accelerator)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -62,3 +63,23 @@ The Long time running cellphone power consumption should be less than 2.5W, so D
 This Nvidia interface can handle serving stage work(training will be done in cloud)
 
 ## HW Acceleration
+
+1. Accelerator inside GPU:
+
+![HW_accerlorator](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/HW_accerlorator.png)
+
+Suitable for low end cellphone, because in house CPU and GPU is not powerful enough, liek 1 1080 UI will consume all resources, so need to separate HW Accelerator to do it
+
+2. GPU in house
+
+Most Android video, image can be done in CPU, and Android_NN supports CPU by default.
+
+## Deep Learning Accelerator
+
+![dl_accerlorator](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/dl_accerlorator.png)
+
+Assuming 1T ops/s, so bandwidth is 5GB/s
+
+1. if within CPU, we could use CPU ACP port. CPU set data Cacheable and Sharable
+
+2. If between GPU, ACE port
