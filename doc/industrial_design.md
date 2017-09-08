@@ -934,6 +934,8 @@ Use super linear (__X^2__) and sub linear(__sqr(x)__)
 
 # Uber: Machine Learning system Michelangelo
 
+https://eng.uber.com/michelangelo/
+
 Michelangelo is designed to address these gaps by standardizing the workflows and tools across teams though an end-to-end system that enables users across the company to easily build and operate machine learning systems at scale. Our goal was not only to solve these immediate problems, but also create a system that would grow with the business
 
 ## System architecture
