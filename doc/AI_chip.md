@@ -108,10 +108,19 @@ This is a new interesting era of deep learning, with emergence trend of new syst
 
 XLA (Accelerated Linear Algebra) is a domain-specific compiler for linear algebra that optimizes TensorFlow computations. The results are improvements in speed, memory usage, and portability on server and mobile platforms. Initially, most users will not see large benefits from XLA, but are welcome to experiment by using XLA via just-in-time (JIT) compilation or ahead-of-time (AOT) compilation. Developers targeting new hardware accelerators are especially encouraged to try out XLA.
 
+![XLA](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/XLA.png)
 
 1. Existing CPU architecture not yet officially supported by XLA, with or without an existing LLVM backend.
-2. Non-CPU-like hardware with an existing LLVM backend.
-3. Non-CPU-like hardware without an existing LLVM backend.
+
+![XLA_HW_3](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/XLA_HW_3.png)
+
+2. JIT Compilation
+
+![XLA_HW_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/XLA_HW_2.png)
+
+3. Directly Targeted device
+
+![XLA_HW_1](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/XLA_HW_1.png)
 
 * XLA is only for TensorFlow
 
