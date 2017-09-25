@@ -493,8 +493,6 @@ Unfortunately, this also turns out to be their biggest flaw. Because of their re
 
 There is quite a large semantic gap between music audio on the one hand, and the various aspects of music that affect listener preferences on the other hand. Some of these are fairly easy to extract from audio signals, such as the genre of the music and the instruments used. Others are a little more challenging
 
-##
-
 # Wide and Deep NN for recommendation(From Google)
 
 https://arxiv.org/pdf/1606.07792.pdf
