@@ -483,6 +483,100 @@ There is quite a large semantic gap between music audio on the one hand, and the
 
 ##
 
+# Wide and Deep NN for recommendation(From Google)
+
+https://arxiv.org/pdf/1606.07792.pdf
+
+## Architecture
+
+* A recommender system can be viewed as a search ranking system, where the input query is a set of user and contextual information, and the output is a ranked list of items.
+
+* Given a query, the recommendation task is to find the relevant items in a database and then rank the items based on certain objectives, such as clicks or purchases.
+
+Here is a overview of how recommendation system can be formed based on Google Play app store
+
+![recsys_arch](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/recsys_arch.png)
+
+
+* Since there are over a million apps in the database, it is intractable to exhaustively score every app for every query within the serving latency requirements (often O(10) ms). Therefore, the first step upon receiving a query is __retrieval__. The retrieval system returns a short list of items that best match the query using various signals, usually a combination of machine-learned models and human-defined rules.
+
+* After reducing the candidate pool, the ranking system ranks all items by their scores. The scores are usually __P(y|x)__, the probability of a user action label y given the features x, including user features (e.g., country, language, demographics), contextual features (e.g., device, hour of the day, day of the week), and impression features (e.g., app age, historical statistics of an app).
+
+The following one will focus on ranking
+
+
+## Wide and Deep Learning
+![wide_deep](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/wide_deep.png)
+
+### Wide Model
+Wide component is generally a linear model as shown in left part of architecture
+
+```
+y = wT x + b, y is the prediction
+x = [x1, x2, ..., xd] is a vector of d features, w = [w1,w2,...,wd] are the model parameters and b is the bias.
+```
+
+The feature set includes raw input features and transformed features. One of the most important transformations is the cross-product transformation
+
+![cross_product](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/cross_product.png)
+
+### Deep component
+
+The deep component is a feed-forward neural network, For categorical features, the original inputs are feature strings (e.g., “language=en”). Each of these sparse, high-dimensional categorical features are first converted into a low-dimensional and dense real-valued vector, often referred to as an embedding vector.
+
+The dimensionality of the embeddings are usually on the order of O(10) to O(100).
+
+The embedding vectors are initialized ran- domly and then the values are trained to minimize the final loss function during model training.
+
+### Joint Training
+
+The wide component and deep component are combined using a weighted sum of their output log odds as prediction, which is then fed to one common logistic loss function for joint training.
+
+#### Difference between joint training and ensemble
+
+Note that there is a distinction be- tween joint training and ensemble. In an ensemble, individual models are trained separately without knowing each other, and their predictions are combined only at inference time but not at training time. In contrast, joint training optimizes all parameters simultaneously by taking both the wide and deep part as well as the weights of their sum into account at training time.
+
+There are implications on model size too: For an ensemble, since the training is disjoint, each individual model size usually needs to be larger (e.g., with more features and transformations) to achieve reasonable accuracy for an ensemble to work. In comparison, for joint training the wide part only needs to complement the weaknesses of the deep part with a small number of cross-product feature transformations, rather than a full-size wide model
+
+### Algorithm
+
+Joint training of a Wide & Deep Model is done by back- propagating the gradients from the output to both the wide and deep part of the model simultaneously using mini-batch stochastic optimization. In the experiments, we used Follow- the-regularized-leader (FTRL) algorithm with L1 regularization as the optimizer for the wide part of the model, and AdaGrad for the deep part.
+
+## Implementation
+
+### Data Generation
+
+![app_rec_pipeline](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/app_rec_pipeline.png)
+
+In this stage, user and app impression data within a period of time are used to generate training data. Each example corresponds to one impression. The label is app acquisition: 1 if the impressed app was installed, and 0 otherwise.
+
+Vocabularies, which are tables mapping categorical fea- ture strings to integer IDs, are also generated in this stage. The system computes the ID space for all the string features that occurred more than a minimum number of times. Con- tinuous real-valued features are normalized to [0, 1] by map- ping a feature value x to its cumulative distribution function
+
+### Model Training
+![joint_training](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/joint_training.png)
+
+During training, our input layer takes in training data and vocabularies and generate sparse and dense fea- tures together with a label. The wide component consists of the cross-product transformation of user installed apps and impression apps. For the deep part of the model, A 32- dimensional embedding vector is learned for each categorical feature. We concatenate all the embeddings together with the dense features, resulting in a dense vector of approxi- mately 1200 dimensions. The concatenated vector is then fed into 3 ReLU layers, and finally the logistic output unit.
+
+The Wide & Deep models are trained on over 500 billion examples. Every time a new set of training data arrives, the model needs to be re-trained. However, retraining from scratch every time is computationally expensive and delays the time from data arrival to serving an updated model. To tackle this challenge, we implemented a warm-starting system which initializes a new model with the embeddings and the linear model weights from the previous model.
+
+Before loading the models into the model servers, a dry run of the model is done to make sure that it does not cause problems in serving live traffic. We empirically validate the model quality against the previous model as a sanity check.
+
+### Model Serving
+
+To evaluate the effectiveness of Wide & Deep learning in a real-world recommender system, we ran live experiments and evaluated the system in a couple of aspects: app acquisitions and serving performance
+
+To evaluate the effectiveness of Wide & Deep learning in a real-world recommender system, we ran live experiments and evaluated the system in a couple of aspects: app acquisitions and serving performance
+
+* Serving performance
+
+
+Serving with high throughput and low latency is challenging with the high level of traffic faced by our commercial mobile app store. At peak traffic, our recommender servers score over 10 million apps per second. With single threading, scoring all candidates in a single batch takes 31 ms. We implemented multithreading and split each batch into smaller sizes, which significantly reduced the client-side latency to 14 ms
+
+
+
+
+
+
 # YouTube Recommendation
 
 [Deep Neural Networks for YouTube Recommendations](https://research.google.com/pubs/pub45530.html)
