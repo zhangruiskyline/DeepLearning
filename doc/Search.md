@@ -56,7 +56,15 @@ In reality, K will be like 3,5,10, but the total documentation size could be ver
 F-score or F-measure, is The weighted harmonic mean of precision and recall
 ![F1 score](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/F1score.svg)
 
-### nDCG(Normalized Discounted Cumulative Gain)
+### NDCG(Normalized Discounted Cumulative Gain)
+
+Compared with only Binary classification, we can use multi-class labels, like 5 levels
+
+Two assumptions are made in using DCG and its related measures.
+* Highly relevant documents are more useful when appearing earlier in a search engine result list (have higher ranks)
+* Highly relevant documents are more useful than marginally relevant documents, which are in turn more useful than non-relevant documents.
+
+So in NDCG, the highly relevant is valued more than un relevant. So highly relevant documentation needs to be ranked in highest position, and 
 
 ## Online
 
