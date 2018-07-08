@@ -14,6 +14,7 @@
   - [Deep Learning/AI Chip Design](#deep-learningai-chip-design)
 - [Applications](#applications)
   - [Kaggle](#kaggle)
+  - [Search](#Search)
   - [Text Classification](#text-classification)
   - [Recommendations](#recommendations)
   - [Industrial Usage](#industrial-usage)
@@ -65,6 +66,10 @@
 ## Kaggle
 
 * [Kaggle experience](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/Kaggle.md)
+
+## Search
+
+* [Search Experience](https://github.com/zhangruiskyline/DeepLearning/blob/master/doc/Search.md)
 
 ## Text Classification
 
