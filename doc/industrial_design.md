@@ -39,7 +39,6 @@
 - [Spotify Music Recommendation](#spotify-music-recommendation)
   - [collaborative filter](#collaborative-filter)
   - [Content based](#content-based)
-  - [](#)
 - [Wide and Deep NN for recommendation(From Google)](#wide-and-deep-nn-for-recommendationfrom-google)
   - [Architecture](#architecture-1)
   - [Wide and Deep Learning](#wide-and-deep-learning)

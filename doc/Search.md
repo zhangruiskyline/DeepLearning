@@ -1,11 +1,61 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Overview](#overview)
+  - [Query/Document Match](#querydocument-match)
+  - [Machine Learning based search system](#machine-learning-based-search-system)
+- [Core Search/Rank Algorithm](#core-searchrank-algorithm)
+  - [TF-IDF](#tf-idf)
+  - [BM25](#bm25)
+  - [Language Model](#language-model)
+- [Query-Document Understanding](#query-document-understanding)
+  - [Query Keywords understanding](#query-keywords-understanding)
+    - [Classification](#classification)
+    - [Query Parse](#query-parse)
+    - [Query Expansion](#query-expansion)
+  - [Documentation understanding](#documentation-understanding)
+- [Machine Learn to Ranking](#machine-learn-to-ranking)
+  - [Pointwise Learning to Rank](#pointwise-learning-to-rank)
+  - [PairWise Learning to Rank](#pairwise-learning-to-rank)
+  - [Listwise Learning to Rank](#listwise-learning-to-rank)
+  - [RankSVM](#ranksvm)
+  - [GBDT: Gradient Boost Decision Tree](#gbdt-gradient-boost-decision-tree)
+  - [LambadaMART](#lambadamart)
+- [Evaluation](#evaluation)
+  - [Offline](#offline)
+    - [ROC](#roc)
+    - [F1](#f1)
+    - [NDCG(Normalized Discounted Cumulative Gain)](#ndcgnormalized-discounted-cumulative-gain)
+  - [Online](#online)
+    - [CTR(Click through rate)](#ctrclick-through-rate)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
 
-> Query-Document Understanding
 
-> Ranking
 
-> Evaluation
+
+# Overview
+
+## Query/Document Match
+
+This is the main stream for search algorithm since 1950s. The key steps for this work is to
+
+* Build the Inverted Index
+
+for each query, build a list of documents that have that keywords, not necessary to store all documents, just its index
+
+* Core Ranking
+
+Ranking documents with query, like TF-IDF, BM25
+
+## Machine Learning based search system
+
+Leverage machine learning system to build the models: select features, build the model, and validation. compared with query/documentation match, machine learning system can leverage more multi modal data, like text, image . etc..
+
+
 
 # Core Search/Rank Algorithm
 
@@ -33,6 +83,10 @@ To understand the Query and Documentation
 
 Bag of Words, N-diagram
 
+> N-Grams:
+
+The good part of using N-Grams as it can expand the feature space and bring more features. but the cons is feature dimension could be too large, and very sparse.
+
 * Algorithms
 
 Logistic regression, SVM, Naive Bayes can all be used.
@@ -53,13 +107,25 @@ Three main techniques we can used
 
 ### Query Expansion
 
+Query Expansion can improve the recall rate. For example, some one search for "Iphone10 repair", if we can expand the query to all "iphone repair" we may get more accurate results. But sometimes it may lose some accuracy(suppose iphone10 has some specific repair)
+
+Another application for query Expansion is to process the equal meaning or Acronym words. Like "Donald Trump" to "POTUS"
+
+* Method 1 is to build a graph relationship between search query and keywords.
+
+* Method 2 is to use word Embeddings type of Embedding space. For each query, we build up a representation, use contextual
+
+
+
 ## Documentation understanding
 
-# Learn to Ranking
+# Machine Learn to Ranking
 
 Learning to rank or machine-learned ranking (MLR) is the application of machine learning, typically supervised, semi-supervised or reinforcement learning, in the construction of ranking models for information retrieval systems.Training data consists of lists of items with some partial order specified between items in each list. This order is typically induced by giving a numerical or ordinal score or a binary judgment (e.g. "relevant" or "not relevant") for each item
 
 Compared with unsupervised learning like TF-IDF and BM25. It will leverage the supervised learning scheme.
+
+![Machine Learning rank](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/rank_ML.png)
 
 
 ## Pointwise Learning to Rank
@@ -95,9 +161,41 @@ The idea of Listwise learning to rank is trying to re construct the perfect rank
 
 NDCG is none continuous and none Differentiable, so optimization will be hard. Algorithm like ListMLE and ListNet could be used.
 
-## LambadaRank/LambadaMART
+## RankSVM
 
-The idea is to learn the diff where two documentations have been ranked in wrong order. In this process, we do not need to know the real target function, only the gradient is enough
+> convert the ranking problem into a machine learning problem and use SVM to solve
+
+* Collect a set of features, X, like documentation information, query/documentation similarity, query keywords. etc , and label, Y, to indicate its correlation
+
+* The ranking algorithm should work like this: X1, X2 two sets of feature lists. and its correposnding Y1=3, Y2=5, then the ranking algorithm should rank documentation with X2 higher than documentation with X1
+
+* So we need to learning a W(linear transition), __X2*W > X1*W__, in fact , the hyperspace W build should make the distance between two set maximum
+
+> However, Ranking SVM has problem as
+
+* Complexity is the __O(N^2)__, where N is the data set number, since we need to build the pairwise feature/label set
+
+## GBDT: Gradient Boost Decision Tree
+
+The idea of boost to use a set of weak classifier to build a strong classifier.
+
+## LambadaMART
+
+* RankNet
+
+Ranknet requires to define a loss function to learn rank algorithm, which they choose Logistic Regression.
+
+Ranknet can learn the pairwise between two documentation, but as we indicated before the pairwise documentation can be represent exact ranking, especially this kind of algorithm lack the optimization on metrics such as NDCG.
+
+For example,  for certain query keywords, we have 10 documentations as top K. and two of them have similarity 5 and 3, in ranking, similarity 5 ranked as 4th position while similarity 3 ranks 7th position,  so ranknet could be more optimize to increase 7th rank higher. so it will de prioritize un correlated, and increase the score(lower loss function).
+
+But in fact, in NDCG, rank similarity 5 from 4th to higher may have larger impact.
+
+* LambadaMART
+
+During RankNet training procedure, you don’t need the costs, only need the gradients (λ) of the cost with respect to the model score. You can think of these gradients as little arrows attached to each document in the ranked list, indicating the direction we’d like those documents to move.
+
+![LambadaMART](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/lambadmart.png)
 
 # Evaluation
 
