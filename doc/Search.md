@@ -195,7 +195,7 @@ But in fact, in NDCG, rank similarity 5 from 4th to higher may have larger impac
 
 During RankNet training procedure, you don’t need the costs, only need the gradients (λ) of the cost with respect to the model score. You can think of these gradients as little arrows attached to each document in the ranked list, indicating the direction we’d like those documents to move.
 
-![LambadaMART](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/lambadmart.png)
+![LambadaMART](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/lambdamart.png)
 
 # Evaluation
 
