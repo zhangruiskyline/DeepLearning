@@ -210,7 +210,23 @@ We need to pick top K(hundreds level) from all documentations . the model could 
 
 ## Re-Ranking
 
-Based on top K selected, use ranking algorithm mentioned above to rank, noticing selection algorithm will score for single documentation. pairwise or list wise will only be applied for re ranking 
+Based on top K selected, use ranking algorithm mentioned above to rank, noticing selection algorithm will score for single documentation. pairwise or list wise will only be applied for re ranking
+
+# Deep Learning Based Ranking
+
+Use deep learning to learning the hidden semantic representation for query/documentation   
+
+## Emebedding representation
+
+## CNN based semantic model
+
+> A Latent Semantic Model with Convolutional-Pooling Structure for Information Retrieval
+
+* Traditional: Use BOW to abstract the feature from query or documentations
+
+* Use Sliding window in CNN filter to abstract character level feature, not word level. So the model will convert word into a character level  embedding representation vector, then apply max pooling
+
+![CNNsemantic](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/CNNsemantic.png)
 
 # Evaluation
 
