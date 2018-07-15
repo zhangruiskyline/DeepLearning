@@ -25,6 +25,12 @@
 - [Two stage: Selection and Ranking](#two-stage-selection-and-ranking)
   - [Top K Selection](#top-k-selection)
   - [Re-Ranking](#re-ranking)
+  - [balance between recall/precision](#balance-between-recallprecision)
+  - [High frequency vs Long tail](#high-frequency-vs-long-tail)
+- [Deep Learning Based Ranking](#deep-learning-based-ranking)
+  - [Emebedding representation](#emebedding-representation)
+  - [CNN based semantic model](#cnn-based-semantic-model)
+  - [Learning local representation](#learning-local-representation)
 - [Evaluation](#evaluation)
   - [Offline](#offline)
     - [ROC](#roc)
@@ -208,9 +214,23 @@ The challenge for current search system is most model like Tree based (GBDT) and
 
 We need to pick top K(hundreds level) from all documentations . the model could be simple. mostly widely used is inverted index. And another way is the WAND operator
 
+* The key part Selection is to increase recall
+
 ## Re-Ranking
 
 Based on top K selected, use ranking algorithm mentioned above to rank, noticing selection algorithm will score for single documentation. pairwise or list wise will only be applied for re ranking
+
+* The key part Selection is to increase precision
+
+## balance between recall/precision
+
+Some  search application focus on more precision. like "Trump", "Steve Jobs", in this case, selection part could be simplified, focusing on re ranking
+
+Some  search application focus on more recall, like certain legal documentation, in this case we should focus on more recall
+
+## High frequency vs Long tail
+
+High frequency usually have high traffic volume, we can just use CTR or conversion rate to rank instead of modeling
 
 # Deep Learning Based Ranking
 
@@ -227,6 +247,8 @@ Use deep learning to learning the hidden semantic representation for query/docum
 * Use Sliding window in CNN filter to abstract character level feature, not word level. So the model will convert word into a character level  embedding representation vector, then apply max pooling
 
 ![CNNsemantic](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/CNNsemantic.png)
+
+## Learning local representation 
 
 # Evaluation
 
