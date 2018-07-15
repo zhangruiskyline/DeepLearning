@@ -14,7 +14,7 @@
   - [Deep Learning/AI Chip Design](#deep-learningai-chip-design)
 - [Applications](#applications)
   - [Kaggle](#kaggle)
-  - [Search](#Search)
+  - [Search](#search)
   - [Text Classification](#text-classification)
   - [Recommendations](#recommendations)
   - [Industrial Usage](#industrial-usage)

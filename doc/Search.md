@@ -21,7 +21,10 @@
   - [Listwise Learning to Rank](#listwise-learning-to-rank)
   - [RankSVM](#ranksvm)
   - [GBDT: Gradient Boost Decision Tree](#gbdt-gradient-boost-decision-tree)
-  - [LambadaMART](#lambadamart)
+  - [LambdaMART](#lambdamart)
+- [Two stage: Selection and Ranking](#two-stage-selection-and-ranking)
+  - [Top K Selection](#top-k-selection)
+  - [Re-Ranking](#re-ranking)
 - [Evaluation](#evaluation)
   - [Offline](#offline)
     - [ROC](#roc)
@@ -179,7 +182,7 @@ NDCG is none continuous and none Differentiable, so optimization will be hard. A
 
 The idea of boost to use a set of weak classifier to build a strong classifier.
 
-## LambadaMART
+## LambdaMART
 
 * RankNet
 
@@ -191,11 +194,23 @@ For example,  for certain query keywords, we have 10 documentations as top K. an
 
 But in fact, in NDCG, rank similarity 5 from 4th to higher may have larger impact.
 
-* LambadaMART
+* LambdaMART
 
 During RankNet training procedure, you don’t need the costs, only need the gradients (λ) of the cost with respect to the model score. You can think of these gradients as little arrows attached to each document in the ranked list, indicating the direction we’d like those documents to move.
 
 ![LambadaMART](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/lambdamart.png)
+
+# Two stage: Selection and Ranking
+
+The challenge for current search system is most model like Tree based (GBDT) and Deep learning has high computation complexity. but in inference stage for online ranking. the delay requirement is very tight(<1s), so it would be very hard to rank all related documentation, sometimes it would be >1m.
+
+## Top K Selection
+
+We need to pick top K(hundreds level) from all documentations . the model could be simple. mostly widely used is inverted index. And another way is the WAND operator
+
+## Re-Ranking
+
+Based on top K selected, use ranking algorithm mentioned above to rank, noticing selection algorithm will score for single documentation. pairwise or list wise will only be applied for re ranking 
 
 # Evaluation
 
