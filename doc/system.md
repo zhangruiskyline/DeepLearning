@@ -52,6 +52,7 @@
     - [FPGA in networking](#fpga-in-networking)
     - [FPGA in data center](#fpga-in-data-center)
   - [FPGA with CPU in future](#fpga-with-cpu-in-future)
+  - [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -485,4 +486,10 @@ Also as more FPGAs are used, the performance boost could be Accelerated. for exa
 
 ## FPGA with CPU in future
 
-FPGA is more suitable for repeatable, streaming style process with low latency. CPU can be used for complex task(where FPGA need to have dedicated logic resource to process different task, so if many different tasks need to be processed, FPGA has large resource waste)
+FPGA is more suitable for repeatable, streaming style process with low latency. CPU can be used for complex task(where FPGA need to have dedicated logic resource to process different task, so if many different tasks need to be processed, FPGA has large resource waste).
+
+## reference
+
+https://www.zhihu.com/question/24174597
+
+Large-Scale Reconfigurable Computing in a Microsoft Datacenter https://www.microsoft.com/en-us/research/wp-content/uploads/2014/06/HC26.12.520-Recon-Fabric-Pulnam-Microsoft-Catapult.pdf[2] A Reconfigurable Fabric for Accelerating Large-Scale Datacenter Services, ISCA'14 https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/Catapult_ISCA_2014.pdf[3] Microsoft Has a Whole New Kind of Computer Chip—and It’ll Change Everything[4] A Cloud-Scale Acceleration Architecture, MICRO'16 https://www.microsoft.com/en-us/research/wp-content/uploads/2016/10/Cloud-Scale-Acceleration-Architecture.pdf[5] ClickNP: Highly Flexible and High-performance Network Processing with Reconfigurable Hardware - Microsoft Research[6] Daniel Firestone, SmartNIC: Accelerating Azure's Network with. FPGAs on OCS servers.
