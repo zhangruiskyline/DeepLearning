@@ -51,6 +51,7 @@
     - [Bing Search via FPGA](#bing-search-via-fpga)
     - [FPGA in networking](#fpga-in-networking)
     - [FPGA in data center](#fpga-in-data-center)
+  - [FPGA with CPU in future](#fpga-with-cpu-in-future)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -481,3 +482,7 @@ The data center can use the high throughput and low latency FPGA to create a Acc
 ![FPGADC](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FPGADC.png)
 
 Also as more FPGAs are used, the performance boost could be Accelerated. for example, a single FPGA may not be able to load all NN parameters, so still need to have overhead to process DRAM parameter. but with lots of FPGA, we can load NN model into many different FPGAs
+
+## FPGA with CPU in future
+
+FPGA is more suitable for repeatable, streaming style process with low latency. CPU can be used for complex task(where FPGA need to have dedicated logic resource to process different task, so if many different tasks need to be processed, FPGA has large resource waste)
