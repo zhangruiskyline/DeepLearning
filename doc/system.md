@@ -41,9 +41,16 @@
     - [Performance](#performance)
 - [FPGA on Machine Leaning/Deep Learning](#fpga-on-machine-leaningdeep-learning)
   - [FPGA vs CPU/GPU](#fpga-vs-cpugpu)
-  - [FPGA on Machine Learning](#fpga-on-machine-learning)
+  - [FPGA advantage on computation](#fpga-advantage-on-computation)
     - [Training and inference stage difference](#training-and-inference-stage-difference)
     - [FPGA vs GPU on parallelism](#fpga-vs-gpu-on-parallelism)
+    - [FPGA vs ASIC](#fpga-vs-asic)
+  - [FPGA advantage on communication](#fpga-advantage-on-communication)
+  - [Microsoft Experience on FPGA](#microsoft-experience-on-fpga)
+    - [History](#history)
+    - [Bing Search via FPGA](#bing-search-via-fpga)
+    - [FPGA in networking](#fpga-in-networking)
+    - [FPGA in data center](#fpga-in-data-center)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -400,7 +407,7 @@ FPGA's register and BRAM belong to its own logic, no need for cache and sharing 
 
 
 
-## FPGA on Machine Learning
+## FPGA advantage on computation
 
 > The core advantage of FPGA in machine learning is delay
 
@@ -413,3 +420,64 @@ In Training stage, throughput/bandwidth is more important than latency/delay. In
 * FPGA has both pipeline parallel and data parallelism
 
 * GPU only has data parallelism
+
+for example, if a data process needs 10 steps, FPGA can set up a 10 stage pipeline, each step process one logic. For GPU, it will set  10 computation units with same instruction sets, and all computation unit will do same thing (SIMD), so it needs to wait all 10 data unit to be ready(input) and process them then output in parallelism.
+
+> For streaming computation, FPGA has delay advantage
+
+### FPGA vs ASIC
+
+ASIC still have delay and computation best performance, however,
+* it dose have large investment both capital and time
+* if the algorithm changes, need to re tap out
+* and for data center, managing different ASIC in hetergeneous environment is not easy
+
+## FPGA advantage on communication
+
+* FPGA can direct connect to 40G, 100G ethernet and process data packet in line rate
+
+* CPU need to get data from ethernet adaptor, and for 64 bytes small packet, most of ethernet adaptor can not handle, so need to have multiple network card to support.
+
+* The latency to get data from network card to CPU and then send back is normally 4-5 us even we use like DPDK. and the OS in CPU usually add uncertain time
+
+* Similar as CPU. GPU need to get data from network card and send back, which adds more latency
+
+## Microsoft Experience on FPGA
+
+### History
+
+Microsoft has evolved largely in 3 different stages
+
+1. FPGA clusters
+
+2. FPGA in each machine connected via dedicated network
+
+3. FPGA in each machine between data center network card and switch machine
+
+### Bing Search via FPGA
+
+![BingFPGA](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/BingFPGA.png)
+
+### FPGA in networking
+
+* The need for FPGA in networking process
+
+CPU used to be able to handle the networking packet easily in 1G networking and hard disk time, however, when the networking speed has increased to 40Gbps and SSD speed is 1Gbps, CPU load becomes high. for example, a Hyper-V virtual network switch can only process 25Gbps and can not achieve 40Gbps line speed. and performance decrease when packet size is small, for AES/SHA, CPU can only process like 100Mbps, which is even less than SSD 1Gbps. Following graph shows performance
+
+![networkingCPU](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/networkingCPU.png)
+
+* Azure networking via FPGA
+
+In order to achieve network virtualization. Azure deploy the FPGA between network card and switch: FPGA has 4 GB DDR3-1333 DRAM, and connect to CPU socket via PCIe Gen3 x8
+
+![azurenetworkingFPGA](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/azurenetworkingFPGA.png)
+
+![FPGAvirtualnetwork](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FPGAvirtualnetwork.png)
+
+### FPGA in data center
+
+The data center can use the high throughput and low latency FPGA to create a Accelerator layer between network switch layer and server layer, as shown in below
+
+![FPGADC](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FPGADC.png)
+
+Also as more FPGAs are used, the performance boost could be Accelerated. for example, a single FPGA may not be able to load all NN parameters, so still need to have overhead to process DRAM parameter. but with lots of FPGA, we can load NN model into many different FPGAs
