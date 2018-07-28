@@ -39,6 +39,11 @@
   - [Ring-based Collective communication](#ring-based-collective-communication)
   - [NCCL Implementation](#nccl-implementation)
     - [Performance](#performance)
+- [FPGA on Machine Leaning/Deep Learning](#fpga-on-machine-leaningdeep-learning)
+  - [FPGA vs CPU/GPU](#fpga-vs-cpugpu)
+  - [FPGA on Machine Learning](#fpga-on-machine-learning)
+    - [Training and inference stage difference](#training-and-inference-stage-difference)
+    - [FPGA vs GPU on parallelism](#fpga-vs-gpu-on-parallelism)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -365,3 +370,46 @@ DGX_1 can achieve 60G bps, the former 3 is single machine multiple GPU cards. fi
 ![allreduce_perf_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/allreduce_perf_2.png)
 
 PCIe within machine and InfiniBand among nodes
+
+
+# FPGA on Machine Leaning/Deep Learning
+
+## FPGA vs CPU/GPU
+
+Both CPU and GPU are based on Von Neumann architecture:
+
+* need to compile code to instructions
+
+In Von Neumann architecture, since CPU/GPU need to execute any instruction. it needs to have parts consisting of a processing unit containing an arithmetic logic unit and processor registers; a control unit containing an instruction register and program counter; a memory to store both data and instructions.
+
+> So GPU/CPU use SIMD(Single Instruction Multiple Data) to process to let multiple process unit to process different data with same logic to achieve parallelism
+
+* have shared memory
+
+Memory is needed to save states and share memory for communication
+
+On the other hand, FPGA dose not need to have
+
+* No instruction set
+
+For FPGA, all logic has been fixed once programming the new logic.
+
+* No shared memory
+
+FPGA's register and BRAM belong to its own logic, no need for cache and sharing state among different logic. and all link between current logic and other logic is decided when programming, so no need for communication
+
+
+
+## FPGA on Machine Learning
+
+> The core advantage of FPGA in machine learning is delay
+
+### Training and inference stage difference
+
+In Training stage, throughput/bandwidth is more important than latency/delay. In inference stage, delay/latency is more important. like in search/recommendation, we want to have the results to be returned back in hundred ms
+
+### FPGA vs GPU on parallelism
+
+* FPGA has both pipeline parallel and data parallelism
+
+* GPU only has data parallelism

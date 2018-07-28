@@ -178,7 +178,12 @@ NDCG is none continuous and none Differentiable, so optimization will be hard. A
 
 * The ranking algorithm should work like this: X1, X2 two sets of feature lists. and its correposnding Y1=3, Y2=5, then the ranking algorithm should rank documentation with X2 higher than documentation with X1
 
-* So we need to learning a W(linear transition), __X2*W > X1*W__, in fact , the hyperspace W build should make the distance between two set maximum
+* So we need to learning a W(linear transition),
+
+```
+X2*W > X1*W
+```
+In fact , the hyperspace W build should make the distance between two set maximum
 
 > However, Ranking SVM has problem as
 
@@ -248,7 +253,7 @@ Use deep learning to learning the hidden semantic representation for query/docum
 
 ![CNNsemantic](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/CNNsemantic.png)
 
-## Learning local representation 
+## Learning local representation
 
 # Evaluation
 
