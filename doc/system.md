@@ -65,13 +65,16 @@ http://dlsys.cs.washington.edu/schedule
 
 ## Deep learning computation model abstraction
 
-Lots of machine learning and deep learning, like NN, graphical model, Matrix Factorization, can be abstracted as \eqref{eq:MLdistribute}
-![equationML](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/equationML.svg)
+Lots of machine learning and deep learning, like NN, graphical model, Matrix Factorization, can be abstracted as
+
 
 \begin{equation}
-$ \large \mbox{for } t = 1 \rightarrow T : \theta^{(t+1)} = \theta^{(t)} + \epsilon \Delta_{\mathcal{L}}(\theta^{(t)}, D^{(t)}) $ 
-\label{eq:MLdistribute}
+$$ \large \mbox{for } t = 1 \rightarrow T : \theta^{(t+1)} = \theta^{(t)} + \epsilon \Delta_{\mathcal{L}}(\theta^{(t)}, D^{(t)}) $$
 \end{equation}
+
+<img src="http://chart.googleapis.com/chart?cht=tx&chl= \large \mbox{for } t = 1 \rightarrow T : \theta^{(t+1)} = \theta^{(t)} + \epsilon \Delta_{\mathcal{L}}(\theta^{(t)}, D^{(t)})" style="border:none;">
+
+
 
 * each iteration  ${\large \theta}$ is the model parameters, and  {\large \Delta} function is the update function.
 * each time  {\large \Delta} will get the current model's parameter {\large \theta^{(t)}} and the training  data {\large D^{(t)}} as input, calculate  and directly added into current paramter set  {\large \theta^{(t)}}, to update paramter into {\large \theta^{(t+1)}}
