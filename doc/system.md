@@ -69,7 +69,7 @@ Lots of machine learning and deep learning, like NN, graphical model, Matrix Fac
 ![equationML](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/equationML.svg)
 
 \begin{equation}
-$$\large \mbox{for } t = 1 \rightarrow T : \theta^{(t+1)} = \theta^{(t)} + \epsilon \Delta_{\mathcal{L}}(\theta^{(t)}, D^{(t)})$$ \end{equation}
+$ \large \mbox{for } t = 1 \rightarrow T : \theta^{(t+1)} = \theta^{(t)} + \epsilon \Delta_{\mathcal{L}}(\theta^{(t)}, D^{(t)}) $ 
 \label{eq:MLdistribute}
 \end{equation}
 
