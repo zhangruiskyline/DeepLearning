@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Distributed Machine Learning](#distributed-machine-learning)
+  - [Deep learning computation model abstraction](#deep-learning-computation-model-abstraction)
   - [model parallelism vs data parallelism](#model-parallelism-vs-data-parallelism)
   - [Data Parallelism](#data-parallelism)
     - [Parameter Averaging](#parameter-averaging)
@@ -15,6 +16,7 @@
     - [Large data](#large-data)
     - [Synchronization](#synchronization)
     - [Fault tolerance](#fault-tolerance)
+  - [Design](#design)
 - [MPI](#mpi)
   - [MPI Reduce and Allreduce](#mpi-reduce-and-allreduce)
 - [RABIT: A Reliable Allreduce and Broadcast Interface](#rabit-a-reliable-allreduce-and-broadcast-interface)
@@ -60,6 +62,18 @@
 
 http://dlsys.cs.washington.edu/schedule
 
+
+## Deep learning computation model abstraction
+
+Lots of machine learning and deep learning, like NN, graphical model, Matrix Factorization, can be abstracted as
+![equationML](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/equationML.svg)
+
+* each iteration  {\large \theta} is the model parameters, and  {\large \Delta} function is the update function.
+* each time  {\large \Delta} will get the current model's parameter {\large \theta^{(t)}} and the training  data {\large D^{(t)}} as input, calculate  and directly added into current paramter set  {\large \theta^{(t)}}, to update paramter into {\large \theta^{(t+1)}}
+* Iterate this until some conditions meet, like Iterate  {\large T} times, or other stop conditions
+
+In NN training, like using SGD
+
 ## model parallelism vs data parallelism
 
 In model parallelism, different machines in the distributed system are responsible for the computations in different parts of a single network - for example, each layer in the neural network may be assigned to a different machine.
@@ -75,6 +89,9 @@ Data parallel approaches to distributed training keep a copy of the entire model
 * Parameter averaging vs. update (gradient)-based approaches
 * Synchronous vs. asynchronous methods
 * Centralized vs. distributed synchronization
+
+
+
 
 ### Parameter Averaging
 Parameter averaging is the conceptually simplest approach to data parallelism. With parameter averaging, training proceeds as follows:
@@ -182,6 +199,8 @@ What are parameters of a ML model? Usually an element of a vector, matrix, etc. 
   * However, workers cache state across iterations
 * Keys are replicated for fault tolerance
 * Jobs are rerun if a worker fails
+
+## Design
 
 # MPI
 
