@@ -13,13 +13,13 @@
 - [Parameter Server](#parameter-server)
   - [Design principal](#design-principal)
   - [Key consideration](#key-consideration)
-  - [PS in GPU cluster](#ps-in-gpu-cluster)
   - [System view](#system-view)
     - [Challenge](#challenge)
     - [Large data](#large-data)
     - [Synchronization](#synchronization)
     - [Fault tolerance](#fault-tolerance)
-  - [Design](#design)
+  - [PS in GPU cluster](#ps-in-gpu-cluster)
+    - [GPU challenge](#gpu-challenge)
 - [MPI](#mpi)
   - [MPI Reduce and Allreduce](#mpi-reduce-and-allreduce)
 - [RABIT: A Reliable Allreduce and Broadcast Interface](#rabit-a-reliable-allreduce-and-broadcast-interface)
@@ -201,9 +201,6 @@ Here the parameter sever is logic concept, it dose not need to be a single centr
 * Fault tolerance(if some servers is down, how to recover)
 * Node computation model, CPU to GPU
 
-## PS in GPU cluster
-
-In
 
 ## System view
 * Initialize model with small random values Paid Once
@@ -247,7 +244,24 @@ What are parameters of a ML model? Usually an element of a vector, matrix, etc. 
 * Keys are replicated for fault tolerance
 * Jobs are rerun if a worker fails
 
-## Design
+## PS in GPU cluster
+
+Two challenges for GPU clusters
+
+* GPU has its own memory, so we need to have data inside CPU memory. Since all data will need to be pulled from remote node, and most of networking protocol only support RAM to RAM (like RDMA). Nvidia has own GPU direct technology, but it requires dedicated HW support
+
+* Need to have memcpy from RAM into GPU memory
+
+So if we have Push and Pull API and two memcpy, we can have PS ported to GPU. here are two simple implementation: https://github.com/sailing-pmls/bosen and https://github.com/sailing-pmls/pmls-caffe
+
+### GPU challenge
+
+In most times, GPU is too fast so we can easily have problem when deploy the real model into systems
+
+* Memory Copy:
+* Communication bandwidth/latency
+* GPU memory 
+
 
 # MPI
 
