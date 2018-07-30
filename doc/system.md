@@ -30,7 +30,7 @@
   - [communication primitive](#communication-primitive)
   - [Ring-based Collective communication](#ring-based-collective-communication)
     - [MPI Reduce and Allreduce](#mpi-reduce-and-allreduce)
-    - [limitation of map-reduce](#limitation-of-map-reduce)
+    - [limitation of reduce via map](#limitation-of-reduce-via-map)
   - [Allreduce in practice](#allreduce-in-practice)
   - [Tree based Allreduce vs Ring based Allreduce](#tree-based-allreduce-vs-ring-based-allreduce)
     - [limitations of Tree Allreduce](#limitations-of-tree-allreduce)
@@ -363,7 +363,9 @@ http://mpitutorial.com/tutorials/mpi-reduce-and-allreduce/
 
 ![MPI_reduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/mpi_reduce.png)
 
-### limitation of map-reduce
+![MPI_allreduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/mpi_allreduce.png)
+
+### limitation of reduce via map
 
 * persistent resources requirements
 
@@ -379,7 +381,7 @@ An abstraction that overcomes such limitations is Allreduce. Allreduce avoids th
 
 ![reduce_allreduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/reduce_allreduce.png)
 
-![MPI_allreduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/mpi_allreduce.png)
+
 
 
 
