@@ -63,12 +63,9 @@
 http://dlsys.cs.washington.edu/schedule
 
 
-## Deep learning computation model abstraction
+## Deep learning computation model
 
 Lots of machine learning and deep learning, like NN, graphical model, Matrix Factorization, can be abstracted as
-
-
-
 
 <img src="http://chart.googleapis.com/chart?cht=tx&chl= \large \mbox{for } t = 1 \rightarrow T : \theta^{(t+1)} = \theta^{(t)} + \epsilon \Delta_{\mathcal{L}}(\theta^{(t)}, D^{(t)})" style="border:none;">
 
@@ -82,6 +79,15 @@ $$ \large \mbox{for } t = 1 \rightarrow T : \theta^{(t+1)} = \theta^{(t)} + \eps
 * Iterate this until some conditions meet, like Iterate  {\large T} times, or other stop conditions
 
 In NN training, like using SGD
+
+In conclusion, we want
+
+
+* The training will be mainly on {\large \Delta} function, since the core distribute function to be executed in different machine is {\large \Delta} function
+
+* In each iteration, each machine will calculate the {\large \Delta} function independently, there is __NO dependency__ between different machines
+
+* Before each iteration, the model parameters ${\large \theta}$ will be shared by all Nodes.
 
 ## model parallelism vs data parallelism
 
@@ -174,6 +180,8 @@ Most variants of asynchronous stochastic gradient descent maintain the same basi
   * fairly trivial to parallelize
 * Try to train the right answer for your input set Iterate through the input set many many times
 * Adjust the model: Send a small update to the model parameters
+
+![PS](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/PS.jpg)
 
 ### Challenge
 
