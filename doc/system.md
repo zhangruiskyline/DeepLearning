@@ -1,3 +1,4 @@
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
@@ -20,7 +21,12 @@
     - [Fault tolerance](#fault-tolerance)
   - [PS in GPU cluster](#ps-in-gpu-cluster)
     - [GPU challenge](#gpu-challenge)
-- [MPI](#mpi)
+      - [GPU bandwidth example](#gpu-bandwidth-example)
+    - [solutions](#solutions)
+      - [model parallelism](#model-parallelism)
+      - [Asychronous: Overlap between computation and communication](#asychronous-overlap-between-computation-and-communication)
+      - [Asychronous: Sufficient Factor Broadcasting](#asychronous-sufficient-factor-broadcasting)
+- [All reduce on MPI](#all-reduce-on-mpi)
   - [MPI Reduce and Allreduce](#mpi-reduce-and-allreduce)
 - [RABIT: A Reliable Allreduce and Broadcast Interface](#rabit-a-reliable-allreduce-and-broadcast-interface)
   - [limitation of map-reduce](#limitation-of-map-reduce)
@@ -258,12 +264,54 @@ So if we have Push and Pull API and two memcpy, we can have PS ported to GPU. he
 
 In most times, GPU is too fast so we can easily have problem when deploy the real model into systems
 
-* Memory Copy:
-* Communication bandwidth/latency
-* GPU memory 
+* Memory Copy: Memory copy has overhead and compared with GPU fast computation the overhead is higher
+* Communication bandwidth/latency: different node and networking condition could lead to different latency, may need to spend quite long time just to wait a node to finish
+* GPU memory: limited memory(Nvidia has largest 12G) compared with RAM.
+
+#### GPU bandwidth example
+> Example: Training Alexnet in Nvidia Gefore Titan X (GM200)
+
+61.5M paramerers for Alexnet, Batch size 256, a GPU can finish computation in 0.25s for each iteration.  assume we have 8 GPUs and all numbers are float.
+
+* In PS  client, in order to pass all parameters in synchronous way, in each 0.25s, each GPU machine need to push and pull 61.5M. so the network bandwidth needed is 61.5M × 2 / 0.25s = 492M/s, converting to networking Tput is 492M/s * 32 bit = 15744 Mbps = 15.7 Gbps
+* In server side, in each 0.25s, server need to Push and Pull 61.5M*8 = 492M gradient paramter values. Network bandwidth needed is 492M * 2 / 0.25s = 3936 M/s, converting networking Tput is 3936M/s * 32 bit = 125.9 Gbps
+
+Even the highest AWS GPU can only provide 20Gbps, and it only has 8 GPU(not even the best Volta)
+
+### solutions
+
+#### model parallelism
+Since PS server is a logic concept, we can distribute all parameters evenly in 8 GPUs, so each machine is both client worker and server. each node only need to compute 1/8 parameter size. so each node will need to push and pull as worker, and push and pull as server. 4 × 61.5M / 0.25s × 7/8 = 840 M/s = 26Gbps, but it is only assumption in optimized situation. communication need for distribute GPUs are very high
+
+like using GPU to train Resnet, Resnet has deeper network so computation time is higher compared with communication time, also it is CNN based so parameter size is smaller
+
+http://www.pdl.cmu.edu/PDL-FTP/CloudComputing/GeePS-cui-eurosys16.pdf
+
+#### Asychronous: Overlap between computation and communication
+
+The basic $ {\large \texttt{pull} \rightarrow \Delta_{\mathcal{L}} \rightarrow \texttt{push}} $ gives us hint that we could overlap computation with communication to achieve better results.
 
 
-# MPI
+The idea is in NN training, both backward propagation and parameter pass are based on layer. __i th__ layer parameter push/Pull are independent with __i-1 th__ layer. Also since parameter update are independent, we do not need to wait all parameter to be ready and pull all of them. instead, we can pull after one layer has finished training.  
+
+Also most model(CNN) has high computation need in initial CNN stage with less parameter and communication bandwidth, but less computation with more parameter/communication bandwidth in later stage like full connected layer
+
+> Wait-free Backpropagation（WFBP）
+
+WFBP can be illustrated as
+
+![WFBP](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/WFBP.jpg)
+
+test results can be found in https://www.usenix.org/system/files/conference/atc17/atc17-zhang.pdf
+
+but, still, as model becomes larger, GPU becomes faster, networking bandwidth will be a big challenge. compared with PCIe in single machine, multiple nodes's communication will be a bottleneck
+
+#### Asychronous: Sufficient Factor Broadcasting
+http://auai.org/uai2016/proceedings/papers/10.pdf
+
+
+
+# All reduce on MPI
 
 http://mpitutorial.com
 
@@ -286,7 +334,7 @@ Allreduce is an abstraction commonly used for solving machine learning problems.
 machine learning programs usually consume more resources, they often demand allocation of tempo- ral results and caching. Since a machine learning process is generally iterative, it is desirable to make it __persistent__ across iterations.
 
 ## All reduce
-An abstraction that overcomes such limitations is Allre- duce. Allreduce avoids the unnecessary map phases, real- location of memory and disk reads-writes between iterations.
+An abstraction that overcomes such limitations is Allreduce. Allreduce avoids the unnecessary map phases, real- location of memory and disk reads-writes between iterations.
 
 * A single map phase takes place, followed by one or more Allreduce stages
 
