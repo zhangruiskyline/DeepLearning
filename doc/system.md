@@ -309,7 +309,9 @@ but, still, as model becomes larger, GPU becomes faster, networking bandwidth wi
 #### Asychronous: Sufficient Factor Broadcasting
 http://auai.org/uai2016/proceedings/papers/10.pdf
 
+Assume a __NxM__ full connected layer network with Batch size B, so the gradient parameters can be divided as num of B product of vectors with length N and M, so in reality, we can only send B times vector N and M instead of a large matrix.
 
+Similar system is Microsoft Project Adam : https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-chilimbi.pdf
 
 # All reduce on MPI
 
