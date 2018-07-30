@@ -3,7 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Distributed Machine Learning](#distributed-machine-learning)
-  - [Deep learning computation model abstraction](#deep-learning-computation-model-abstraction)
+  - [Deep learning computation model](#deep-learning-computation-model)
   - [model parallelism vs data parallelism](#model-parallelism-vs-data-parallelism)
   - [Data Parallelism](#data-parallelism)
     - [Parameter Averaging](#parameter-averaging)
@@ -11,6 +11,9 @@
     - [Asychronous Stochastic Gradient Descent](#asychronous-stochastic-gradient-descent)
   - [Distributed Asychronous Stochastic Gradient Descent](#distributed-asychronous-stochastic-gradient-descent)
 - [Parameter Server](#parameter-server)
+  - [Design principal](#design-principal)
+  - [Key consideration](#key-consideration)
+  - [PS in GPU cluster](#ps-in-gpu-cluster)
   - [System view](#system-view)
     - [Challenge](#challenge)
     - [Large data](#large-data)
@@ -80,14 +83,7 @@ $$ \large \mbox{for } t = 1 \rightarrow T : \theta^{(t+1)} = \theta^{(t)} + \eps
 
 In NN training, like using SGD
 
-In conclusion, we want
 
-
-* The training will be mainly on {\large \Delta} function, since the core distribute function to be executed in different machine is {\large \Delta} function
-
-* In each iteration, each machine will calculate the {\large \Delta} function independently, there is __NO dependency__ between different machines
-
-* Before each iteration, the model parameters ${\large \theta}$ will be shared by all Nodes.
 
 ## model parallelism vs data parallelism
 
@@ -175,13 +171,47 @@ Most variants of asynchronous stochastic gradient descent maintain the same basi
 
 # Parameter Server
 
+## Design principal
+
+> Design the equation into distributed way
+
+\begin{equation} \large \mbox{for } t = 1 \rightarrow T : \theta^{(t+1)} = \theta^{(t)} + \epsilon \sum_{p=1}^P \Delta_{\mathcal{L}}(\theta^{(t)}, D^{(t)}_p) \end{equation}
+
+Compared wih single machine, only to distribute calculation into different machines.
+
+
+* The training will be mainly on {\large \Delta} function, since the core distribute function to be executed in different machine is {\large \Delta} function
+
+* In each iteration, each machine will calculate the {\large \Delta} function independently, there is __NO dependency__ between different machines
+
+* Before each iteration, the model parameters ${\large \theta}$ will be shared by all Nodes.
+
+> So the architecture will looks like
+
+![PS](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/PS.jpg)
+
+Here the parameter sever is logic concept, it dose not need to be a single centralized server. but could be servers in data center.
+
+## Key consideration
+
+* How to store all parameter
+* Push and Pull API Design
+* Synchronous or Asynchronous
+* Communication bandwidth
+* Fault tolerance(if some servers is down, how to recover)
+* Node computation model, CPU to GPU
+
+## PS in GPU cluster
+
+In
+
 ## System view
 * Initialize model with small random values Paid Once
   * fairly trivial to parallelize
 * Try to train the right answer for your input set Iterate through the input set many many times
 * Adjust the model: Send a small update to the model parameters
 
-![PS](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/PS.jpg)
+
 
 ### Challenge
 
