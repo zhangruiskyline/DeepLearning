@@ -26,28 +26,25 @@
       - [model parallelism](#model-parallelism)
       - [Asychronous: Overlap between computation and communication](#asychronous-overlap-between-computation-and-communication)
       - [Asychronous: Sufficient Factor Broadcasting](#asychronous-sufficient-factor-broadcasting)
-- [All reduce on MPI](#all-reduce-on-mpi)
-  - [MPI Reduce and Allreduce](#mpi-reduce-and-allreduce)
-- [RABIT: A Reliable Allreduce and Broadcast Interface](#rabit-a-reliable-allreduce-and-broadcast-interface)
-  - [limitation of map-reduce](#limitation-of-map-reduce)
-    - [persistent resources requirements](#persistent-resources-requirements)
-  - [All reduce](#all-reduce)
-    - [allreduce in practice](#allreduce-in-practice)
-  - [Rabit Algorithm](#rabit-algorithm)
-    - [Fault-tolerant](#fault-tolerant)
-      - [Recovery](#recovery)
-      - [Consensus Protocol](#consensus-protocol)
-      - [Routing](#routing)
-- [Tree based Allreduce vs Ring based Allreduce](#tree-based-allreduce-vs-ring-based-allreduce)
-  - [limitations of Tree Allreduce](#limitations-of-tree-allreduce)
-  - [Ring Allreduce](#ring-allreduce)
+- [All reduce Approach](#all-reduce-approach)
+  - [communication primitive](#communication-primitive)
+  - [Ring-based Collective communication](#ring-based-collective-communication)
+    - [MPI Reduce and Allreduce](#mpi-reduce-and-allreduce)
+    - [limitation of map-reduce](#limitation-of-map-reduce)
+  - [Allreduce in practice](#allreduce-in-practice)
+  - [Tree based Allreduce vs Ring based Allreduce](#tree-based-allreduce-vs-ring-based-allreduce)
+    - [limitations of Tree Allreduce](#limitations-of-tree-allreduce)
+    - [Ring Allreduce](#ring-allreduce)
     - [Scatter-Reduce](#scatter-reduce)
     - [AllGather](#allgather)
     - [Overhead Analysis](#overhead-analysis)
-- [Allreduce vs Paramter server](#allreduce-vs-paramter-server)
+    - [RABIT: A Reliable Allreduce and Broadcast Interface](#rabit-a-reliable-allreduce-and-broadcast-interface)
+      - [Fault-tolerant](#fault-tolerant)
+      - [Recovery](#recovery)
+      - [Consensus Protocol](#consensus-protocol)
+      - [Routing](#routing)
+  - [Allreduce vs Paramter server](#allreduce-vs-paramter-server)
 - [Nvidia Multi-GPU Lib: NCCL](#nvidia-multi-gpu-lib-nccl)
-  - [communication primitive](#communication-primitive)
-  - [Ring-based Collective communication](#ring-based-collective-communication)
   - [NCCL Implementation](#nccl-implementation)
     - [Performance](#performance)
 - [FPGA on Machine Leaning/Deep Learning](#fpga-on-machine-leaningdeep-learning)
@@ -313,29 +310,67 @@ Assume a __NxM__ full connected layer network with Batch size B, so the gradient
 
 Similar system is Microsoft Project Adam : https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-chilimbi.pdf
 
-# All reduce on MPI
+# All reduce Approach
+
+## communication primitive
+
+* Reduce:
+
+Multiple senders send information and combine in one node
+
+![reduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/reduce.png)
+
+* All reduce
+
+Multiple senders send information and combine and distribute to all nodes
+
+![all_reduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/all_reduce.png)
+
+Traditional Collective communication assumes a tree style topology, but it dose not assume a flat tree, instead it use ring-based Collective communication.
+
+## Ring-based Collective communication
+
+Ring based assumes all nodes are in a circle.
+
+* Assume there are K nodes, N data, and bandwidth is B
+
+total communication time is:
+
+```
+(K-1)*N/B
+```
+
+* Split the data into S, then we split N/S data
+
+total communication time is:
+
+```
+S*(N/S/B) + (k-2)* (N/S/B) = N(S+K-2)/(SB) --> N/B
+
+if S>>K, which is normally true
+```
+
+![collective_communication](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/collective_communication.png)
+
+* Implement in GPU environment
+
+![GPU_allreduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_allreduce.png)
 
 http://mpitutorial.com
 
-## MPI Reduce and Allreduce
+### MPI Reduce and Allreduce
 http://mpitutorial.com/tutorials/mpi-reduce-and-allreduce/
 
 ![MPI_reduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/mpi_reduce.png)
 
-![MPI_allreduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/mpi_allreduce.png)
+### limitation of map-reduce
 
-# RABIT: A Reliable Allreduce and Broadcast Interface
-http://homes.cs.washington.edu/~icano/projects/rabit.pdf
+* persistent resources requirements
 
-Allreduce is an abstraction commonly used for solving machine learning problems. It is an operation where every node starts with a local value and ends up with an aggre- gate global result.
+machine learning programs usually consume more resources, they often demand allocation of temporal results and caching. Since a machine learning process is generally iterative, it is desirable to make it __persistent__ across iterations.
 
-## limitation of map-reduce
+## Allreduce in practice
 
-### persistent resources requirements
-
-machine learning programs usually consume more resources, they often demand allocation of tempo- ral results and caching. Since a machine learning process is generally iterative, it is desirable to make it __persistent__ across iterations.
-
-## All reduce
 An abstraction that overcomes such limitations is Allreduce. Allreduce avoids the unnecessary map phases, real- location of memory and disk reads-writes between iterations.
 
 * A single map phase takes place, followed by one or more Allreduce stages
@@ -344,9 +379,17 @@ An abstraction that overcomes such limitations is Allreduce. Allreduce avoids th
 
 ![reduce_allreduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/reduce_allreduce.png)
 
+![MPI_allreduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/mpi_allreduce.png)
+
+
+
+Allreduce is an abstraction commonly used for solving machine learning problems. It is an operation where every node starts with a local value and ends up with an aggre- gate global result.
+
+
+
 * OpenMPI is non fault-tolerant
 
-### allreduce in practice
+
 
 In Allreduce settings, nodes are organized in a tree structure. Each node holds a portion of the data and computes some values on it. Those values are passed up the tree and aggregated, until a global aggregate value is calculated in the root node (reduce). The global value is then passed down to all other nodes (broadcast).
 
@@ -354,45 +397,14 @@ In Allreduce settings, nodes are organized in a tree structure. Each node holds 
 
 Several machine learning problems fit into this abstrac- tion, where every node works on some portion of the data, computes some local statistics (e.g. local gradients) and then invokes the Allreduce primitive to get a global ag- gregated result (e.g. global gradient) in order to further proceed with the computations.
 
-## Rabit Algorithm
+## Tree based Allreduce vs Ring based Allreduce
 
-* Flexibility in programming: Programs can call Ra- bit functions in any order, as opposed to frameworks where callbacks are offered and called at specific points in time.
-* Programs persistence: Programs continue running over all iterations, instead of being restarted on each one of them.
-* Fault tolerance: Rabit programs can recover their state (e.g. machine learning model) using synchronous function calls.
-* MPIcompatible: Code that uses Rabit API also compiles with existing MPI compilers, i.e. users can use MPI Allreduce with no code modification.
-
-### Fault-tolerant
-
-1. Pause every node until the failed node is fully recov- ered.
-2. Detect the model version we need to recover by ob- taining the minimum operation number. This is done using the Consensus Protocol.
-3. Transfer the model to the failed node using the Routing Protocol.
-4. Resume the execution of the failed node using the received model.
-5. Resume the execution of the other nodes as soon as the failed node catches up
-
-![allreduce_recovery](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/allreduce_recovery.png)
-
-#### Recovery
-Message Passing: nodes send messages to their neighbors to find out information about them. It can be used in many algorithms such as Shortest Path
-
-#### Consensus Protocol
-The consensus protocol agrees on the model version to recover using an Allreduce min operation. In the example shown in Figure,
-![min_recovery](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/min_recovery.png)
-the value of each node is the model version they store. The green node on the left subtree is recovering so it wants to find which model it needs in order to make progress. It does so with the Allreduce min operation. After the value 0 is broadcast-ed to every node, everyone knows that model 0 is the version to be used
-for recovery.
-
-#### Routing
-Routing: Once the model version to recover is agreed among the nodes, the routing protocol executes. It finds the shortest path a failed node needs to use in order to retrieve the model. It uses two rounds of message passing.
-* The first round computes the distance from a failed node to the nearest node that has the model.
-* The second round sends requests through the shortest path until it reaches the node that owns the model, and retrieves it.
-
-# Tree based Allreduce vs Ring based Allreduce
-
-## limitations of Tree Allreduce
+### limitations of Tree Allreduce
 ![allreduce_issue](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/allreduce_issue.png)
 
 If we have 300M parameters and each is 4 Bytes. it will have 1.2G data, and assuming bandwidth is 1GB/s. if we use 2 GPUs, delayed 1.2s, 10 GPUs, delayed 10.8s for each epoch
 
-## Ring Allreduce
+### Ring Allreduce
 GPUs have been placed in logical ring. GPU get data from left GPU and sends to right GPU
 ![ring_reduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/ring_reduce.png)
 
@@ -438,56 +450,46 @@ For Each GPU,
 2(N−1)⋅K
 ```
 
-# Allreduce vs Paramter server
+### RABIT: A Reliable Allreduce and Broadcast Interface
+http://homes.cs.washington.edu/~icano/projects/rabit.pdf
+
+* Flexibility in programming: Programs can call Ra- bit functions in any order, as opposed to frameworks where callbacks are offered and called at specific points in time.
+* Programs persistence: Programs continue running over all iterations, instead of being restarted on each one of them.
+* Fault tolerance: Rabit programs can recover their state (e.g. machine learning model) using synchronous function calls.
+* MPIcompatible: Code that uses Rabit API also compiles with existing MPI compilers, i.e. users can use MPI Allreduce with no code modification.
+
+#### Fault-tolerant
+
+1. Pause every node until the failed node is fully recov- ered.
+2. Detect the model version we need to recover by ob- taining the minimum operation number. This is done using the Consensus Protocol.
+3. Transfer the model to the failed node using the Routing Protocol.
+4. Resume the execution of the failed node using the received model.
+5. Resume the execution of the other nodes as soon as the failed node catches up
+
+![allreduce_recovery](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/allreduce_recovery.png)
+
+#### Recovery
+Message Passing: nodes send messages to their neighbors to find out information about them. It can be used in many algorithms such as Shortest Path
+
+#### Consensus Protocol
+The consensus protocol agrees on the model version to recover using an Allreduce min operation. In the example shown in Figure,
+![min_recovery](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/min_recovery.png)
+the value of each node is the model version they store. The green node on the left subtree is recovering so it wants to find which model it needs in order to make progress. It does so with the Allreduce min operation. After the value 0 is broadcast-ed to every node, everyone knows that model 0 is the version to be used
+for recovery.
+
+#### Routing
+Routing: Once the model version to recover is agreed among the nodes, the routing protocol executes. It finds the shortest path a failed node needs to use in order to retrieve the model. It uses two rounds of message passing.
+* The first round computes the distance from a failed node to the nearest node that has the model.
+* The second round sends requests through the shortest path until it reaches the node that owns the model, and retrieves it.
+
+
+
+## Allreduce vs Paramter server
 http://hunch.net/?p=151364
 
 # Nvidia Multi-GPU Lib: NCCL
 
 NCCL (pronounced "Nickel") is a stand-alone library of standard collective communication routines, such as all-gather, reduce, broadcast, etc., that have been optimized to achieve high bandwidth over PCIe, Nvlink、InfiniBand
-
-## communication primitive
-
-* Reduce:
-
-Multiple senders send information and combine in one node
-
-![reduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/reduce.png)
-
-* All reduce
-
-Multiple senders send information and combine and distribute to all nodes
-
-![all_reduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/all_reduce.png)
-
-Traditional Collective communication assumes a tree style topology, but it dose not assume a flat tree, instead it use ring-based Collective communication.
-
-## Ring-based Collective communication
-
-Ring based assumes all nodes are in a circle.
-
-* Assume there are K nodes, N data, and bandwidth is B
-
-total communication time is:
-
-```
-(K-1)*N/B
-```
-
-* Split the data into S, then we split N/S data
-
-total communication time is:
-
-```
-S*(N/S/B) + (k-2)* (N/S/B) = N(S+K-2)/(SB) --> N/B
-
-if S>>K, which is normally true
-```
-
-![collective_communication](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/collective_communication.png)
-
-* Implement in GPU environment
-
-![GPU_allreduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_allreduce.png)
 
 ## NCCL Implementation
 
