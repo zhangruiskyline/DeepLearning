@@ -75,7 +75,7 @@ Lots of machine learning and deep learning, like NN, graphical model, Matrix Fac
 ![ML_equation](http://mathurl.com/yat9ozoy.png)
 
 
-* each iteration ![theta](http://mathurl.com/y9g6t9ew) is the model parameters, and  {\large \Delta} function is the update function.
+* each iteration ![theta](http://mathurl.com/y9g6t9ew.png) is the model parameters, and  {\large \Delta} function is the update function.
 * each time  {\large \Delta} will get the current model's parameter {\large \theta^{(t)}} and the training  data {\large D^{(t)}} as input, calculate  and directly added into current paramter set  {\large \theta^{(t)}}, to update paramter into {\large \theta^{(t+1)}}
 * Iterate this until some conditions meet, like Iterate  {\large T} times, or other stop conditions
 
@@ -174,7 +174,7 @@ Most variants of asynchronous stochastic gradient descent maintain the same basi
 > Design the equation into distributed way
 
 
- ![distribute_ML](http://mathurl.com/y79pumk2)
+ ![distribute_ML](http://mathurl.com/y79pumk2.png)
 
 Compared wih single machine, only to distribute calculation into different machines.
 
