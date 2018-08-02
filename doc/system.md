@@ -73,11 +73,7 @@ http://dlsys.cs.washington.edu/schedule
 
 Lots of machine learning and deep learning, like NN, graphical model, Matrix Factorization, can be abstracted as
 
-<img src="http://chart.googleapis.com/chart?cht=tx&chl= \large \mbox{for } t = 1 \rightarrow T : \theta^{(t+1)} = \theta^{(t)} + \epsilon \Delta_{\mathcal{L}}(\theta^{(t)}, D^{(t)})" style="border:none;">
-
-
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-$$ \large \mbox{for } t = 1 \rightarrow T : \theta^{(t+1)} = \theta^{(t)} + \epsilon \Delta_{\mathcal{L}}(\theta^{(t)}, D^{(t)}) $$
+![ML_equation](http://mathurl.com/yat9ozoy.png)
 
 
 * each iteration  ${\large \theta}$ is the model parameters, and  {\large \Delta} function is the update function.
