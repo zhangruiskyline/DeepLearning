@@ -75,12 +75,11 @@ Lots of machine learning and deep learning, like NN, graphical model, Matrix Fac
 ![ML_equation](http://mathurl.com/yat9ozoy.png)
 
 
-* each iteration ![theta](http://mathurl.com/y9g6t9ew.png) is the model parameters, and  {\large \Delta} function is the update function.
-* each time  {\large \Delta} will get the current model's parameter {\large \theta^{(t)}} and the training  data {\large D^{(t)}} as input, calculate  and directly added into current paramter set  {\large \theta^{(t)}}, to update paramter into {\large \theta^{(t+1)}}
-* Iterate this until some conditions meet, like Iterate  {\large T} times, or other stop conditions
+* each iteration ![theta](http://mathurl.com/y9g6t9ew.png) is the model parameters, and  ![delta](http://mathurl.com/y7vtqbnk.png) function is the update function,
+* each time  ![delta](http://mathurl.com/y7vtqbnk.png) will get the current model's parameter ![theta_t](http://mathurl.com/y8aaxmyx.png) and the training  data ![D_t](http://mathurl.com/y88cxtk6.png) as input, calculate  and directly added into current paramter set  ![theta_t](http://mathurl.com/y8aaxmyx.png), to update paramter into ![theta_t+1](http://mathurl.com/ya2kbabj.png)
+* Iterate this until some conditions meet, like Iterate  __T__ times, or other stop conditions
 
-In NN training, like using SGD
-
+In NN training, like using SGD, ![theta](http://mathurl.com/y9g6t9ew.png) is the NN parameter, __L__ is the optimization function. ![delta_L](http://mathurl.com/y9v7pmh4.png) is the gradient decent. So in each batch, using the original data set ![D_t](http://mathurl.com/y88cxtk6.png) and calculate the target optimization function __L__ decent to ![theta](http://mathurl.com/y9g6t9ew.png), mutiply learning rate and add momentum to get updated parameters
 
 
 ## model parallelism vs data parallelism
