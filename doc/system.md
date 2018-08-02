@@ -180,6 +180,8 @@ Most variants of asynchronous stochastic gradient descent maintain the same basi
 
 \begin{equation} \large \mbox{for } t = 1 \rightarrow T : \theta^{(t+1)} = \theta^{(t)} + \epsilon \sum_{p=1}^P \Delta_{\mathcal{L}}(\theta^{(t)}, D^{(t)}_p) \end{equation}
 
+ ![img](http://latex.codecogs.com/svg.latex?%5Clarge+%5Cmbox%7Bfor+%7D+t+%3D+1+%5Crightarrow+T+%3A+%5Ctheta%5E%7B%28t%2B1%29%7D+%3D+%5Ctheta%5E%7B%28t%29%7D+%2B+%5Cepsilon+%5Csum_%7Bp%3D1%7D%5EP+%5CDelta_%7B%5Cmathcal%7BL%7D%7D%28%5Ctheta%5E%7B%28t%29%7D%2C+D%5E%7B%28t%29%7D_p%29)
+
 Compared wih single machine, only to distribute calculation into different machines.
 
 
