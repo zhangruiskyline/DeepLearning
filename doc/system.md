@@ -178,11 +178,11 @@ Most variants of asynchronous stochastic gradient descent maintain the same basi
 Compared wih single machine, only to distribute calculation into different machines.
 
 
-* The training will be mainly on {\large \Delta} function, since the core distribute function to be executed in different machine is {\large \Delta} function
+* The training will be mainly on ![delta](http://mathurl.com/y7vtqbnk.png) function, since the core distribute function to be executed in different machine is ![delta](http://mathurl.com/y7vtqbnk.png) function
 
-* In each iteration, each machine will calculate the {\large \Delta} function independently, there is __NO dependency__ between different machines
+* In each iteration, each machine will calculate the ![delta](http://mathurl.com/y7vtqbnk.png) function independently, there is __NO dependency__ between different machines
 
-* Before each iteration, the model parameters ${\large \theta}$ will be shared by all Nodes.
+* Before each iteration, the model parameters ![theta](http://mathurl.com/y9g6t9ew.png)  will be shared by all Nodes.
 
 > So the architecture will looks like
 
