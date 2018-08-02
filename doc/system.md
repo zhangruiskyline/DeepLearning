@@ -1,4 +1,3 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
@@ -76,7 +75,7 @@ Lots of machine learning and deep learning, like NN, graphical model, Matrix Fac
 ![ML_equation](http://mathurl.com/yat9ozoy.png)
 
 
-* each iteration  ${\large \theta}$ is the model parameters, and  {\large \Delta} function is the update function.
+* each iteration ![theta](http://mathurl.com/y9g6t9ew) is the model parameters, and  {\large \Delta} function is the update function.
 * each time  {\large \Delta} will get the current model's parameter {\large \theta^{(t)}} and the training  data {\large D^{(t)}} as input, calculate  and directly added into current paramter set  {\large \theta^{(t)}}, to update paramter into {\large \theta^{(t+1)}}
 * Iterate this until some conditions meet, like Iterate  {\large T} times, or other stop conditions
 
@@ -174,9 +173,8 @@ Most variants of asynchronous stochastic gradient descent maintain the same basi
 
 > Design the equation into distributed way
 
-\begin{equation} \large \mbox{for } t = 1 \rightarrow T : \theta^{(t+1)} = \theta^{(t)} + \epsilon \sum_{p=1}^P \Delta_{\mathcal{L}}(\theta^{(t)}, D^{(t)}_p) \end{equation}
 
- ![img](http://latex.codecogs.com/svg.latex?%5Clarge+%5Cmbox%7Bfor+%7D+t+%3D+1+%5Crightarrow+T+%3A+%5Ctheta%5E%7B%28t%2B1%29%7D+%3D+%5Ctheta%5E%7B%28t%29%7D+%2B+%5Cepsilon+%5Csum_%7Bp%3D1%7D%5EP+%5CDelta_%7B%5Cmathcal%7BL%7D%7D%28%5Ctheta%5E%7B%28t%29%7D%2C+D%5E%7B%28t%29%7D_p%29)
+ ![distribute_ML](http://mathurl.com/y79pumk2)
 
 Compared wih single machine, only to distribute calculation into different machines.
 
