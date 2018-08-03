@@ -44,6 +44,7 @@
       - [Routing](#routing)
   - [Allreduce vs Paramter server](#allreduce-vs-paramter-server)
 - [Nvidia Multi-GPU Lib: NCCL](#nvidia-multi-gpu-lib-nccl)
+    - [Ring based collective](#ring-based-collective)
   - [NCCL Implementation](#nccl-implementation)
     - [Performance](#performance)
 - [FPGA on Machine Leaning/Deep Learning](#fpga-on-machine-leaningdeep-learning)
@@ -347,10 +348,6 @@ if S>>K, which is normally true
 
 ![collective_communication](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/collective_communication.png)
 
-* Implement in GPU environment
-
-![GPU_allreduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_allreduce.png)
-
 http://mpitutorial.com
 
 ### MPI Reduce and Allreduce
@@ -487,6 +484,12 @@ http://hunch.net/?p=151364
 # Nvidia Multi-GPU Lib: NCCL
 
 NCCL (pronounced "Nickel") is a stand-alone library of standard collective communication routines, such as all-gather, reduce, broadcast, etc., that have been optimized to achieve high bandwidth over PCIe, Nvlink、InfiniBand
+
+### Ring based collective
+
+* Implement in GPU environment
+
+![GPU_allreduce](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_allreduce.png)
 
 ## NCCL Implementation
 
