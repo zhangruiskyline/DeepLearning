@@ -7,9 +7,12 @@
   - [GPU architecture](#gpu-architecture)
     - [GPU vs CPU](#gpu-vs-cpu)
     - [Streaming Multiprocessor (SM)](#streaming-multiprocessor-sm)
-    - [GPU Memeory model](#gpu-memeory-model)
+  - [GPU Memory architecture](#gpu-memory-architecture)
+    - [GPU memory model](#gpu-memory-model)
+    - [GPU memory latency](#gpu-memory-latency)
+    - [GPU memory bandwidth](#gpu-memory-bandwidth)
   - [GPU programming model](#gpu-programming-model)
-    - [Thread and blocks](#thread-and-blocks)
+    - [SIMD](#simd)
     - [Kernel Execution](#kernel-execution)
     - [Control Flow](#control-flow)
     - [Thread Hierarchy & Memory Hierarchy](#thread-hierarchy--memory-hierarchy)
@@ -111,11 +114,24 @@ The reason there are many registers and the reason the hardware can context swit
 
 The SMs are general-purpose processors, but they are designed very differently than the execution cores in CPUs: They target much lower clock rates; they support instruction-level parallelism, but not branch prediction or speculative execution; and they have less cache, if they have any cache at all. For suitable workloads, the sheer computing horsepower in a GPU more than makes up for these disadvantages.
 
-### GPU Memeory model
+## GPU Memory architecture
+
+### GPU memory model
+
+![GPU_memory](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_memory.png)
+
+* GPU has more register than L1 cache, so computation is more powerful but limited memory to save state/Data
+* L1 cache is controlled by programmer  
+
+### GPU memory latency
+
+![GPU_memory_latency](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_memory_latency.png)
+
+### GPU memory bandwidth
 
 ## GPU programming model
 
-### Thread and blocks
+### SIMD
 
 * SIMT: Single Instruction, Multiple Threads
 * Programmer writes code for a single thread in a simple C program. All threads executes the same code, but can takedifferent paths.
@@ -123,7 +139,7 @@ The SMs are general-purpose processors, but they are designed very differently t
 * Blocks are grouped into a grid. Blocks are independently scheduled on the GPU, can be executed in any order.
 * A kernel is executed as a grid of blocks of threads.
 
-![GPU_block](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_block.png)
+![GPU_SIMT](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_SIMT.png)
 
 ### Kernel Execution
 
