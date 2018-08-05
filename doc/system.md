@@ -20,6 +20,12 @@
     - [Vector Add](#vector-add)
     - [Slide window sum (Use of thread block)](#slide-window-sum-use-of-thread-block)
     - [Matrix Operation](#matrix-operation)
+    - [Tips for High Performance](#tips-for-high-performance)
+- [](#)
+  - [Hardware Specialization in Deep Learning](#hardware-specialization-in-deep-learning)
+    - [Roofline model](#roofline-model)
+    - [TPU](#tpu)
+  - [HW/SW Codesign](#hwsw-codesign)
 - [Distributed Machine Learning](#distributed-machine-learning)
   - [Deep learning computation model](#deep-learning-computation-model)
   - [model parallelism vs data parallelism](#model-parallelism-vs-data-parallelism)
@@ -234,6 +240,53 @@ __global__ void windowSumKernel(const float* A, float* B, int n) {
 ```
 
 ### Matrix Operation
+
+### Tips for High Performance
+* Use existing libraries, which are highly optimized, e.g. cublas, cudnn.
+* Use nvprof or nvvp (visual profiler) to debug the performance.
+* Use high level language to write GPU kernels.
+
+
+#
+
+## Hardware Specialization in Deep Learning
+
+> Idea: tailor your chip architecture to the characteristics of a stable workload
+
+* Does deep learning constitute a stable workload to justify ASIC-based hardware acceleration?
+* What benchmarks would benefit from improvements on clock frequency?
+* What benchmarks would benefit from higher memory bandwidth?
+
+
+
+For example in CNN:
+
+### Roofline model
+* Given:
+  * Processor BW
+  * Processor Flop/s
+* You can find the Speed of Light: Approach the roofline
+* Such simple bounds are a powerful tool
+
+The most basic Roofline model can be visualized by plotting floating-point performance as a function of machine peak performance, machine peak bandwidth, and arithmetic intensity. The resultant curve is effectively a performance bound under which kernel or application performance exists, and includes two platform-specific performance ceilings[clarification needed]: a ceiling derived from the memory bandwidth and one derived from the processor's peak performance (see figure on the right)
+
+
+![roofline_math](http://mathurl.com/yb7qdzu2.png)
+
+where __P__ is the attainable performance, __π__  is the peak performance, __β__ is the peak bandwidth and __I__ is the arithmetic intensity. The point at which the performance saturates at the peak performance level that is where the diagonal and horizontal roof meet, is defined as ridge point.
+
+* the kernel or application is said to be memory-bound if __I≤π/β__ .
+* the computation is said to be compute-bound if __I≥π/β__ .
+
+![roofline](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/roofline.png)
+
+### TPU
+
+![TPU_overview](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/TPU_overview.png)
+
+![TPU_compare](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/TPU_compare.png)
+
+## HW/SW Codesign
 
 # Distributed Machine Learning
 
