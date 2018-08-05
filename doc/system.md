@@ -2,8 +2,12 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [System Stack overview](#system-stack-overview)
 - [GPU in DeepLearning](#gpu-in-deeplearning)
-  - [CPU/GPU architecture](#cpugpu-architecture)
+  - [GPU architecture](#gpu-architecture)
+    - [GPU vs CPU](#gpu-vs-cpu)
+    - [Streaming Multiprocessor (SM)](#streaming-multiprocessor-sm)
+    - [GPU Memeory model](#gpu-memeory-model)
   - [GPU programming model](#gpu-programming-model)
     - [Thread and blocks](#thread-and-blocks)
     - [Kernel Execution](#kernel-execution)
@@ -71,9 +75,43 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+# System Stack overview
+
+![DL_sys](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/DL_sys.png)
+
 # GPU in DeepLearning
 
-## CPU/GPU architecture
+## GPU architecture
+
+### GPU vs CPU
+
+The overhead on Too much overhead in compute resources and energy efficiency in Fetch/decode/Write Back, so CPU has more overhead compared with GPU
+
+![CPU_GPU](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/CPU_GPU.png)
+
+### Streaming Multiprocessor (SM)
+
+The streaming multiprocessors (SMs) are the part of the GPU that runs our CUDA kernels. Each SM contains the following.
+
+* Thousands of registers that can be partitioned among threads of execution
+* Several caches:
+– Shared memory for fast data interchange between threads
+– Constant cache for fast broadcast of reads from constant memory
+– Texture cache to aggregate bandwidth from texture memory
+– L1 cache to reduce latency to local or global memory
+* Warp schedulers that can quickly switch contexts between threads and issue instructions to warps that are ready to execute
+Execution cores for integer and floating-point operations:
+– Integer and single-precision floating point operations
+– Double-precision floating point
+– Special Function Units (SFUs) for single-precision floating-point transcendental functions
+
+![GPU_SM](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_SM.png)
+
+The reason there are many registers and the reason the hardware can context switch between threads so efficiently are to maximize the throughput of the hardware. The GPU is designed to have enough state to cover both execution latency and the memory latency of hundreds of clock cycles that it may take for data from device memory to arrive after a read instruction is executed.
+
+The SMs are general-purpose processors, but they are designed very differently than the execution cores in CPUs: They target much lower clock rates; they support instruction-level parallelism, but not branch prediction or speculative execution; and they have less cache, if they have any cache at all. For suitable workloads, the sheer computing horsepower in a GPU more than makes up for these disadvantages.
+
+### GPU Memeory model
 
 ## GPU programming model
 
