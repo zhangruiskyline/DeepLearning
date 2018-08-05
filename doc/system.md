@@ -180,7 +180,7 @@ These Blocks gets ultimately mapped to one of the SM's to execute.
 
 ![GPU_vector_add](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_vector_add.png)
 
-'''
+```
 #define THREADS_PER_BLOCK   512
 void vecAdd(const float* A, const float* B, float* C, int n) {
     float *d_A, *d_B, *d_C;
@@ -195,7 +195,7 @@ void vecAdd(const float* A, const float* B, float* C, int n) {
      cudaMemcpy(C, d_C, size, cudaMemcpyDeviceToHost);
     cudaFree(d_A); cudaFree(d_B); cudaFree(d_C);
 }
-'''
+```
 
 ### Slide window sum (Use of thread block)
 
@@ -210,7 +210,7 @@ void vecAdd(const float* A, const float* B, float* C, int n) {
 
 ![GPU_slide_win](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_slide_win.png)
 
-'''
+```
 __global__ void windowSumKernel(const float* A, float* B, int n) {
     __shared__ float temp[THREADS_PER_BLOCK + 2 * RADIUS];
     int out_index = blockDim.x * blockIdx.x + threadIdx.x;
@@ -231,9 +231,9 @@ __global__ void windowSumKernel(const float* A, float* B, int n) {
             }
         }
 }
-'''
+```
 
-### Matrix Operation 
+### Matrix Operation
 
 # Distributed Machine Learning
 
