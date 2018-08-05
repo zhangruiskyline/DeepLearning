@@ -16,6 +16,10 @@
     - [Kernel Execution](#kernel-execution)
     - [Control Flow](#control-flow)
     - [Thread Hierarchy & Memory Hierarchy](#thread-hierarchy--memory-hierarchy)
+  - [GPU Example](#gpu-example)
+    - [Vector Add](#vector-add)
+    - [Slide window sum (Use of thread block)](#slide-window-sum-use-of-thread-block)
+    - [Matrix Operation](#matrix-operation)
 - [Distributed Machine Learning](#distributed-machine-learning)
   - [Deep learning computation model](#deep-learning-computation-model)
   - [model parallelism vs data parallelism](#model-parallelism-vs-data-parallelism)
@@ -154,6 +158,15 @@ The SMs are general-purpose processors, but they are designed very differently t
 
 ![GPU_kernel_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_kernel_2.png)
 
+In conclusion
+
+* In CUDA, Every kernel will be executed on SM ( Streaming Multiprocessors ).There will be many of them on the GPU.
+* When you invoke a kernel, you will specify how many threads you want to launch in a block and how many blocks you want to launch.
+These Blocks gets ultimately mapped to one of the SM's to execute.
+* All the threads in a block can share the memory on the SM as they are on the same SM. Now, we have blocks which execute on SM.
+* But SM wont directly give the threads the Execution resources.Instead it will try to divide the threads in the block again into Warps(32 threads).
+* The Warps in each of the block exhibit SIMD execution ( Single instruction Multiple data ). If there is a memory access to any thread in a warp, SM switches to next warp. This way SM always have some work to do
+
 ### Control Flow
 
 ###  Thread Hierarchy & Memory Hierarchy
@@ -161,7 +174,66 @@ The SMs are general-purpose processors, but they are designed very differently t
 ![thread_memory](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/thread_memory.png)
 
 
+## GPU Example
 
+### Vector Add
+
+![GPU_vector_add](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_vector_add.png)
+
+'''
+#define THREADS_PER_BLOCK   512
+void vecAdd(const float* A, const float* B, float* C, int n) {
+    float *d_A, *d_B, *d_C;
+    int size = n * sizeof(float);
+    cudaMalloc((void **) &d_A, size);
+    cudaMemcpy(d_A, A, size, cudaMemcpyHostToDevice);
+    cudaMalloc((void **) &d_B, size);
+    cudaMemcpy(d_B, B, size, cudaMemcpyHostToDevice);
+    cudaMalloc((void **) &d_C, size);
+    int nblocks = (n + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK;
+    vecAddKernel<<<nblocks, THREADS_PER_BLOCK>>>(d_A, d_B, d_C, n);  //Launch the GPU kernel asynchronously
+     cudaMemcpy(C, d_C, size, cudaMemcpyDeviceToHost);
+    cudaFree(d_A); cudaFree(d_B); cudaFree(d_C);
+}
+'''
+
+### Slide window sum (Use of thread block)
+
+* Consider computing the sum of a sliding window over a vector:
+  * Each output element is the sum of input elements within a radius
+  * Example: image blur kernel
+* If radius is 3, each output element is sum of 7 input elements
+* Overhead:
+  * Each input element is read 7 times!
+  * Neighboring threads read most of the same elements
+* solutions: A thread block first cooperatively loads the needed input data into the shared memory.
+
+![GPU_slide_win](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_slide_win.png)
+
+'''
+__global__ void windowSumKernel(const float* A, float* B, int n) {
+    __shared__ float temp[THREADS_PER_BLOCK + 2 * RADIUS];
+    int out_index = blockDim.x * blockIdx.x + threadIdx.x;
+    int in_index = out_index + RADIUS;
+    int local_index = threadIdx.x + RADIUS;
+    if (out_index < n) {
+        temp[local_index] = A[in_index];
+        if (threadIdx.x < RADIUS) {
+            temp[local_index - RADIUS] = A[in_index - RADIUS];
+            temp[local_index + THREADS_PER_BLOCK] = A[in_index+THREADS_PER_BLOCK];
+        }
+        __syncthreads();
+        float sum = 0.;
+                for (int i = -RADIUS; i <= RADIUS; ++i) {
+                    sum += temp[local_index + i];
+                }
+                B[out_index] = sum;
+            }
+        }
+}
+'''
+
+### Matrix Operation 
 
 # Distributed Machine Learning
 
