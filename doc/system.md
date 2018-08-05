@@ -290,7 +290,7 @@ where __P__ is the attainable performance, __π__  is the peak performance, __β
 
 ![TPU_overview](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/TPU_overview.png)
 
-![TPU_compare](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/TPU_compare.png)
+![TPU_compare](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/TPU_comp.png)
 
 ## HW/SW Codesign
 
