@@ -21,11 +21,16 @@
     - [Slide window sum (Use of thread block)](#slide-window-sum-use-of-thread-block)
     - [Matrix Operation](#matrix-operation)
     - [Tips for High Performance](#tips-for-high-performance)
-- [](#)
+- [Machine Learning HW](#machine-learning-hw)
   - [Hardware Specialization in Deep Learning](#hardware-specialization-in-deep-learning)
     - [Roofline model](#roofline-model)
     - [TPU](#tpu)
   - [HW/SW Codesign](#hwsw-codesign)
+    - [Tensorization](#tensorization)
+    - [Memory Architecting](#memory-architecting)
+    - [Data Type](#data-type)
+  - [Latency Hiding](#latency-hiding)
+- [Memory Optimization](#memory-optimization)
 - [Distributed Machine Learning](#distributed-machine-learning)
   - [Deep learning computation model](#deep-learning-computation-model)
   - [model parallelism vs data parallelism](#model-parallelism-vs-data-parallelism)
@@ -247,7 +252,7 @@ __global__ void windowSumKernel(const float* A, float* B, int n) {
 * Use high level language to write GPU kernels.
 
 
-#
+# Machine Learning HW
 
 ## Hardware Specialization in Deep Learning
 
@@ -287,6 +292,35 @@ where __P__ is the attainable performance, __π__  is the peak performance, __β
 ![TPU_compare](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/TPU_compare.png)
 
 ## HW/SW Codesign
+
+### Tensorization
+
+![HWSW_codesign_tensorization](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/HWSW_codesign_tensorization.png)
+
+
+### Memory Architecting
+
+![HWSW_codesign_memory](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/HWSW_codesign_memory.png)
+
+
+### Data Type
+* Reducing type width can result in a quadratic increase of compute resources, and linear increase of storage/bandwidth
+* But it also affects classification accuracy!
+
+![HWSW_codesign_INT](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/HWSW_codesign_INT.png)
+
+## Latency Hiding
+
+* Without latency hiding, we are wasting compute/memory resources. By exploiting pipeline parallelism, we can hide memory latency
+* Pipeline Parallelism requires
+  * Concurrent tasks need to access non-overlapping regions of memory
+  * Data dependences need to be explicit!
+* enforce read-after-write (RAW) and write-after-read (WAR) dependences
+* Takeaway: work partitioning and explicit dependence graph execution (EDGE) unlocks pipeline parallelism to hide the latency of memory accesses
+
+![Latency_hiding](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Latency_hiding.png)
+
+# Memory Optimization
 
 # Distributed Machine Learning
 
