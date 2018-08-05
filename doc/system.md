@@ -2,6 +2,13 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [GPU in DeepLearning](#gpu-in-deeplearning)
+  - [CPU/GPU architecture](#cpugpu-architecture)
+  - [GPU programming model](#gpu-programming-model)
+    - [Thread and blocks](#thread-and-blocks)
+    - [Kernel Execution](#kernel-execution)
+    - [Control Flow](#control-flow)
+    - [Thread Hierarchy & Memory Hierarchy](#thread-hierarchy--memory-hierarchy)
 - [Distributed Machine Learning](#distributed-machine-learning)
   - [Deep learning computation model](#deep-learning-computation-model)
   - [model parallelism vs data parallelism](#model-parallelism-vs-data-parallelism)
@@ -63,6 +70,44 @@
   - [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# GPU in DeepLearning
+
+## CPU/GPU architecture
+
+## GPU programming model
+
+### Thread and blocks
+
+* SIMT: Single Instruction, Multiple Threads
+* Programmer writes code for a single thread in a simple C program. All threads executes the same code, but can takedifferent paths.
+* Threads are grouped into a block. Threads within the same block can synchronize execution.
+* Blocks are grouped into a grid. Blocks are independently scheduled on the GPU, can be executed in any order.
+* A kernel is executed as a grid of blocks of threads.
+
+![GPU_block](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_block.png)
+
+### Kernel Execution
+
+* Each block is executed by one SM and does not migrate.
+* Several concurrent blocks can reside on one SM depending on block’s memory requirement and the SM’s memory resources.
+
+![GPU_kernel](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_kernel.png)
+
+* A warp consists of 32 threads. A warp is the basic schedule unit in kernel execution.
+* A thread block consists of 32-thread warps.
+* Each cycle, a warp scheduler selects one ready warps and dispatches the warps to CUDA cores to execute.
+
+![GPU_kernel_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/GPU_kernel_2.png)
+
+### Control Flow
+
+###  Thread Hierarchy & Memory Hierarchy
+
+![thread_memory](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/thread_memory.png)
+
+
+
 
 # Distributed Machine Learning
 
