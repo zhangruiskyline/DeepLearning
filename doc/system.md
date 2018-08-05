@@ -31,6 +31,7 @@
     - [Data Type](#data-type)
   - [Latency Hiding](#latency-hiding)
 - [Memory Optimization](#memory-optimization)
+- [Parallel schedule](#parallel-schedule)
 - [Distributed Machine Learning](#distributed-machine-learning)
   - [Deep learning computation model](#deep-learning-computation-model)
   - [model parallelism vs data parallelism](#model-parallelism-vs-data-parallelism)
@@ -321,6 +322,8 @@ where __P__ is the attainable performance, __π__  is the peak performance, __β
 ![Latency_hiding](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Latency_hiding.png)
 
 # Memory Optimization
+
+# Parallel schedule
 
 # Distributed Machine Learning
 
