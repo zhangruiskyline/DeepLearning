@@ -31,7 +31,16 @@
     - [Data Type](#data-type)
   - [Latency Hiding](#latency-hiding)
 - [Memory Optimization](#memory-optimization)
+  - [Build an Executor for a Given Graph](#build-an-executor-for-a-given-graph)
+    - [Dynamic Memory Allocation:](#dynamic-memory-allocation)
+    - [Static memory allocation](#static-memory-allocation)
+  - [Common Patterns of Memory Planning](#common-patterns-of-memory-planning)
+  - [Memory Allocation and Scheduling](#memory-allocation-and-scheduling)
+  - [Memory Plan with Gradient Calculation](#memory-plan-with-gradient-calculation)
 - [Parallel schedule](#parallel-schedule)
+  - [Common patterns of parallelization](#common-patterns-of-parallelization)
+  - [Design for parallelization](#design-for-parallelization)
+    - [Model parallelization](#model-parallelization)
 - [Distributed Machine Learning](#distributed-machine-learning)
   - [Deep learning computation model](#deep-learning-computation-model)
   - [model parallelism vs data parallelism](#model-parallelism-vs-data-parallelism)
@@ -323,7 +332,59 @@ where __P__ is the attainable performance, __π__  is the peak performance, __β
 
 # Memory Optimization
 
+The maximum size of the model we can try is bounded by total RAM available of a Titan X card (12G)
+
+## Build an Executor for a Given Graph
+
+* Allocate temp memory for intermediate computation
+* Traverse and execute the graph by topology order.
+
+### Dynamic Memory Allocation:
+
+* Allocate when needed
+* Recycle when a memory is not needed.
+* Useful for both declarative and imperative executions
+
+### Static memory allocation
+
+* Plan for reuse ahead of time
+* Analog: register allocation algorithm in compiler
+
+##  Common Patterns of Memory Planning
+
+* **Inplace** store the result in the input
+
+  * We can only do inplace if result op is the only consumer of the current value
+
+
+![memory_planing](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/memory_planing.png)
+
+> Concurrency vs Memory Optimization
+
+![concurrent_memory](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/concurrent_memory.png)
+
+* **Normal Sharing** reuse memory that are no longer needed.
+
+## Memory Allocation and Scheduling
+
+* Explicitly add the control flow dependencies ○ Needed in TensorFlow
+* Enable mutation in the scheduler, no extra job needed
+  * Both operation “mutate” the same memory
+  * Supported in MXNet
+
+##  Memory Plan with Gradient Calculation
+
+Why do we need automatic differentiation that extends the graph instead of backprop in graph?
+
+
+
 # Parallel schedule
+
+## Common patterns of parallelization
+
+## Design for parallelization
+
+### Model parallelization
 
 # Distributed Machine Learning
 
