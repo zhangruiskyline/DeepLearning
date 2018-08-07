@@ -39,8 +39,11 @@
   - [Memory Plan with Gradient Calculation](#memory-plan-with-gradient-calculation)
 - [Parallel schedule](#parallel-schedule)
   - [Common patterns of parallelization](#common-patterns-of-parallelization)
-  - [Design for parallelization](#design-for-parallelization)
-    - [Model parallelization](#model-parallelization)
+  - [Data parallelism](#data-parallelism)
+    - [DAG based scheduler](#dag-based-scheduler)
+    - [mutation aware scheduler](#mutation-aware-scheduler)
+    - [Queue based Implementation of scheduler](#queue-based-implementation-of-scheduler)
+  - [Model parallelization](#model-parallelization)
 - [Distributed Machine Learning](#distributed-machine-learning)
   - [Deep learning computation model](#deep-learning-computation-model)
   - [model parallelism vs data parallelism](#model-parallelism-vs-data-parallelism)
@@ -382,9 +385,64 @@ Why do we need automatic differentiation that extends the graph instead of backp
 
 ## Common patterns of parallelization
 
-## Design for parallelization
+* Map parts of workload to different devices
+* Require special dependency patterns (wave style), e.g. LSTM
 
-### Model parallelization
+
+## Data parallelism
+
+* Train replicated version of model in each machine
+* Synchronize the gradient
+
+![ML_parallel](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/ML_parallel.png)
+
+> Design goal
+
+* Write Serial Program
+* Possibly dynamically (not declare graph beforehand)
+* Run in Parallel
+* Respect serial execution order
+
+### DAG based scheduler
+
+'''
+engine.push(lambda op, deps=[])
+'''
+
+* Explicit push operation and its dependencies
+* Can reuse the computation graph structure
+* Useful when all results are immutable
+* Used in typical frameworks (e.g. TensorFlow)
+
+> What are the drawbacks?
+
+### mutation aware scheduler
+
+The user then calls **push** to tell the engine about the function to execute. The user also needs to specify the dependencies of the operation, using **read_vars** and **write_vars**:
+
+* **read_vars** are variable tags for objects that the operation will read from, without changing their internal state.
+* **mutate_vars** are variable tags for objects whose internal states the operation will mutate.
+
+![mutation_scheduler](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/mutation_scheduler.png)
+
+The preceding figure shows how to push operation __B = A + 1__ to the dependency engine. B.data and A.data are the allocated space. Note that the engine is only aware of variable tags. Any execution function can be processed. This interface is generic for the operations and resources we want to schedule.
+
+###  Queue based Implementation of scheduler
+
+* Like scheduling problem in OS
+* Maintain a pending operation queue
+* Schedule new operations with event update
+
+> Examples
+
+The engine maintains a queue for each variable. Green blocks represents a read action, while red blocks represent mutations.
+
+![dep_parallel](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/dep_parallel.png)
+
+
+Upon building this queue, the engine sees that the first two green blocks at the beginning of A‘s queue could actually be run in parallel because they are both read actions and won’t conflict with each other. The following graph illustrates this point.
+
+## Model parallelization
 
 # Distributed Machine Learning
 
