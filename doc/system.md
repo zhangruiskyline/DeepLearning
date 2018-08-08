@@ -110,6 +110,97 @@
 
 ![DL_sys](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/DL_sys.png)
 
+# Deep Learning Programming Style
+
+## Symbolic vs. Imperative Programs
+
+* Whether to build networks with bigger (more abstract) or more atomic operations.
+* Whether to build networks with bigger (more abstract) or more atomic operations.
+
+If you are a Python or C++ programmer, then you’re already familiar with imperative programs. Imperative-style programs perform computation as you run them. Most code you write in Python is imperative, as is the following NumPy snippet.
+```
+import numpy as np
+a = np.ones(10)
+b = np.ones(10) * 2
+c = b * a
+d = c + 1
+```
+
+
+When the program executes c = b * a, it runs the actual numerical computation.
+
+Symbolic programs are a bit different. With symbolic-style programs, we first define a (potentially complex) function abstractly. When defining the function, no actual numerical computation takes place. We define the abstract function in terms of placeholder values. Then we can compile the function, and evaluate it given real inputs. In the following example, we rewrite the imperative program from above as a symbolic-style program:
+```
+A = Variable('A')
+B = Variable('B')
+C = B * A
+D = C + Constant(1)
+# compiles the function
+f = compile(D)
+d = f(A=np.ones(10), B=np.ones(10)*2)
+```
+
+As you can see, in the symbolic version, when C = B * A is executed, no computation occurs. Instead, this operation generates a computation graph (also called a symbolic graph) that represents the computation. The following figure shows a computation graph to compute D.
+
+Most symbolic-style programs contain, either explicitly or implicitly, a compile step. This converts the computation graph into a function that we can later call. In the above example, numerical computation only occurs in the last line of code. The defining characteristic of symbolic programs is their clear separation between building the computation graph and executing it. For neural networks, we typically define the entire model as a single compute graph.
+
+Among other popular deep learning libraries, Torch, Chainer, and Minerva embrace the imperative style. Examples of symbolic-style deep learning libraries include Theano, CGT, and TensorFlow. We might also view libraries like CXXNet and Caffe, which rely on configuration files, as symbolic-style libraries. In this interpretation, we’d consider the content of the configuration file as defining the computation graph.
+
+Now that you understand the difference between these two programming models, let’s compare the advantages of each.
+
+### Imperative Programs Tend to be More Flexible
+
+### Symbolic Programs Tend to be More Efficient
+
+```
+import numpy as np
+a = np.ones(10)
+b = np.ones(10) * 2
+c = b * a
+d = c + 1
+...
+```
+
+Assume that each cell in the array occupies 8 bytes of memory. How much memory do you need to execute this program in the Python console?
+
+As an imperative program we need to allocate memory at each line. That leaves us allocating 4 arrays of size 10. So we’ll need 4 * 10 * 8 = 320 bytes. On the other hand, if we built a computation graph, and knew in advance that we only needed d, we could reuse the memory originally allocated for intermediate values. For example, by performing computations in-place, we might recycle the bits allocated for b to store c. And we might recycle the bits allocated for c to store d. In the end we could cut our memory requirement in half, requiring just 2 * 10 * 8 = 160 bytes.
+
+Symbolic programs are more restricted. When we call compile on D, we tell the system that only the value of d is needed. The intermediate values of the computation, in this case c, is then invisible to us.
+
+We benefit because the symbolic programs can then safely reuse the memory for in-place computation. But on the other hand, if we later decide that we need to access c, we’re out of luck. So imperative programs are better prepared to encounter all possible demands. If we ran the imperative version of the code in a Python console, we could inspect any of the intermediate variables in the future.
+
+Symbolic programs can also perform another kind of optimization, called operation folding. Returning to our toy example, the multiplication and addition operations can be folded into one operation, as shown in the following graph. If the computation runs on a GPU processor, one GPU kernel will be executed, instead of two. In fact, this is one way we hand-craft operations in optimized libraries, such as CXXNet and Caffe. Operation folding improves computation efficiency
+
+## Case Study: Backprop and AutoDiff
+
+```
+A = Variable('A')
+B = Variable('B')
+C = B * A
+D = C + Constant(1)
+# get gradient node.
+gA, gB = D.grad(wrt=[A, B])
+# compiles the gradient function.
+f = compile([gA, gB])
+grad_a, grad_b = f(A=np.ones(10), B=np.ones(10)*2)
+```
+
+The grad function of **D** generates a backward computation graph, and returns a gradient node, **gA**, **gB**, which correspond to the red nodes in the following figure.
+
+![comp_graph_backward](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/comp_graph_backward.png)
+
+The imperative program actually does the same thing as the symbolic program. It implicitly saves a backward computation graph in the grad closure. When you invoked d.grad, you start from d(D), backtrack through the graph to compute the gradient, and collect the results.
+
+The gradient calculations in both symbolic and imperative programming follow the same pattern. What’s the difference then? Recall the be prepared to encounter all possible demands requirement of imperative programs. If you are creating an array library that supports automatic differentiation, you have to keep the grad closure along with the computation. This means that none of the history variables can be garbage-collected because they are referenced by variable d by way of function closure.
+
+What if you want to compute only the value of d, and don’t want the gradient value? In symbolic programming, you declare this with f=compiled([D]). This also declares the boundary of computation, telling the system that you want to compute only the forward pass. As a result, the system can free the memory of previous results, and share the memory between inputs and outputs.
+
+Imagine running a deep neural network with n layers. If you are running only the forward pass, not the backward(gradient) pass, you need to allocate only two copies of temporal space to store the values of the intermediate layers, instead of n copies of them. However, because imperative programs need to be prepared to encounter all possible demands of getting the gradient, they have to store the intermediate values, which requires n copies of temporal space.
+
+As you can see, the level of optimization depends on the restrictions on what you can do. Symbolic programs ask you to clearly specify these restrictions when you compile the graph. One the other hand, imperative programs must be prepared for a wider range of demands. Symbolic programs have a natural advantage because they know more about what you do and don’t want.
+
+https://mxnet.incubator.apache.org/architecture/program_model.html
+
 # GPU in DeepLearning
 
 ## GPU architecture
@@ -405,9 +496,9 @@ Why do we need automatic differentiation that extends the graph instead of backp
 
 ### DAG based scheduler
 
-'''
+```
 engine.push(lambda op, deps=[])
-'''
+```
 
 * Explicit push operation and its dependencies
 * Can reuse the computation graph structure
@@ -443,6 +534,13 @@ The engine maintains a queue for each variable. Green blocks represents a read a
 Upon building this queue, the engine sees that the first two green blocks at the beginning of A‘s queue could actually be run in parallel because they are both read actions and won’t conflict with each other. The following graph illustrates this point.
 
 ## Model parallelization
+
+## Summary
+
+* Automatic scheduling makes parallelization easier
+* Mutation aware interface to handle resource contention
+* Queue based scheduling algorithm
+
 
 # Distributed Machine Learning
 
