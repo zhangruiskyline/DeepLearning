@@ -3,6 +3,11 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [System Stack overview](#system-stack-overview)
+- [Deep Learning Programming Style](#deep-learning-programming-style)
+  - [Symbolic vs. Imperative Programs](#symbolic-vs-imperative-programs)
+    - [Imperative Programs Tend to be More Flexible](#imperative-programs-tend-to-be-more-flexible)
+    - [Symbolic Programs Tend to be More Efficient](#symbolic-programs-tend-to-be-more-efficient)
+  - [Case Study: Backprop and AutoDiff](#case-study-backprop-and-autodiff)
 - [GPU in DeepLearning](#gpu-in-deeplearning)
   - [GPU architecture](#gpu-architecture)
     - [GPU vs CPU](#gpu-vs-cpu)
@@ -44,6 +49,7 @@
     - [mutation aware scheduler](#mutation-aware-scheduler)
     - [Queue based Implementation of scheduler](#queue-based-implementation-of-scheduler)
   - [Model parallelization](#model-parallelization)
+  - [Summary](#summary)
 - [Distributed Machine Learning](#distributed-machine-learning)
   - [Deep learning computation model](#deep-learning-computation-model)
   - [model parallelism vs data parallelism](#model-parallelism-vs-data-parallelism)
