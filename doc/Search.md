@@ -305,8 +305,19 @@ So in NDCG, the highly relevant is valued more than un relevant. So highly relev
 
 ### Logistic regression
 
+
 ### Factor Machine
 
 ### GBDT
 
 ## Deep Learning
+
+> Handlde the challenge
+
+* High order sparse feature space -> One hot encoding to Dense(embedding)
+
+* Feature Engineering -> Deep NN automatically abstract features
+
+* Feature Engineering: How to abstract low order feature combination -> FM in DNN
+
+* Feature Engineering: How to abstract high order feature combination -> Deep NN
