@@ -37,7 +37,13 @@
     - [F1](#f1)
     - [NDCG(Normalized Discounted Cumulative Gain)](#ndcgnormalized-discounted-cumulative-gain)
   - [Online](#online)
-    - [CTR(Click through rate)](#ctrclick-through-rate)
+- [CTR(Click through rate)](#ctrclick-through-rate)
+  - [Unique in CTR](#unique-in-ctr)
+  - [Classic Method](#classic-method)
+    - [Logistic regression](#logistic-regression)
+    - [Factor Machine](#factor-machine)
+    - [GBDT](#gbdt)
+  - [Deep Learning](#deep-learning)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -285,4 +291,22 @@ So in NDCG, the highly relevant is valued more than un relevant. So highly relev
 
 ## Online
 
-### CTR(Click through rate)
+# CTR(Click through rate)
+
+* Widely used in Ads, Recommendation, Feed
+
+## Unique in CTR
+
+* Very Sparse discrete Features
+* High order sparse Features
+* Feature engineering is very important
+
+## Classic Method
+
+### Logistic regression
+
+### Factor Machine
+
+### GBDT
+
+## Deep Learning
