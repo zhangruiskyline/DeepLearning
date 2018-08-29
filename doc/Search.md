@@ -299,7 +299,7 @@ So in NDCG, the highly relevant is valued more than un relevant. So highly relev
 
 * Very Sparse discrete Features
 * High order sparse Features
-* Feature engineering is very important
+* Feature engineering is very important(conjecture combination features )
 
 ## Classic Method
 
