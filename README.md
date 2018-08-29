@@ -55,7 +55,7 @@
 
 ## Search/Rank/CTR
 
-* [Search](https://github.com/zhangruiskyline/DeepLearning/blob/master/doc/Search.md)
+* [Search/Rank/CTR](https://github.com/zhangruiskyline/DeepLearning/blob/master/doc/Search.md)
 
 ## Text Classification
 
