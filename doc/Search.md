@@ -43,7 +43,15 @@
     - [Logistic regression](#logistic-regression)
     - [Factor Machine](#factor-machine)
     - [GBDT](#gbdt)
-  - [Deep Learning](#deep-learning)
+  - [Deep Learning on CTR](#deep-learning-on-ctr)
+    - [Deep Learning feature set](#deep-learning-feature-set)
+    - [Handle the challenge](#handle-the-challenge)
+    - [one hot to dense](#one-hot-to-dense)
+    - [General DNN network Architecture](#general-dnn-network-architecture)
+    - [Advanced architecture based on general architecture](#advanced-architecture-based-on-general-architecture)
+      - [Parallel](#parallel)
+      - [Serialization](#serialization)
+  - [DNN model training and optimization](#dnn-model-training-and-optimization)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -325,9 +333,13 @@ So in NDCG, the highly relevant is valued more than un relevant. So highly relev
 
 ### GBDT
 
-## Deep Learning
+## Deep Learning on CTR
 
-> Handlde the challenge
+### Deep Learning feature set
+
+* continuous: age, height, etc,
+
+### Handle the challenge
 
 * High order sparse feature space -> One hot encoding to Dense(embedding)
 
@@ -336,3 +348,50 @@ So in NDCG, the highly relevant is valued more than un relevant. So highly relev
 * Feature Engineering: How to abstract low order feature combination -> FM in DNN
 
 * Feature Engineering: How to abstract high order feature combination -> Deep NN
+
+
+
+* discrete: professional, gender, college
+
+### one hot to dense
+
+One hot is good at representing discrete features. however, if we directly use one hot encoding in deep learning, the parameter size will be too large.
+
+So the proper solution is 
+* to convert ___one hot->Dense___
+* different feature categories do not fully connected with each other 
+
+![onehot2dense](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/onehot2dense.png)
+
+### General DNN network Architecture
+
+* one hot to dense
+* add continous feature vector
+
+> This is the general DNN architecture, it is also seen as Factorisation-Machine Supported Neural Networks
+
+![DNN_CTR](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/DNN_CTR.png)
+
+### Advanced architecture based on general architecture 
+
+> The idea is to abstract the low order feature combination separately and add into general DNN structure 
+
+#### Parallel 
+
+![para_DNN_CTR](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/para_DNN_CTR.png)
+
+
+#### Serialization 
+
+
+## DNN model training and optimization 
+
+
+
+
+ 
+
+
+
+
+
