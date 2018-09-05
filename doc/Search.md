@@ -301,12 +301,27 @@ So in NDCG, the highly relevant is valued more than un relevant. So highly relev
 * High order sparse Features
 * Feature engineering is very important(conjecture combination features )
 
+> example: Feature vector in CTR
+
+![featurevector](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/featurevector.png)
+
+
 ## Classic Method
 
 ### Logistic regression
 
+* Simple and useful. Easy to capture and represent features, easy to add business logic into feature sets.
+
+* drawback: can not capture feature combination
+
+> we can add the feature combination as pair of feature combination
+
+* But then it dose not have good generalization capability, let's see if we did not see any __x_i__ and __x_j__ combination feature in training, then weight __w_i,j__ will be 0, and if we had this feature in serving, LR can not recognize it.
 
 ### Factor Machine
+
+![FM](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FM.png)
+
 
 ### GBDT
 
