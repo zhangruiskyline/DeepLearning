@@ -553,6 +553,13 @@ Upon building this queue, the engine sees that the first two green blocks at the
 
 http://dlsys.cs.washington.edu/schedule
 
+## Computation vs Communication 
+
+Some model has high computation requirement, while the parameter size is not so large, so computation overhead is more important.
+
+* Resnet or most CNN based solution, the parameters size of CNN is moderate, but computation overhead is high. 
+* Full connected, parameter size is large: 
+
 
 ## Deep learning computation model
 
