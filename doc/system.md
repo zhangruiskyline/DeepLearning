@@ -1116,7 +1116,14 @@ FPGA is more suitable for repeatable, streaming style process with low latency. 
 
 https://www.zhihu.com/question/24174597
 
-Large-Scale Reconfigurable Computing in a Microsoft Datacenter https://www.microsoft.com/en-us/research/wp-content/uploads/2014/06/HC26.12.520-Recon-Fabric-Pulnam-Microsoft-Catapult.pdf[2] A Reconfigurable Fabric for Accelerating Large-Scale Datacenter Services, ISCA'14 https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/Catapult_ISCA_2014.pdf[3] Microsoft Has a Whole New Kind of Computer Chip—and It’ll Change Everything[4] A Cloud-Scale Acceleration Architecture, MICRO'16 https://www.microsoft.com/en-us/research/wp-content/uploads/2016/10/Cloud-Scale-Acceleration-Architecture.pdf[5] ClickNP: Highly Flexible and High-performance Network Processing with Reconfigurable Hardware - Microsoft Research[6] Daniel Firestone, SmartNIC: Accelerating Azure's Network with. FPGAs on OCS servers.
+* [Serving DNNs in Real Time at Datacenter Scale with Project Brainwave]https://www.microsoft.com/en-us/research/uploads/prod/2018/03/mi0218_Chung-2018Mar25.pdf
+
+* Large-Scale Reconfigurable Computing in a Microsoft Datacenter https://www.microsoft.com/en-us/research/wp-content/uploads/2014/06/HC26.12.520-Recon-Fabric-Pulnam-Microsoft-Catapult.pdf
+* A Reconfigurable Fabric for Accelerating Large-Scale Datacenter Services, ISCA'14 https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/Catapult_ISCA_2014.pdf
+
+* Microsoft Has a Whole New Kind of Computer Chip—and It’ll Change Everything: A Cloud-Scale Acceleration Architecture, MICRO'16 https://www.microsoft.com/en-us/research/wp-content/uploads/2016/10/Cloud-Scale-Acceleration-Architecture.pdf
+
+* ClickNP: Highly Flexible and High-performance Network Processing with Reconfigurable Hardware - Microsoft Research[6] Daniel Firestone, SmartNIC: Accelerating Azure's Network with. FPGAs on OCS servers.
 
 # Cloud ML platform
 
