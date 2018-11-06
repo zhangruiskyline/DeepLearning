@@ -1125,6 +1125,8 @@ https://www.zhihu.com/question/24174597
 
 * ClickNP: Highly Flexible and High-performance Network Processing with Reconfigurable Hardware - Microsoft Research[6] Daniel Firestone, SmartNIC: Accelerating Azure's Network with. FPGAs on OCS servers.
 
+* How to Use FPGAs for Deep Learning Inference to Perform Land Cover Mapping on Terabytes of Aerial Images: https://blogs.technet.microsoft.com/machinelearning/2018/05/29/how-to-use-fpgas-for-deep-learning-inference-to-perform-land-cover-mapping-on-terabytes-of-aerial-images/
+
 # Cloud ML platform
 
 https://docs.microsoft.com/en-us/azure/machine-learning/data-science-virtual-machine/dsvm-tools-overview
