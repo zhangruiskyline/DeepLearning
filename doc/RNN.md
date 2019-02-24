@@ -23,6 +23,9 @@
   - [Seq-to-Seq Application: Chat Bot](#seq-to-seq-application-chat-bot)
   - [LSTM Application: Query Classification](#lstm-application-query-classification)
 - [Attention model](#attention-model)
+- [Transformer](#transformer)
+  - [Transformer Model](#transformer-model)
+  - [BERT](#bert)
 - [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->

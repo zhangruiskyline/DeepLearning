@@ -51,6 +51,7 @@
   - [Model parallelization](#model-parallelization)
   - [Summary](#summary)
 - [Distributed Machine Learning](#distributed-machine-learning)
+  - [Computation vs Communication](#computation-vs-communication)
   - [Deep learning computation model](#deep-learning-computation-model)
   - [model parallelism vs data parallelism](#model-parallelism-vs-data-parallelism)
   - [Data Parallelism](#data-parallelism)
