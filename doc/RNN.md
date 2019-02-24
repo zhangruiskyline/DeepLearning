@@ -387,6 +387,32 @@ This process can be seen as an alignment, because the network usually learns to 
 
 ![attention_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/attention_2.png)
 
+# Transformer
+
+https://ai.googleblog.com/2017/08/transformer-novel-neural-network.html
+
+Transformer, a novel neural network architecture based on a self-attention mechanism that we believe to be particularly well suited for language understanding. 
+
+* Language Understanding
+
+Neural networks usually process language by generating fixed- or variable-length vector-space representations. After starting with representations of individual words or even pieces of words, they aggregate information from surrounding words to determine the meaning of a given bit of language in context.
+
+* Traditional RNN
+
+Reading one word at a time, this forces RNNs to perform multiple steps to make decisions that depend on words far away from each other. 
+
+The sequential nature of RNNs also makes it more difficult to fully take advantage of modern fast computing devices such as TPUs and GPUs, which excel at parallel and not sequential processing. Convolutional neural networks (CNNs) are much less sequential than RNNs, but in CNN architectures like ByteNet or ConvS2S the number of steps required to combine information from distant parts of the input still grows with increasing distance.
+
+## Transformer Model
+
+In contrast, the Transformer only performs a small, constant number of steps (chosen empirically). In each step, it applies a self-attention mechanism which directly models relationships between all words in a sentence, regardless of their respective position.
+
+## BERT
+
+https://ai.googleblog.com/2018/11/open-sourcing-bert-state-of-art-pre.html
+
+
+
 # reference
 
 http://www.wildml.com/2016/01/attention-and-memory-in-deep-learning-and-nlp/
