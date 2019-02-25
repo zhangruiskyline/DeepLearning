@@ -24,8 +24,10 @@
   - [LSTM Application: Query Classification](#lstm-application-query-classification)
 - [Attention model](#attention-model)
 - [Transformer](#transformer)
+  - [Traditional RNN/CNN](#traditional-rnncnn)
   - [Transformer Model](#transformer-model)
   - [BERT](#bert)
+    - [Architecture](#architecture)
 - [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -400,13 +402,33 @@ Transformer, a novel neural network architecture based on a self-attention mecha
 
 Neural networks usually process language by generating fixed- or variable-length vector-space representations. After starting with representations of individual words or even pieces of words, they aggregate information from surrounding words to determine the meaning of a given bit of language in context.
 
-* Traditional RNN
+## Traditional RNN/CNN
+
 
 Reading one word at a time, this forces RNNs to perform multiple steps to make decisions that depend on words far away from each other. 
 
-The sequential nature of RNNs also makes it more difficult to fully take advantage of modern fast computing devices such as TPUs and GPUs, which excel at parallel and not sequential processing. Convolutional neural networks (CNNs) are much less sequential than RNNs, but in CNN architectures like ByteNet or ConvS2S the number of steps required to combine information from distant parts of the input still grows with increasing distance.
+The sequential nature of RNNs also makes it more difficult to fully take advantage of modern fast computing devices such as TPUs and GPUs, which excel at parallel and not sequential processing. 
+
+
+![RNN_limit](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/RNN_limit.jpg)
+
+> At any time, RNN need two inputs: current word X(t) and last time hidden layer input S(t-1)
+
+So RNN can only execute at sequentially.
+
+> CNN has limitation of fix step.
+
+Convolutional neural networks (CNNs) are much less sequential than RNNs, but in CNN architectures like ByteNet or ConvS2S the number of steps required to combine information from distant parts of the input still grows with increasing distance.
+
+So currently research has developed skip level CNN to compensate
+
+![CNN_NLP](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/CNN_NLP.jpg)
+
+
 
 ## Transformer Model
+
+https://jalammar.github.io/illustrated-transformer/
 
 In contrast, the Transformer only performs a small, constant number of steps (chosen empirically). In each step, it applies a self-attention mechanism which directly models relationships between all words in a sentence, regardless of their respective position.
 
