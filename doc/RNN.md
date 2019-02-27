@@ -26,8 +26,10 @@
 - [Transformer](#transformer)
   - [Traditional RNN/CNN](#traditional-rnncnn)
   - [Transformer Model](#transformer-model)
+    - [Transformer Model with Code](#transformer-model-with-code)
   - [BERT](#bert)
     - [Architecture](#architecture)
+    - [Blog Post](#blog-post)
 - [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -432,6 +434,9 @@ https://jalammar.github.io/illustrated-transformer/
 
 In contrast, the Transformer only performs a small, constant number of steps (chosen empirically). In each step, it applies a self-attention mechanism which directly models relationships between all words in a sentence, regardless of their respective position.
 
+### Transformer Model with Code
+http://nlp.seas.harvard.edu/2018/04/03/attention.html
+
 ## BERT
 
 https://ai.googleblog.com/2018/11/open-sourcing-bert-state-of-art-pre.html
@@ -461,6 +466,10 @@ To solve this problem, we use the straightforward technique of masking out some 
 
 BERT also learns to model relationships between sentences by pre-training on a very simple task that can be generated from any text corpus: Given two sentences A and B, is B the actual next sentence that comes after A in the corpus, or just a random sentence?
 
+
+### Blog Post
+
+https://medium.com/dissecting-bert/dissecting-bert-part-1-d3c3d495cdb3
 
 
 
