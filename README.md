@@ -10,6 +10,7 @@
   - [GBDT](#gbdt)
   - [SVM](#svm)
 - [Applications](#applications)
+  - [NLP](#nlp)
   - [Search/Rank/CTR](#searchrankctr)
   - [Text Classification](#text-classification)
   - [Recommendations](#recommendations)
@@ -52,6 +53,10 @@
 
 
 # Applications
+
+## NLP
+
+* [NLP](https://github.com/zhangruiskyline/DeepLearning/blob/master/doc/NLP.md)
 
 ## Search/Rank/CTR
 
