@@ -460,7 +460,7 @@ researchers have developed a variety of techniques for training general purpose 
 
 > Word2vec used as input for other NN network
 
-![W2V_Pretrain](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/W2V_Pretrain.jpg)
+![W2V_Pretrain](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/W2V_pretrain.jpg)
 
 
 > Drawback of Word2Vec
