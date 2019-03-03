@@ -28,6 +28,9 @@
   - [Transformer Model](#transformer-model)
     - [Transformer Model with Code](#transformer-model-with-code)
   - [BERT](#bert)
+    - [Pretraining](#pretraining)
+      - [Word2Vec](#word2vec)
+      - [Embedding from Language Models](#embedding-from-language-models)
     - [Architecture](#architecture)
     - [Blog Post](#blog-post)
 - [reference](#reference)
@@ -450,6 +453,43 @@ One of the biggest challenges in natural language processing (NLP) is the shorta
 researchers have developed a variety of techniques for training general purpose language representation models using the enormous amount of unannotated text on the web (known as pre-training). 
 
 * So it is about pretrain + fine tune
+
+### Pretraining 
+
+#### Word2Vec
+
+> Word2vec used as input for other NN network
+
+![W2V_Pretrain](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/W2V_Pretrain.jpg)
+
+
+> Drawback of Word2Vec
+
+#### Embedding from Language Models
+
+Understand Context: Word2vec just uses fixed vector regardless of conetxt. But ELMO first uses pretrain data, and then adjust word's vector based on context. 
+
+ELMO uses two stage training processes:
+
+* Stage 1 uses pretrained word embedding .
+
+* Stage 2: For downstream application, use pretrained word embedding as new features
+
+> The network Architecture is as below
+
+![ELMO](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/ELMO.jpg)
+
+Every encoder is a 2 layer Bi-LSTM. after the training, every new sentence will have 3 embedding
+
+1. Word embedding
+2. first B-LSTM layer word position embedding, so this layer will have sentence context 
+3. second B-LSTM layer word position embedding, so this layer will have semantic context 
+
+> How to use ELMO
+
+The application  of pretrained ELMO can be used in down stream application. For example, Q&A as before 
+
+![ELMO_application](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/ELMO_application.jpg)
 
 ### Architecture
 
