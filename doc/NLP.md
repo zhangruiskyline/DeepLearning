@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Tradirional NLP Method and Fudamental](#tradirional-nlp-method-and-fudamental)
+  - [Attention model](#attention-model)
   - [Transformer Model](#transformer-model)
     - [Transformer Model with Code](#transformer-model-with-code)
   - [BERT](#bert)
@@ -23,6 +24,10 @@
 # Tradirional NLP Method and Fudamental
 
 Pleasew refer my other Repo: https://github.com/zhangruiskyline/NLP_DeepLearning
+
+## Attention model
+
+https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/
 
 ## Transformer Model
 
