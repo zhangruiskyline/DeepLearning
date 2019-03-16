@@ -24,6 +24,7 @@
   - [LambdaMART](#lambdamart)
 - [Two stage: Selection and Ranking](#two-stage-selection-and-ranking)
   - [Top K Selection](#top-k-selection)
+    - [Mutiple recall](#mutiple-recall)
   - [Re-Ranking](#re-ranking)
   - [balance between recall/precision](#balance-between-recallprecision)
   - [High frequency vs Long tail](#high-frequency-vs-long-tail)
@@ -229,11 +230,23 @@ During RankNet training procedure, you don’t need the costs, only need the gra
 
 The challenge for current search system is most model like Tree based (GBDT) and Deep learning has high computation complexity. but in inference stage for online ranking. the delay requirement is very tight(<1s), so it would be very hard to rank all related documentation, sometimes it would be >1m.
 
+The idea of two stage recall can be shown as below
+
+![2stagerecall](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/2stagerecall.jpg)
+
 ## Top K Selection
 
-We need to pick top K(hundreds level) from all documentations . the model could be simple. mostly widely used is inverted index. And another way is the WAND operator
+We need to pick top K(hundreds level) from all documentations . the model could be simple. mostly widely used is inverted index. And another way is the WAND operator.
+
 
 * The key part Selection is to increase recall
+* The key challange in most recall or top K selection is the large amout of candidate, some over hundreds of millions. so the model should be simple to calculate all candidates and speed is the most important parameter.
+
+### Mutiple recall 
+
+The current industrial usage is normally multiple recall system as shown below, so there will be multiple feature sets running and independently pick up top K. The K number is a super parameters that may need to be A/B tested
+
+![multirecall](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/multirecall.jpg)
 
 ## Re-Ranking
 
