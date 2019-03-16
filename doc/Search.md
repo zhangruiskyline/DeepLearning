@@ -25,6 +25,7 @@
 - [Two stage: Selection and Ranking](#two-stage-selection-and-ranking)
   - [Top K Selection](#top-k-selection)
     - [Mutiple recall](#mutiple-recall)
+  - [Classical Recall Algorithms](#classical-recall-algorithms)
   - [Re-Ranking](#re-ranking)
   - [balance between recall/precision](#balance-between-recallprecision)
   - [High frequency vs Long tail](#high-frequency-vs-long-tail)
@@ -247,6 +248,44 @@ We need to pick top K(hundreds level) from all documentations . the model could 
 The current industrial usage is normally multiple recall system as shown below, so there will be multiple feature sets running and independently pick up top K. The K number is a super parameters that may need to be A/B tested
 
 ![multirecall](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/multirecall.jpg)
+
+## Classical Recall Algorithms
+
+1. LR
+
+* Simple and useful. Easy to capture and represent features, easy to add business logic into feature sets.
+
+* drawback: can not capture feature combination
+
+![LR_recall](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/LR_recall.jpg)
+
+LR is most widely used in recall and CTR, so it is linear feature sets with manually introduced none linear combination
+
+2. Improved LR to boost the generalization
+
+* Mannually pick up the feature combination is complicated and time consuming. so put the feature combination into model
+
+![LR_improve](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/LR_improve.jpg)
+
+But the generalization will be a problem, if two feature combination has not appeared in training set, this model can not capture in serving stage. Especially for sparse feature set like in recall and CTR
+
+3. FM(Factorization Machine) model
+
+![FMmodel](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FMmodel.jpg)
+
+In Sparse embedding, although the two features may not appear in training, but as long as each feature is just a vector, it is still possible to capture the relation using dot product.
+
+> This is essentailly key point for most embedding, to use dot product to measure similarity 
+
+4. MF(Matrix Factorization)
+
+Basically use two embedding, one for user and one for item/keywords
+
+![MF](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/MF.jpg)
+
+5. MF to FM
+
+![MF2FM](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/MF2FM.jpg)
 
 ## Re-Ranking
 
