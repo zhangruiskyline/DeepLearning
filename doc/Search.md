@@ -28,10 +28,10 @@
   - [Classical Recall Algorithms](#classical-recall-algorithms)
     - [Performance Analysis](#performance-analysis)
     - [Multiple Recall vs Unified Recall](#multiple-recall-vs-unified-recall)
-    - [FM as unified recall](#fm-as-unified-recall)
-      - [Simple version](#simple-version)
-      - [More complete version with context](#more-complete-version-with-context)
-      - [with context](#with-context)
+  - [FM as unified recall](#fm-as-unified-recall)
+    - [Simple version](#simple-version)
+    - [More complete version with context](#more-complete-version-with-context)
+    - [FM advanced](#fm-advanced)
   - [Re-Ranking](#re-ranking)
   - [balance between recall/precision](#balance-between-recallprecision)
   - [High frequency vs Long tail](#high-frequency-vs-long-tail)
@@ -314,9 +314,9 @@ And to understand more
 
 Mutiple recall needs to adjusts the super parameter how many recall do we use. but use FM, adding one recall sub system is like adding a feature
 
-### FM as unified recall
+## FM as unified recall
 
-#### Simple version
+### Simple version
 
 we can use the simple FM recall version as
 
@@ -348,14 +348,28 @@ First, we add up all user vectors and item vectors and then do the product, is i
 
 * From math point of view, it is same as FM similipication, calculate all sum of embeddeing vector then apply dot product of __<V,V>__ , the difference is only that right now we have both user and item vectors.
 
-#### More complete version with context
+### More complete version with context
 
 The challenge for context information is it needs to be processed in real time or near real time.
 
+The process can be summarized as
+
+![FM_withcontext](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FM_withcontext.jpg)
 
 
+### FM advanced
 
-#### with context 
+There will be two follow up on FM advanced 
+
+1. How to incorporate multiple recall system
+
+So for each category, we can put them into either the features of user or item
+
+2. FM recall combine with ranking
+
+From the analysis above, in theory, we can use it for re ranking. Also we need to consider the process speed. 
+
+More detailed can be found in https://zhuanlan.zhihu.com/p/58160982 
 
 ## Re-Ranking
 
