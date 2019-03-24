@@ -29,6 +29,8 @@
     - [Performance Analysis](#performance-analysis)
     - [Multiple Recall vs Unified Recall](#multiple-recall-vs-unified-recall)
     - [FM as unified recall](#fm-as-unified-recall)
+      - [Simple versuibn](#simple-versuibn)
+      - [with context](#with-context)
   - [Re-Ranking](#re-ranking)
   - [balance between recall/precision](#balance-between-recallprecision)
   - [High frequency vs Long tail](#high-frequency-vs-long-tail)
@@ -313,7 +315,7 @@ Mutiple recall needs to adjusts the super parameter how many recall do we use. b
 
 ### FM as unified recall
 
-1. Simple version
+#### Simple versuibn
 
 we can use the simple FM recall version as
 
@@ -321,6 +323,23 @@ we can use the simple FM recall version as
 
 ![FM_recall2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FM_recall2.svg)
 
+
+1. Step1: Offline process
+
+* calculate all the sub set of user embedding vectors 
+* calculate all the sub set of item embedding vectors
+* dot product of them
+
+
+![simple_FM1](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/simple_FM1.jpg)
+
+![simple_FM2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/simple_FM2.jpg)
+
+
+From Math point of view, it is equal to that 
+
+
+#### with context 
 
 ## Re-Ranking
 
