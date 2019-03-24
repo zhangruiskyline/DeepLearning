@@ -27,6 +27,8 @@
     - [Mutiple recall](#mutiple-recall)
   - [Classical Recall Algorithms](#classical-recall-algorithms)
     - [Performance Analysis](#performance-analysis)
+    - [Multiple Recall vs Unified Recall](#multiple-recall-vs-unified-recall)
+    - [FM as unified recall](#fm-as-unified-recall)
   - [Re-Ranking](#re-ranking)
   - [balance between recall/precision](#balance-between-recallprecision)
   - [High frequency vs Long tail](#high-frequency-vs-long-tail)
@@ -304,6 +306,21 @@ And due to in the real applicastion, feature vector will be sparse, so most n wi
 And to understand more 
 
 ![FM_improve2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FM_improve2.jpg)
+
+### Multiple Recall vs Unified Recall
+
+Mutiple recall needs to adjusts the super parameter how many recall do we use. but use FM, adding one recall sub system is like adding a feature
+
+### FM as unified recall
+
+1. Simple version
+
+we can use the simple FM recall version as
+
+![FM_recall1](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FM_recall1.jpg)
+
+![FM_recall2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FM_recall2.svg)
+
 
 ## Re-Ranking
 
