@@ -344,7 +344,7 @@ we can use the simple FM recall version as
 
 First, we add up all user vectors and item vectors and then do the product, is it equal to FM model?
 
-![math_FM](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Math_FM.jpg)
+![math_FM](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Math_FM.png)
 
 * From math point of view, it is same as FM similipication, calculate all sum of embeddeing vector then apply dot product of __<V,V>__ , the difference is only that right now we have both user and item vectors.
 
