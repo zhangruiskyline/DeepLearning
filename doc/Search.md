@@ -26,6 +26,7 @@
   - [Top K Selection](#top-k-selection)
     - [Mutiple recall](#mutiple-recall)
   - [Classical Recall Algorithms](#classical-recall-algorithms)
+    - [Performance Analysis](#performance-analysis)
   - [Re-Ranking](#re-ranking)
   - [balance between recall/precision](#balance-between-recallprecision)
   - [High frequency vs Long tail](#high-frequency-vs-long-tail)
@@ -286,6 +287,23 @@ Basically use two embedding, one for user and one for item/keywords
 5. MF to FM
 
 ![MF2FM](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/MF2FM.jpg)
+
+
+### Performance Analysis
+
+FM Needs 2-order analysis. so the Time complexity will be __O(n^2)__
+
+> Optimization of performance 
+
+* Use embedding and __K__ is embedding dimension and __n__ is number of features, so the time complexity will be __O(k*n)__. 
+
+And due to in the real applicastion, feature vector will be sparse, so most n will be 0, computation complexity will be reduced
+
+![FM_improve1](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FM_improve1.jpg)
+
+And to understand more 
+
+![FM_improve2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FM_improve2.jpg)
 
 ## Re-Ranking
 
