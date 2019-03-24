@@ -29,7 +29,8 @@
     - [Performance Analysis](#performance-analysis)
     - [Multiple Recall vs Unified Recall](#multiple-recall-vs-unified-recall)
     - [FM as unified recall](#fm-as-unified-recall)
-      - [Simple versuibn](#simple-versuibn)
+      - [Simple version](#simple-version)
+      - [More complete version with context](#more-complete-version-with-context)
       - [with context](#with-context)
   - [Re-Ranking](#re-ranking)
   - [balance between recall/precision](#balance-between-recallprecision)
@@ -315,7 +316,7 @@ Mutiple recall needs to adjusts the super parameter how many recall do we use. b
 
 ### FM as unified recall
 
-#### Simple versuibn
+#### Simple version
 
 we can use the simple FM recall version as
 
@@ -328,15 +329,30 @@ we can use the simple FM recall version as
 
 * calculate all the sub set of user embedding vectors 
 * calculate all the sub set of item embedding vectors
-* dot product of them
+* Store all those embedding vector in a K/V store/cache
 
+2. Step2: Online serving
+
+* When user login in/request comes. get the user vector from cache, then apply dotproduct similar to item vector in K/V store. calculating the dot-product and rank the Top K items (via some lib like Facebook FAISS)
 
 ![simple_FM1](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/simple_FM1.jpg)
 
 ![simple_FM2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/simple_FM2.jpg)
 
 
-From Math point of view, it is equal to that 
+3. Model analysis
+
+First, we add up all user vectors and item vectors and then do the product, is it equal to FM model?
+
+![math_FM](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Math_FM.jpg)
+
+* From math point of view, it is same as FM similipication, calculate all sum of embeddeing vector then apply dot product of __<V,V>__ , the difference is only that right now we have both user and item vectors.
+
+#### More complete version with context
+
+The challenge for context information is it needs to be processed in real time or near real time.
+
+
 
 
 #### with context 
