@@ -23,15 +23,18 @@
   - [GBDT: Gradient Boost Decision Tree](#gbdt-gradient-boost-decision-tree)
   - [LambdaMART](#lambdamart)
 - [Two stage: Selection and Ranking](#two-stage-selection-and-ranking)
-  - [Top K Selection](#top-k-selection)
+- [Recommendation](#recommendation)
+  - [Recall](#recall)
     - [Mutiple recall](#mutiple-recall)
   - [Classical Recall Algorithms](#classical-recall-algorithms)
     - [Performance Analysis](#performance-analysis)
     - [Multiple Recall vs Unified Recall](#multiple-recall-vs-unified-recall)
-  - [FM as unified recall](#fm-as-unified-recall)
+  - [FM Model](#fm-model)
     - [Simple version](#simple-version)
     - [More complete version with context](#more-complete-version-with-context)
     - [FM advanced](#fm-advanced)
+  - [FFM Model](#ffm-model)
+    - [FM to FFM(a CTR example)](#fm-to-ffma-ctr-example)
   - [Re-Ranking](#re-ranking)
   - [balance between recall/precision](#balance-between-recallprecision)
   - [High frequency vs Long tail](#high-frequency-vs-long-tail)
@@ -241,7 +244,14 @@ The idea of two stage recall can be shown as below
 
 ![2stagerecall](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/2stagerecall.jpg)
 
-## Top K Selection
+# Recommendation
+
+an industrial level of recommendation could be like
+
+![Industrial_recall](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Industrial_recall.jpg)
+
+
+## Recall
 
 We need to pick top K(hundreds level) from all documentations . the model could be simple. mostly widely used is inverted index. And another way is the WAND operator.
 
@@ -314,7 +324,7 @@ And to understand more
 
 Mutiple recall needs to adjusts the super parameter how many recall do we use. but use FM, adding one recall sub system is like adding a feature
 
-## FM as unified recall
+## FM Model
 
 ### Simple version
 
@@ -370,6 +380,19 @@ So for each category, we can put them into either the features of user or item
 From the analysis above, in theory, we can use it for re ranking. Also we need to consider the process speed. 
 
 More detailed can be found in https://zhuanlan.zhihu.com/p/58160982 
+
+## FFM Model
+
+FFM is field Factorial machine.
+
+### FM to FFM(a CTR example)
+
+
+
+
+
+
+
 
 ## Re-Ranking
 
