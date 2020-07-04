@@ -9,7 +9,7 @@
   - [General Rule](#general-rule)
   - [Hogwild](#hogwild)
   - [Data Parallel (DP)](#data-parallel-dp)
-  - [Distributed Data Parallel](#distributed-data-parallel)
+  - [Distributed Data Parallel(DDP)](#distributed-data-parallelddp)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -30,4 +30,4 @@
 
 ## Data Parallel (DP)
 
-## Distributed Data Parallel
+## Distributed Data Parallel(DDP)

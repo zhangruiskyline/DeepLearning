@@ -7,6 +7,7 @@
   - [CNN](#cnn)
   - [RNN](#rnn)
   - [TensorFlow](#tensorflow)
+  - [Pytorch](#pytorch)
   - [GBDT](#gbdt)
   - [SVM](#svm)
 - [Applications](#applications)
@@ -44,6 +45,11 @@
 ## TensorFlow
 
 [TensorFlow and Keras](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/Tensorflow_Keras.md)
+
+## Pytorch
+
+[Pytorch](https://github.com/zhangruiskyline/DeepLearning/blob/master/doc/pytorch.md)
+
 
 ## GBDT
 [Tree(decision_tree,xgboost)](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/doc/decision_tree.md)
