@@ -36,7 +36,7 @@ https://towardsdatascience.com/how-to-scale-training-on-multiple-gpus-dae1041f49
 
 General rule is to distribute the data into different sub data sets, and each GPU will process a subset of them. As shown in 
 
-![dp](https://github.com/zhangruiskyline/DeepLearning/blob/master/img/dp.png)
+![DP](https://github.com/zhangruiskyline/DeepLearning/blob/master/img/DP.png)
 
 The process steps will be like
 
