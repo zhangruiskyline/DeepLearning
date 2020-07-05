@@ -7,8 +7,17 @@
   - [Multi-worker dataloader](#multi-worker-dataloader)
 - [Pytorch Training accelerate](#pytorch-training-accelerate)
   - [General Rule](#general-rule)
-  - [Hogwild](#hogwild)
+  - [Distributed SGD](#distributed-sgd)
+    - [Locking Updates (Synchronous SGD)](#locking-updates-synchronous-sgd)
+    - [Async lock free SGD: Hogwild](#async-lock-free-sgd-hogwild)
+    - [Pytorch implementation of Hogwild](#pytorch-implementation-of-hogwild)
+      - [Leverage multi-processing](#leverage-multi-processing)
+      - [Data Management](#data-management)
+      - [Updates](#updates)
+      - [Sample code](#sample-code)
+    - [Parameter Server](#parameter-server)
   - [Data Parallel (DP)](#data-parallel-dp)
+    - [DP limitation](#dp-limitation)
   - [Distributed Data Parallel(DDP)](#distributed-data-parallelddp)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -26,7 +35,96 @@
 * more CPU and networking utilization
 
 
-## Hogwild
+## Distributed SGD 
+
+https://towardsdatascience.com/accelerating-deep-learning-using-distributed-sgd-an-overview-e66c4aee1a0c
+
+Stochastic Gradient Descent (SGD) and its multiple variants (such as RMSProp or Adam) are the crutial for deep learning training. In training, the mini-batches is strongly limited by computer memory (GPU memory if the algorithms run on GPUs). Due to these reasons, we need a fast and stable solution for parallelizing training over multiple independent nodes (computers) to achieve higher speedups.
+
+Over the years, multiple solutions to this problem have been invented. In this post I will detail some of the most promising modifications to the vanilla SGD and try to explain the rationale behind these.
+
+### Locking Updates (Synchronous SGD)
+
+
+The simplest solution for parallelizing SGD across multiple CPUs or nodes is to have every node read the current parameter values, calculate the gradients using one batch of data, lock the parameters and update them. In pseudocode:
+
+```
+parallel for (batch of data):
+   Acquire lock on current parameters
+   Read current parameters
+   Calculate the gradient w.r.t. the batch and update parameters
+   Release lock
+end
+```
+
+The problem with this kind of update is that acquiring the lock typically takes much longer than calculating the gradients. Thus, the synchronization becomes a major bottleneck and the parallelization is not effective. Therefore, alternatives have to be devised.
+
+### Async lock free SGD: Hogwild
+
+The workings of Hogwild ![Hogwild](http://papers.nips.cc/paper/4390-hogwild-a-lock-free-approach-to-parallelizing-stochastic-gradient-descent.pdf) can be simply explained by: it is like the code above, just without the locks. In pseudocode:
+
+```
+parallel for (batch or sample of data):
+   Read current parameters
+   Calculate the gradient w.r.t. the batch and update parameters
+end
+```
+
+Although this might not obvious, the authors of Hogwild were able to prove mathematically that it makes sense, at least in some learning settings. The main assumption of the algorithm is that the parameter updates are __sparse__. This means that most updates only update a sparse set of parameters. In this case, Hogwild is able to achieve almost the same convergence rate as the serial version.
+
+### Pytorch implementation of Hogwild
+
+https://towardsdatascience.com/this-is-hogwild-7cc80cd9b944
+
+#### Leverage multi-processing
+
+One possible algorithm is Hogwild! which leverages parallel processes on computers to run SGD simultaneously and asynchronously. Asynchronicity is important for reducing unnecessary idle time in which no calculations are done but energy is still consumed.
+
+__torch.multiprocessing__ is a drop in replacement for Python’s multiprocessing module. It supports the exact same operations, but extends it, so that all tensors sent through a multiprocessing.Queue, will have their data moved into __shared memory__ and will only send a handle to another process.
+
+
+
+#### Data Management
+Using Hogwild!, each participating process in a parallel training session is responsible for one partition of the data, e.g. having 8 parallel processes would split the data set in 8 equal parts whereas each process is assigned to one part. Moreover, on shared memory or a separate server, an initial model is created which can be accessed by all processes.
+
+
+#### Updates
+Once the training starts, each process loads the current state of the model from __shared memory__ and starts reading the first batch of their data partition. As in standard SGD, each process is calculating the gradients for that batch. The gradients are now directly written to the shared model without blocking the other processes. Once written, the new model parameters are loaded and the next batch is used. Due to the missing blocking, the shared model will sometimes receive old gradients which, one may think, could be a disadvantage. The researchers of Hogwild!, however, could show that the training even benefits from the non-blocking fashion.
+
+
+#### Sample code
+
+```python
+import torch.multiprocessing as mp
+from model import MyModel
+
+def train(model):
+    # Construct data_loader, optimizer, etc.
+    for data, labels in data_loader:
+        optimizer.zero_grad()
+        loss_fn(model(data), labels).backward()
+        optimizer.step()  # This will update the shared parameters
+
+if __name__ == '__main__':
+    num_processes = 4
+    model = MyModel()
+    # NOTE: this is required for the ``fork`` method to work
+    model.share_memory()
+    processes = []
+    for rank in range(num_processes):
+        p = mp.Process(target=train, args=(model,))
+        p.start()
+        processes.append(p)
+    for p in processes:
+        p.join()
+```
+
+### Parameter Server
+
+![Parameter Server](https://github.com/zhangruiskyline/DeepLearning/blob/master/img/PS.png)
+
+was invented by researchers in Google as part of their DistBelief framework (predecessor of TensorFlow) and its variants are still used in today’s distributed TensorFlow framework. It makes use of multiple model replicas that each calculate updates based on a small portion of data (data parallelism). After calculation, the updates are sent to a centralized parameter server. The parameter server itself is split into multiple nodes, each holding and updating a small subset of the parameters (model parallelism). This parallelization scheme is very popular up to this date, not least due to it being a built-in feature in TensorFlow. However, convergence of this scheme suffers from the fact that model replicas do not share parameters (weights) or updates with each other. This means that their parameters can always diverge.
+
 
 ## Data Parallel (DP)
 
@@ -52,10 +150,14 @@ The process steps will be like
 parallel_model = torch.nn.DataParallel(model) # Encapsulate the model
 
 predictions = parallel_model(inputs)          # Forward pass on multi-GPUs
-loss = loss_function(predictions, labels)     # Compute loss function
+loss = loss_function(predictions, labels)     # Compute loss function on single GPU
 loss.mean().backward()                        # Average GPU-losses + backward pass
 optimizer.step()                              # Optimizer step
 predictions = parallel_model(inputs)          # Forward pass with new parameters
 ```
+
+### DP limitation
+
+
 
 ## Distributed Data Parallel(DDP)
