@@ -17,7 +17,7 @@
       - [Sample code](#sample-code)
     - [Parameter Server](#parameter-server)
   - [Data Parallel (DP)](#data-parallel-dp)
-    - [DP limitation](#dp-limitation)
+    - [DataParallelModel/DataParallelCriterion](#dataparallelmodeldataparallelcriterion)
   - [Distributed Data Parallel(DDP)](#distributed-data-parallelddp)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -156,7 +156,40 @@ optimizer.step()                              # Optimizer step
 predictions = parallel_model(inputs)          # Forward pass with new parameters
 ```
 
-### DP limitation
+### DataParallelModel/DataParallelCriterion
+
+There are two main solution to the imbalanced GPU usage issue:
+
+* computing the loss in the forward pass of your model,
+* computing the loss in a parallel fashion.
+
+We will focus on solution 2, the solution is to keep each partial output on its GPU instead of gathering all of them to GPU-1. We well need to distribute our loss criterion computation as well to be able to compute and back propagate our loss.
+
+we can check PyTorch package called PyTorch-Encoding(https://github.com/zhanghang1989/PyTorch-Encoding) which comprises these custom parallelization functions.
+
+
+```python
+from parallel import DataParallelModel, DataParallelCriterion
+
+parallel_model = DataParallelModel(model)             # Encapsulate the model
+parallel_loss  = DataParallelCriterion(loss_function) # Encapsulate the loss function
+
+predictions = parallel_model(inputs)      # Parallel forward pass
+                                          # "predictions" is a tuple of n_gpu tensors
+loss = parallel_loss(predictions, labels) # Compute loss function in parallel
+loss.backward()                           # Backward pass
+optimizer.step()                          # Optimizer step
+predictions = parallel_model(inputs)      # Parallel forward pass with new parameters
+```
+
+The difference between _DataParallelModel_ and _torch.nn.DataParallel_ is just that the output of the forward pass (predictions) is not gathered on GPU-1 and is thus a tuple of n_gpu tensors, each tensor being located on a respective GPU.
+
+The _DataParallelCriterion_ container encapsulate the loss function and takes as input the tuple of n_gpu tensors and the target labels tensor. It computes the loss function in parallel on each GPU, splitting the target label tensor the same way the model input was chunked by _DataParallel_.
+
+The new way can be illustrated as
+
+![DP2](https://github.com/zhangruiskyline/DeepLearning/blob/master/img/DP2.png)
+
 
 
 
