@@ -168,6 +168,15 @@ We will focus on solution 2, the solution is to keep each partial output on its 
 we can check PyTorch package called PyTorch-Encoding(https://github.com/zhanghang1989/PyTorch-Encoding) which comprises these custom parallelization functions.
 
 
+
+If you use __DataParallelCriterion__, you should not wrap your model with a regular _DataParallel_. This is because _DataParallel_ basically gathers output on one GPU. Therefore, we use the __DataParallelModel__, a Custom DataParallel class. The process of learning using DataParallelModel and DataParallelCriterion is as follows: How to use is quite simple. Just import the parallel.py file from the Pytorch-Encoding package and make it import in the training code.
+
+The new way can be illustrated as
+
+![DP2](https://github.com/zhangruiskyline/DeepLearning/blob/master/img/DP2.png)
+
+And the code sample can be like
+
 ```python
 from parallel import DataParallelModel, DataParallelCriterion
 
@@ -186,11 +195,34 @@ The difference between _DataParallelModel_ and _torch.nn.DataParallel_ is just t
 
 The _DataParallelCriterion_ container encapsulate the loss function and takes as input the tuple of n_gpu tensors and the target labels tensor. It computes the loss function in parallel on each GPU, splitting the target label tensor the same way the model input was chunked by _DataParallel_.
 
-The new way can be illustrated as
-
-![DP2](https://github.com/zhangruiskyline/DeepLearning/blob/master/img/DP2.png)
-
-
-
 
 ## Distributed Data Parallel(DDP)
+
+https://yangkky.github.io/2019/07/08/distributed-pytorch-tutorial.html
+
+* Multiprocessing with __DistributedDataParallel__ duplicates the model across multiple GPUs, each of which is controlled by one process. 
+
+* The GPUs can all be on the same node or spread across multiple nodes. 
+
+* Every process does __identical__ tasks, and each process communicates with all the others. Only __gradients__ are passed between the processes/GPUs so that network communication is less of a bottleneck.
+
+
+> Training process 
+
+1. each process loads its own minibatches from disk and passes them to its GPU
+
+2. Each GPU does its own forward pass, and then the gradients are __all-reduced__ across the GPUs. Gradients for each layer do not depend on previous layers, so the gradient all-reduce is calculated concurrently with the backwards pass to futher alleviate the networking bottleneck
+
+3. At the end of the backwards pass, every node has the __averaged__ gradients, ensuring that the model weights stay __synchronized__.
+
+DDP  can be illustrated as
+
+![DDP](https://github.com/zhangruiskyline/DeepLearning/blob/master/img/DDP.png)
+
+> Code requirement
+
+All this requires that the multiple processes, possibly on multiple nodes, are synchronized and communicate. Pytorch does this through its ```distributed.init_process_group``` function. This function needs to know where to find process 0 so that all the processes can sync up and the total number of processes to expect. Each individual process also needs to know the total number of processes as well as its rank within the processes and which GPU to use. It’s common to call the total number of processes the world size. Finally, each process needs to know which slice of the data to work on so that the batches are non-overlapping. Pytorch provides ```nn.utils.data.DistributedSampler``` to accomplish this.
+
+
+
+
