@@ -14,6 +14,8 @@
     - [Model Complexity Effects:](#model-complexity-effects)
 - [Overfitting](#overfitting)
   - [How to overcome overfitting](#how-to-overcome-overfitting)
+    - [L1/L2/SVM Regularization](#l1l2svm-regularization)
+    - [Dropout for NN](#dropout-for-nn)
 - [Dimension Reduction](#dimension-reduction)
   - [PCA](#pca)
 - [Hyperparameter](#hyperparameter)
@@ -157,7 +159,7 @@ Go for simpler models over more complicated models. Generally, the fewer paramet
 * Cross-Validation
 
 
-* Regularization/Penalizes the complexity
+### L1/L2/SVM Regularization
 
   * L1: Tends to train lots of parameters into 0, sparse model
   * L2: tends to train parameters to be small, so no "big" features
@@ -165,7 +167,7 @@ Go for simpler models over more complicated models. Generally, the fewer paramet
 
 * Ensemble model
 
-* Dropout for NN
+### Dropout for NN
 
 * Decision Tree tends to have overfitting: The ID3 algorithm will grow each branch in the tree just deep enough to classify the training instances perfectly
   * Pre_prune: stop growing the tree earlier, before it perfectly classifies the training set.
