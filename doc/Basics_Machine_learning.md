@@ -3,7 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Model selection and data prepare](#model-selection-and-data-prepare)
-  - [Loss function](#loss-function)
+- [Loss function](#loss-function)
     - [SoftMax](#softmax)
     - [Cross-Entropy](#cross-entropy)
     - [Square Loss](#square-loss)
@@ -62,7 +62,7 @@ Estimate the generalization error using the test set with Jtest(Θ(d)), (d = the
 
 Why separate test and validation sets? The error rate estimate of the final model on validation data will be biased (smaller than the true error rate) since the validation set is used to select the final model After assessing the final model on the test set, YOU MUST NOT tune the model any further!
 
-## Loss function
+# Loss function
 
 ### SoftMax
 
