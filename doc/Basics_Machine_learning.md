@@ -3,9 +3,10 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Model selection and data prepare](#model-selection-and-data-prepare)
-  - [SoftMax and cross-entropy](#softmax-and-cross-entropy)
+  - [Loss function](#loss-function)
     - [SoftMax](#softmax)
     - [Cross-Entropy](#cross-entropy)
+    - [Square Loss](#square-loss)
 - [Bias vs Variance](#bias-vs-variance)
   - [concept](#concept)
   - [Learn from learning curves](#learn-from-learning-curves)
@@ -61,7 +62,7 @@ Estimate the generalization error using the test set with Jtest(Θ(d)), (d = the
 
 Why separate test and validation sets? The error rate estimate of the final model on validation data will be biased (smaller than the true error rate) since the validation set is used to select the final model After assessing the final model on the test set, YOU MUST NOT tune the model any further!
 
-## SoftMax and cross-entropy
+## Loss function
 
 ### SoftMax
 
@@ -91,6 +92,10 @@ Another way to get the loss function of logistic regression
 ![LR_loss_2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/lr_loss_2.png)
 
 ![LR_loss_3](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/lr_loss_3.png)
+
+### Square Loss
+
+Usually used for regression problem
 
 # Bias vs Variance
 
