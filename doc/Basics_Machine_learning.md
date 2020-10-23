@@ -7,6 +7,7 @@
     - [SoftMax](#softmax)
     - [Cross-Entropy](#cross-entropy)
     - [Square Loss](#square-loss)
+    - [KL Distance](#kl-distance)
 - [Bias vs Variance](#bias-vs-variance)
   - [concept](#concept)
   - [Learn from learning curves](#learn-from-learning-curves)
@@ -19,6 +20,7 @@
     - [Dropout for NN](#dropout-for-nn)
 - [Dimension Reduction](#dimension-reduction)
   - [PCA](#pca)
+  - [Auto encoder](#auto-encoder)
 - [Hyperparameter](#hyperparameter)
   - [Grid search](#grid-search)
   - [Bayesian Optimization for Hyperparameter Tuning](#bayesian-optimization-for-hyperparameter-tuning)
@@ -96,6 +98,8 @@ Another way to get the loss function of logistic regression
 ### Square Loss
 
 Usually used for regression problem
+
+### KL Distance
 
 # Bias vs Variance
 
@@ -188,6 +192,8 @@ Go for simpler models over more complicated models. Generally, the fewer paramet
 * Sort eigenvalues in descending order and choose the k eigenvectors that correspond to the k largest eigenvalues where k is the number of dimensions of the new feature subspace (k≤d).
 * Construct the projection matrix W from the selected k eigenvectors.
 * Transform the original dataset X via W to obtain a k-dimensional feature subspace Y.
+
+## Auto encoder
 
 # Hyperparameter
 
