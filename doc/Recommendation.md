@@ -73,15 +73,6 @@
   - [Data Model](#data-model)
     - [Basic Data model and features](#basic-data-model-and-features)
     - [Tools available](#tools-available)
-  - [Feed Model](#feed-model)
-    - [Fan-out-on-load(Pull)](#fan-out-on-loadpull)
-    - [Fan-out-on-write(Push)](#fan-out-on-writepush)
-    - [Combine together](#combine-together)
-    - [Tools available](#tools-available-1)
-  - [Feed Rank](#feed-rank)
-    - [Model](#model)
-    - [Features](#features)
-  - [Data Pipeline](#data-pipeline)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1144,49 +1135,3 @@ Optimizing for short-term clicks can promote clickbait contents
 * User: Mysql
 * Connections: Mysql
 * Acitivty: Redis/Canssadra/Mysql
-
-## Feed Model
-
-Fan out: The process of pushing an activity to all your followers is called a fanout. The Basic fanout(like early twitter) is like:
-
-![fanout_basic](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/fanout_basic.png)
-
-### Fan-out-on-load(Pull)
-
-* Pros: simple(one SQL), real time
-* Cons: exponential grow complexity as Connection grow, need memory store everyone's activity, Scalability issue
-
-### Fan-out-on-write(Push)
-When actor generate content, push to all connections. system open area for every person's feed
-
-* Pros: easy and scalable for object, high available
-* Cons: lots of write, N copies of feed, not quite real time
-
-### Combine together
-* for acitive user, push mode, so they won't wait too longest
-* not active user, pull mode
-* Cache hot actor(with large amount of object/follower)
-
-> Etsy:
-* actor and object has high affinition. push.
-* Low affinition: pull or no push
-
-### Tools available
-* Feed store: redis: UID as key
-* Feed Push: celery(distributed queue)
-
-## Feed Rank
-
-* Need measurement metrics
-* Avoid human interaction
-
-### Model
-* Logistic regression: easy, open source,
-* Score or similarity
-
-### Features
-* User features:
-* Content Features:
-* Others
-
-## Data Pipeline
