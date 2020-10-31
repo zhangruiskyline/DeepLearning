@@ -22,8 +22,8 @@
   - [RankSVM](#ranksvm)
   - [GBDT: Gradient Boost Decision Tree](#gbdt-gradient-boost-decision-tree)
   - [LambdaMART](#lambdamart)
-- [Two stage: Selection and Ranking](#two-stage-selection-and-ranking)
 - [Recommendation](#recommendation)
+  - [Two stage: Selection and Ranking](#two-stage-selection-and-ranking)
   - [Recall](#recall)
     - [Mutiple recall](#mutiple-recall)
   - [Classical Recall Algorithms](#classical-recall-algorithms)
@@ -236,13 +236,7 @@ During RankNet training procedure, you don’t need the costs, only need the gra
 
 ![LambadaMART](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/lambdamart.png)
 
-# Two stage: Selection and Ranking
 
-The challenge for current search system is most model like Tree based (GBDT) and Deep learning has high computation complexity. but in inference stage for online ranking. the delay requirement is very tight(<1s), so it would be very hard to rank all related documentation, sometimes it would be >1m.
-
-The idea of two stage recall can be shown as below
-
-![2stagerecall](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/2stagerecall.jpg)
 
 # Recommendation
 
@@ -250,6 +244,13 @@ an industrial level of recommendation could be like
 
 ![Industrial_recall](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Industrial_recall.jpg)
 
+## Two stage: Selection and Ranking
+
+The challenge for current search system is most model like Tree based (GBDT) and Deep learning has high computation complexity. but in inference stage for online ranking. the delay requirement is very tight(<1s), so it would be very hard to rank all related documentation, sometimes it would be >1m.
+
+The idea of two stage recall can be shown as below
+
+![2stagerecall](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/2stagerecall.jpg)
 
 ## Recall
 

@@ -27,6 +27,47 @@
     - [The usual architecture for Triplet Loss:](#the-usual-architecture-for-triplet-loss)
     - [The Deep NN model](#the-deep-nn-model-1)
 - [General Framework](#general-framework)
+- [Industrial Recommendation](#industrial-recommendation)
+  - [Two stage: Selection and Ranking](#two-stage-selection-and-ranking)
+  - [Recall](#recall)
+    - [Mutiple recall](#mutiple-recall)
+  - [Classical Recall Algorithms](#classical-recall-algorithms)
+    - [Performance Analysis](#performance-analysis)
+    - [Multiple Recall vs Unified Recall](#multiple-recall-vs-unified-recall)
+  - [FM Model](#fm-model)
+    - [Simple version](#simple-version)
+    - [More complete version with context](#more-complete-version-with-context)
+    - [FM advanced](#fm-advanced)
+  - [FFM Model](#ffm-model)
+    - [FM to FFM(a CTR example)](#fm-to-ffma-ctr-example)
+  - [Re-Ranking](#re-ranking)
+  - [balance between recall/precision](#balance-between-recallprecision)
+  - [High frequency vs Long tail](#high-frequency-vs-long-tail)
+- [Deep Learning Based Ranking](#deep-learning-based-ranking)
+  - [Emebedding representation](#emebedding-representation)
+  - [CNN based semantic model](#cnn-based-semantic-model)
+  - [Learning local representation](#learning-local-representation)
+- [Evaluation](#evaluation)
+  - [Offline](#offline)
+    - [ROC](#roc)
+    - [F1](#f1)
+    - [NDCG(Normalized Discounted Cumulative Gain)](#ndcgnormalized-discounted-cumulative-gain)
+  - [Online](#online)
+- [CTR(Click through rate)](#ctrclick-through-rate)
+  - [Unique in CTR](#unique-in-ctr)
+  - [Classic Method](#classic-method)
+    - [Logistic regression](#logistic-regression)
+    - [Factor Machine](#factor-machine)
+    - [GBDT](#gbdt)
+  - [Deep Learning on CTR](#deep-learning-on-ctr)
+    - [Deep Learning feature set](#deep-learning-feature-set)
+    - [Handle the challenge](#handle-the-challenge)
+    - [one hot to dense](#one-hot-to-dense)
+    - [General DNN network Architecture](#general-dnn-network-architecture)
+    - [Advanced architecture based on general architecture](#advanced-architecture-based-on-general-architecture)
+      - [Parallel](#parallel)
+      - [Serialization](#serialization)
+  - [DNN model training and optimization](#dnn-model-training-and-optimization)
 - [Ethical Considerations](#ethical-considerations)
 - [General Feed Rank System](#general-feed-rank-system)
   - [Data Model](#data-model)
@@ -751,6 +792,314 @@ Further, for more general NN framework refer "AutoRec: Autoencoders Meet Collabo
 * Input = One Hot encoding of User; Target = User vector in item space, This is equivalent to MF model.
 * Input = User features ; Target = User vector in item space, This is equivalent to user feature based recommender.
 * Input = Item features ; Target = Item vector in user space, This is equivalent to item feature based recommender.
+
+# Industrial Recommendation
+
+an industrial level of recommendation could be like
+
+![Industrial_recall](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Industrial_recall.jpg)
+
+## Two stage: Selection and Ranking
+
+The challenge for current search system is most model like Tree based (GBDT) and Deep learning has high computation complexity. but in inference stage for online ranking. the delay requirement is very tight(<1s), so it would be very hard to rank all related documentation, sometimes it would be >1m.
+
+The idea of two stage recall can be shown as below
+
+![2stagerecall](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/2stagerecall.jpg)
+
+## Recall
+
+We need to pick top K(hundreds level) from all documentations . the model could be simple. mostly widely used is inverted index. And another way is the WAND operator.
+
+
+* The key part Selection is to increase recall
+* The key challange in most recall or top K selection is the large amout of candidate, some over hundreds of millions. so the model should be simple to calculate all candidates and speed is the most important parameter.
+
+### Mutiple recall 
+
+The current industrial usage is normally multiple recall system as shown below, so there will be multiple feature sets running and independently pick up top K. The K number is a super parameters that may need to be A/B tested
+
+![multirecall](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/multirecall.jpg)
+
+## Classical Recall Algorithms
+
+1. LR
+
+* Simple and useful. Easy to capture and represent features, easy to add business logic into feature sets.
+
+* drawback: can not capture feature combination
+
+![LR_recall](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/LR_recall.jpg)
+
+LR is most widely used in recall and CTR, so it is linear feature sets with manually introduced none linear combination
+
+2. Improved LR to boost the generalization
+
+* Mannually pick up the feature combination is complicated and time consuming. so put the feature combination into model
+
+![LR_improve](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/LR_improve.jpg)
+
+But the generalization will be a problem, if two feature combination has not appeared in training set, this model can not capture in serving stage. Especially for sparse feature set like in recall and CTR
+
+3. FM(Factorization Machine) model
+
+![FMmodel](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FMmodel.jpg)
+
+In Sparse embedding, although the two features may not appear in training, but as long as each feature is just a vector, it is still possible to capture the relation using dot product.
+
+> This is essentailly key point for most embedding, to use dot product to measure similarity 
+
+4. MF(Matrix Factorization)
+
+Basically use two embedding, one for user and one for item/keywords
+
+![MF](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/MF.jpg)
+
+5. MF to FM
+
+![MF2FM](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/MF2FM.jpg)
+
+
+### Performance Analysis
+
+FM Needs 2-order analysis. so the Time complexity will be __O(n^2)__
+
+> Optimization of performance 
+
+* Use embedding and __K__ is embedding dimension and __n__ is number of features, so the time complexity will be __O(k*n)__. 
+
+And due to in the real applicastion, feature vector will be sparse, so most n will be 0, computation complexity will be reduced
+
+![FM_improve1](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FM_improve1.jpg)
+
+And to understand more 
+
+![FM_improve2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FM_improve2.jpg)
+
+### Multiple Recall vs Unified Recall
+
+Mutiple recall needs to adjusts the super parameter how many recall do we use. but use FM, adding one recall sub system is like adding a feature
+
+## FM Model
+
+### Simple version
+
+we can use the simple FM recall version as
+
+![FM_recall1](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FM_recall1.jpg)
+
+![FM_recall2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FM_recall2.svg)
+
+
+1. Step1: Offline process
+
+* calculate all the sub set of user embedding vectors 
+* calculate all the sub set of item embedding vectors
+* Store all those embedding vector in a K/V store/cache
+
+2. Step2: Online serving
+
+* When user login in/request comes. get the user vector from cache, then apply dotproduct similar to item vector in K/V store. calculating the dot-product and rank the Top K items (via some lib like Facebook FAISS)
+
+![simple_FM1](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/simple_FM1.jpg)
+
+![simple_FM2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/simple_FM2.jpg)
+
+
+3. Model analysis
+
+First, we add up all user vectors and item vectors and then do the product, is it equal to FM model?
+
+![math_FM](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/Math_FM.png)
+
+* From math point of view, it is same as FM similipication, calculate all sum of embeddeing vector then apply dot product of __<V,V>__ , the difference is only that right now we have both user and item vectors.
+
+### More complete version with context
+
+The challenge for context information is it needs to be processed in real time or near real time.
+
+The process can be summarized as
+
+![FM_withcontext](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FM_withcontext.jpg)
+
+
+### FM advanced
+
+There will be two follow up on FM advanced 
+
+1. How to incorporate multiple recall system
+
+So for each category, we can put them into either the features of user or item
+
+2. FM recall combine with ranking
+
+From the analysis above, in theory, we can use it for re ranking. Also we need to consider the process speed. 
+
+More detailed can be found in https://zhuanlan.zhihu.com/p/58160982 
+
+## FFM Model
+
+FFM is field Factorial machine.
+
+### FM to FFM(a CTR example)
+
+
+
+
+
+
+
+
+## Re-Ranking
+
+Based on top K selected, use ranking algorithm mentioned above to rank, noticing selection algorithm will score for single documentation. pairwise or list wise will only be applied for re ranking
+
+* The key part Selection is to increase precision
+
+## balance between recall/precision
+
+Some  search application focus on more precision. like "Trump", "Steve Jobs", in this case, selection part could be simplified, focusing on re ranking
+
+Some  search application focus on more recall, like certain legal documentation, in this case we should focus on more recall
+
+## High frequency vs Long tail
+
+High frequency usually have high traffic volume, we can just use CTR or conversion rate to rank instead of modeling
+
+# Deep Learning Based Ranking
+
+Use deep learning to learning the hidden semantic representation for query/documentation   
+
+## Emebedding representation
+
+## CNN based semantic model
+
+> A Latent Semantic Model with Convolutional-Pooling Structure for Information Retrieval
+
+* Traditional: Use BOW to abstract the feature from query or documentations
+
+* Use Sliding window in CNN filter to abstract character level feature, not word level. So the model will convert word into a character level  embedding representation vector, then apply max pooling
+
+![CNNsemantic](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/CNNsemantic.png)
+
+## Learning local representation
+
+# Evaluation
+
+## Offline
+
+### ROC
+
+* Ranking precision: Out of all Documentation judged as relevant, how much of them are marked as relevant.
+* Ranking Recall: Out of all relevant Documentation, how much of them have been marked as relevant
+
+> Top K
+
+In reality, K will be like 3,5,10, but the total documentation size could be very large. So how to choose the K documentation is very important
+
+### F1
+
+F-score or F-measure, is The weighted harmonic mean of precision and recall
+![F1 score](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/F1score.svg)
+
+### NDCG(Normalized Discounted Cumulative Gain)
+
+Compared with only Binary classification, we can use multi-class labels, like 5 levels
+
+Two assumptions are made in using DCG and its related measures.
+* Highly relevant documents are more useful when appearing earlier in a search engine result list (have higher ranks)
+* Highly relevant documents are more useful than marginally relevant documents, which are in turn more useful than non-relevant documents.
+
+So in NDCG, the highly relevant is valued more than un relevant. So highly relevant documentation needs to be ranked in highest position, and most un-relevant documentation needs to be bottom. every wrong ranking will be punished.
+
+## Online
+
+# CTR(Click through rate)
+
+* Widely used in Ads, Recommendation, Feed
+
+## Unique in CTR
+
+* Very Sparse discrete Features
+* High order sparse Features
+* Feature engineering is very important(conjecture combination features )
+
+> example: Feature vector in CTR
+
+![featurevector](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/featurevector.png)
+
+
+## Classic Method
+
+### Logistic regression
+
+* Simple and useful. Easy to capture and represent features, easy to add business logic into feature sets.
+
+* drawback: can not capture feature combination
+
+> we can add the feature combination as pair of feature combination
+
+* But then it dose not have good generalization capability, let's see if we did not see any __x_i__ and __x_j__ combination feature in training, then weight __w_i,j__ will be 0, and if we had this feature in serving, LR can not recognize it.
+
+### Factor Machine
+
+![FM](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/FM.png)
+
+
+### GBDT
+
+## Deep Learning on CTR
+
+### Deep Learning feature set
+
+* continuous: age, height, etc,
+
+### Handle the challenge
+
+* High order sparse feature space -> One hot encoding to Dense(embedding)
+
+* Feature Engineering -> Deep NN automatically abstract features
+
+* Feature Engineering: How to abstract low order feature combination -> FM in DNN
+
+* Feature Engineering: How to abstract high order feature combination -> Deep NN
+
+
+
+* discrete: professional, gender, college
+
+### one hot to dense
+
+One hot is good at representing discrete features. however, if we directly use one hot encoding in deep learning, the parameter size will be too large.
+
+So the proper solution is 
+* to convert ___one hot->Dense___
+* different feature categories do not fully connected with each other 
+
+![onehot2dense](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/onehot2dense.png)
+
+### General DNN network Architecture
+
+* one hot to dense
+* add continous feature vector
+
+> This is the general DNN architecture, it is also seen as Factorisation-Machine Supported Neural Networks
+
+![DNN_CTR](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/DNN_CTR.png)
+
+### Advanced architecture based on general architecture 
+
+> The idea is to abstract the low order feature combination separately and add into general DNN structure 
+
+#### Parallel 
+
+![para_DNN_CTR](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/para_DNN_CTR.png)
+
+
+#### Serialization 
+
+
+## DNN model training and optimization 
 
 # Ethical Considerations
 
