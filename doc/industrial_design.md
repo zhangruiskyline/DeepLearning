@@ -363,6 +363,8 @@ need to be fast, could start after take out phone instead of unlock
 
 # FaceBook Personaliztion in Large Scale 
 
+https://www.slideshare.net/HagayLupesko/ai-powered-personalization-scale-oreilly-ai-san-jose-sep-2019
+
 ## High Level
 
 ![fb-personalization](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/fb-personalization.jpg)
