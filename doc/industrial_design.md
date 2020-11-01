@@ -27,6 +27,12 @@
   - [Deployment and iterate](#deployment-and-iterate)
   - [Speed vs quality](#speed-vs-quality)
 - [Design a iphone APP recommendation system(Siri Recommendation)](#design-a-iphone-app-recommendation-systemsiri-recommendation)
+- [FaceBook Personaliztion in Large Scale](#facebook-personaliztion-in-large-scale)
+  - [High Level](#high-level)
+  - [System Design](#system-design)
+  - [Embedding and Two tower models](#embedding-and-two-tower-models)
+  - [Sparse vs Dense features](#sparse-vs-dense-features)
+    - [Two tower to combine sparse and Dense](#two-tower-to-combine-sparse-and-dense)
 - [Facebook Feed Rank System](#facebook-feed-rank-system)
   - [Overall consideration](#overall-consideration)
   - [Data Model](#data-model)
@@ -39,7 +45,7 @@
 - [Spotify Music Recommendation](#spotify-music-recommendation)
   - [collaborative filter](#collaborative-filter)
   - [Content based](#content-based)
-- [Wide and Deep NN for recommendation(From Google)](#wide-and-deep-nn-for-recommendationfrom-google)
+- [Google Wide and Deep NN for recommendation](#google-wide-and-deep-nn-for-recommendation)
   - [Architecture](#architecture-1)
   - [Wide and Deep Learning](#wide-and-deep-learning)
     - [Wide Model](#wide-model)
@@ -355,6 +361,46 @@ if model is heavy, then probably need a local model, with rough estimation, like
 need to be fast, could start after take out phone instead of unlock
 
 
+# FaceBook Personaliztion in Large Scale 
+
+## High Level
+
+![fb-personalization](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/fb-personalization.jpg)
+
+![fb-personalization-2](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/fb-personalization-2.jpg)
+
+## System Design
+
+* Fast Identify from large candidate space to smaller amount
+
+* Do not optimize for accurate, but for latency
+
+## Embedding and Two tower models
+
+
+
+![fb-personalization-3](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/fb-personalization-3.jpg)
+
+![fb-personalization-4](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/fb-personalization-4.jpg)
+
+
+## Sparse vs Dense features
+
+* Challenge 1: How to learn from sparse/categorical features
+
+* Challenge 2: How to combine with Dense feature
+
+### Two tower to combine sparse and Dense
+
+
+
+![fb-personalization-5](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/fb-personalization-5.jpg)
+
+![fb-personalization-6](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/fb-personalization-6.jpg)
+
+
+
+
 # Facebook Feed Rank System
 
 http://blog.gainlo.co/index.php/2016/03/29/design-news-feed-system-part-1-system-design-interview-questions/
@@ -492,7 +538,7 @@ Unfortunately, this also turns out to be their biggest flaw. Because of their re
 
 There is quite a large semantic gap between music audio on the one hand, and the various aspects of music that affect listener preferences on the other hand. Some of these are fairly easy to extract from audio signals, such as the genre of the music and the instruments used. Others are a little more challenging
 
-# Wide and Deep NN for recommendation(From Google)
+# Google Wide and Deep NN for recommendation
 
 https://arxiv.org/pdf/1606.07792.pdf
 
