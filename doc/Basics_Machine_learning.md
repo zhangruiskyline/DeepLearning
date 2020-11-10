@@ -195,6 +195,10 @@ Go for simpler models over more complicated models. Generally, the fewer paramet
 
 ## Auto encoder
 
+* None Linear
+
+* Encoding to least parameters
+
 # Hyperparameter
 
 https://jmhessel.github.io/Bayesian-Optimization/
