@@ -135,31 +135,6 @@
 
 * [Deep Learning course: lecture slides and lab notebooks](https://github.com/m2dsupsdlclass/lectures-labs)
 
-  * Lab 1: Neural Networks and Backpropagation:
-    * Intro to MLP with Keras, Numpy and TensorFlow
-
-  * Lab 2: Embeddings and Recommender Systems.
-    * Neural Recommender Systems with Explicit Feedback. Neural Recommender Systems with
-    * Implicit Feedback and the Triplet Loss
-
-  * Lab 3: Convolutional Neural Networks for Image Classification
-
-  * Convolution and ConvNets with TensorFlow
-    * Pretrained ConvNets with Keras
-    * Fine Tuning a pretrained ConvNet with Keras (GPU required)
-
-  * Lab 4: Deep Learning for Object Dection and Image Segmentation
-
-    * Fully Convolutional Neural Networks
-    * ConvNets for Classification and Localization
-
-  * Lab 5: Text Classification, Word Embeddings and Language Models
-
-  * Text Classification and Word Vectors
-    * Character Level Language Model (GPU required)
-
-  * Lab 6: Sequence to Sequence for Machine Translation
-
 
 ## Blog
 
