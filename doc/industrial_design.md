@@ -365,6 +365,8 @@ need to be fast, could start after take out phone instead of unlock
 
 https://www.slideshare.net/HagayLupesko/ai-powered-personalization-scale-oreilly-ai-san-jose-sep-2019
 
+https://www.youtube.com/watch?v=65NR4LwdOcE
+
 ## High Level
 
 ![fb-personalization](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/fb-personalization.jpg)
