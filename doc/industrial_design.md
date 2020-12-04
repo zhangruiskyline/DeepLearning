@@ -388,7 +388,16 @@ https://www.youtube.com/watch?v=65NR4LwdOcE
 ![fb-personalization-4](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/fb-personalization-4.jpg)
 
 
+* User embedding can be trained via user engagement, like watch video, like post, etc.
+* Populated via offline KNN nearest neighbor search, https://engineering.fb.com/2017/03/29/data-infrastructure/faiss-a-library-for-efficient-similarity-search/, store the index of K nearst neighbor for each item in Memoey. 
+* Online is just look up KNN store. Low latency, efficient
+
 ## Sparse vs Dense features
+
+
+
+* Dense feature: Time, user age, # of video watched last 7 days, # of like last 7 days
+* Category feature: userid, device id, post id, language id
 
 * Challenge 1: How to learn from sparse/categorical features
 
