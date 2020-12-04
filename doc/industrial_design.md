@@ -412,7 +412,7 @@ https://www.youtube.com/watch?v=65NR4LwdOcE
 ![fb-personalization-6](https://github.com/zhangruiskyline/DeepLearning_Intro/blob/master/img/fb-personalization-6.jpg)
 
 
-
+https://ai.facebook.com/blog/dlrm-an-advanced-open-source-deep-learning-recommendation-model/
 
 # Facebook Feed Rank System
 
